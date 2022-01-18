@@ -77,5 +77,20 @@ export function Input(props: InputProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
-  return <DefaultTextInput style={[style]} {...otherProps} />;
+  return (
+    <DefaultTextInput
+      style={[
+        {
+          color,
+          borderColor: color,
+          borderWidth: 1,
+          minWidth: "40%",
+          width: "500px",
+          maxWidth: "100%",
+        },
+        style,
+      ]}
+      {...otherProps}
+    />
+  );
 }

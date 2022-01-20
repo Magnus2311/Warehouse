@@ -78,8 +78,8 @@ function BottomTabNavigator() {
   const Drawer = createDrawerNavigator();
 
   return (
-    <Drawer.Navigator initialRouteName="Home">
-      <Drawer.Screen name="Home" component={AddItemScreen} />
+    <Drawer.Navigator initialRouteName="AddItem">
+      <Drawer.Screen name="AddItem" component={AddItemScreen} />
       <Drawer.Screen name="Notifications" component={TabTwoScreen} />
     </Drawer.Navigator>
 

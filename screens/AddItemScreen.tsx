@@ -3,10 +3,9 @@ import { StyleSheet } from "react-native";
 
 import {
   Text,
-  View,
   Separator,
-  Input,
   LabeledInput,
+  PageContainer,
 } from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 
@@ -20,7 +19,7 @@ export default function AddItemScreen({
   const onChangeNumber = (text: string) => changeNumber(text);
 
   return (
-    <View style={styles.container}>
+    <PageContainer style={styles.container}>
       <Text style={styles.title}>Add new item</Text>
       <Separator />
       <LabeledInput
@@ -34,7 +33,7 @@ export default function AddItemScreen({
         value={number}
         keyboardType="numeric"
       />
-    </View>
+    </PageContainer>
   );
 }
 
@@ -42,7 +41,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
   },
   title: {
     fontSize: 20,

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 
 import Colors from "../constants/Colors";
+import { normalize } from "../helpers/screenSizing";
 import useColorScheme from "../hooks/useColorScheme";
 
 export function useThemeColor(
@@ -31,9 +32,16 @@ type ThemeProps = {
   darkColor?: string;
 };
 
+type DefaultLabeledInputProps = {
+  label: string;
+};
+
 export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
 export type InputProps = ThemeProps & DefaultTextInput["props"];
+export type LabeledInputProps = ThemeProps &
+  DefaultLabeledInputProps &
+  DefaultTextInput["props"];
 
 export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
@@ -84,13 +92,42 @@ export function Input(props: InputProps) {
           color,
           borderColor: color,
           borderWidth: 1,
-          minWidth: "40%",
-          width: "500px",
-          maxWidth: "100%",
+          width: normalize(300),
+          maxWidth: 500,
+          borderRadius: 5,
+          padding: 3,
+          paddingBottom: 5,
+          paddingLeft: 5,
         },
         style,
       ]}
       {...otherProps}
     />
+  );
+}
+
+export function LabeledInput(props: LabeledInputProps) {
+  const { label } = props;
+
+  return (
+    <View
+      style={[
+        {
+          width: normalize(300),
+          marginBottom: 10,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        props.style,
+      ]}
+      {...props}
+    >
+      <View>
+        <Text style={{ marginLeft: 1, marginBottom: 2 }} {...props}>
+          {label}
+        </Text>
+        <Input {...props} />
+      </View>
+    </View>
   );
 }

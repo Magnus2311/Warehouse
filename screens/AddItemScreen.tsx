@@ -1,7 +1,13 @@
 import { useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import { StyleSheet } from "react-native";
 
-import { Text, View, Separator, Input } from "../components/Themed";
+import {
+  Text,
+  View,
+  Separator,
+  Input,
+  LabeledInput,
+} from "../components/Themed";
 import { RootTabScreenProps } from "../types";
 
 export default function AddItemScreen({
@@ -17,8 +23,13 @@ export default function AddItemScreen({
     <View style={styles.container}>
       <Text style={styles.title}>Add new item</Text>
       <Separator />
-      <Input onChangeText={onChangeText} value={text} />
-      <Input
+      <LabeledInput
+        label="Име на стоката:"
+        onChangeText={onChangeText}
+        value={text}
+      />
+      <LabeledInput
+        label="Цена на стоката: "
         onChangeText={changeNumber}
         value={number}
         keyboardType="numeric"

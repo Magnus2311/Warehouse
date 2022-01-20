@@ -17,7 +17,7 @@ const linking: LinkingOptions<RootStackParamList> = {
         screens: {
           AddItemScreen: {
             screens: {
-              AddItemScreen: "one",
+              AddItemScreen: "AddItem",
             },
           },
           TabTwo: {

@@ -6,17 +6,22 @@ import {
   Separator,
   LabeledInput,
   PageContainer,
+  Button,
 } from "../components/Themed";
+import { Item } from "../helpers/models";
 import { RootTabScreenProps } from "../types";
 
 export default function AddItemScreen({
   navigation,
 }: RootTabScreenProps<"AddItemScreen">) {
-  const [text, changeText] = useState("");
-  const [number, changeNumber] = useState("");
+  const [item, setItem] = useState({} as Item);
 
-  const onChangeText = (text: string) => changeText(text);
-  const onChangeNumber = (text: string) => changeNumber(text);
+  const onTextChange = (name: string, value: string) => {
+    setItem({
+      ...item,
+      [name]: value,
+    });
+  };
 
   return (
     <PageContainer style={styles.container}>
@@ -24,15 +29,22 @@ export default function AddItemScreen({
       <Separator />
       <LabeledInput
         label="Име на стоката:"
-        onChangeText={onChangeText}
-        value={text}
+        onChangeText={(txt) => onTextChange("name", txt)}
+        value={item.name}
       />
       <LabeledInput
-        label="Цена на стоката: "
-        onChangeText={changeNumber}
-        value={number}
+        label="Доставна цена:"
+        onChangeText={(txt) => onTextChange("basePrice", txt)}
+        value={item.basePrice}
         keyboardType="numeric"
       />
+      <LabeledInput
+        label="Продажна цена:"
+        onChangeText={(txt) => onTextChange("sellPrice", txt)}
+        value={item.sellPrice}
+        keyboardType="numeric"
+      />
+      <Button label="Добавяне на стока" />
     </PageContainer>
   );
 }

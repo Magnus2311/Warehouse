@@ -3,10 +3,12 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
+import { useState } from "react";
 import {
   Text as DefaultText,
   View as DefaultView,
   TextInput as DefaultTextInput,
+  TouchableOpacity,
 } from "react-native";
 
 import Colors from "../constants/Colors";
@@ -36,9 +38,16 @@ type DefaultLabeledInputProps = {
   label: string;
 };
 
+type DefaultButtonProps = {
+  label: string;
+};
+
 export type TextProps = ThemeProps & DefaultText["props"];
 export type ViewProps = ThemeProps & DefaultView["props"];
 export type InputProps = ThemeProps & DefaultTextInput["props"];
+export type ButtonProps = ThemeProps &
+  DefaultButtonProps &
+  TouchableOpacity["props"];
 export type LabeledInputProps = ThemeProps &
   DefaultLabeledInputProps &
   DefaultTextInput["props"];
@@ -118,6 +127,32 @@ export function Input(props: InputProps) {
       ]}
       {...otherProps}
     />
+  );
+}
+
+export function Button(props: ButtonProps) {
+  const { style, lightColor, darkColor, onPress, label, ...otherProps } = props;
+
+  return (
+    <TouchableOpacity
+      style={[
+        {
+          backgroundColor: "rgba(35, 134, 38, 0.9)",
+          borderWidth: 1,
+          padding: 5,
+          borderRadius: 5,
+          width: normalize(300),
+          maxWidth: 500,
+          alignItems: "center",
+          marginTop: normalize(5),
+          borderColor: "rgba(240,246,252,0.1)",
+        },
+        style,
+      ]}
+      onPress={onPress}
+    >
+      <Text style={{ color: "white" }}>{label}</Text>
+    </TouchableOpacity>
   );
 }
 

@@ -1,8 +1,3 @@
-/**
- * If you are not familiar with React Navigation, refer to the "Fundamentals" guide:
- * https://reactnavigation.org/docs/getting-started
- *
- */
 import { FontAwesome } from "@expo/vector-icons";
 import {
   NavigationContainer,
@@ -11,19 +6,14 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName, Pressable } from "react-native";
+import { ColorSchemeName } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import Colors from "../constants/Colors";
 import useColorScheme from "../hooks/useColorScheme";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import AddItemScreen from "../screens/AddItemScreen";
-import TabTwoScreen from "../screens/TabTwoScreen";
-import {
-  RootStackParamList,
-  RootTabParamList,
-  RootTabScreenProps,
-} from "../types";
+import ItemsListScreen from "../screens/ItemsListScreen";
+import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 
 export default function Navigation({
@@ -73,14 +63,12 @@ function RootNavigator() {
  */
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
-
   const Drawer = createDrawerNavigator();
 
   return (
     <Drawer.Navigator>
       <Drawer.Screen name="AddItem" component={AddItemScreen} />
-      <Drawer.Screen name="Notifications" component={TabTwoScreen} />
+      <Drawer.Screen name="ItemsList" component={ItemsListScreen} />
     </Drawer.Navigator>
 
     // <BottomTab.Navigator
@@ -124,9 +112,6 @@ function BottomTabNavigator() {
   );
 }
 
-/**
- * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
- */
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;

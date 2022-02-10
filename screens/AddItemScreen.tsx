@@ -1,45 +1,69 @@
-import { useState } from "react";
-import { StyleSheet, TextInput } from "react-native";
+import React, { FunctionComponent, useState } from "react";
+import { connect } from "react-redux";
+import { Page } from "../components/Page";
 
-import { Text, View, Separator, Input } from "../components/Themed";
+import { LabeledInput, Button } from "../components/Themed";
+import { Item } from "../helpers/models";
+import { actionCreators } from "../redux/itemActions";
+import { AppState } from "../redux/store";
 import { RootTabScreenProps } from "../types";
 
-export default function AddItemScreen({
-  navigation,
-}: RootTabScreenProps<"AddItemScreen">) {
-  const [text, changeText] = useState("");
-  const [number, changeNumber] = useState("");
-
-  const onChangeText = (text: string) => changeText(text);
-  const onChangeNumber = (text: string) => changeNumber(text);
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Add new item</Text>
-      <Separator />
-      <Input onChangeText={onChangeText} value={text} />
-      <Input
-        onChangeText={changeNumber}
-        value={number}
-        keyboardType="numeric"
-      />
-    </View>
-  );
+interface Props {
+  onItemAdded: (item: Item) => void;
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
+const emptyItem = {
+  name: "",
+  basePrice: "",
+  sellPrice: "",
+} as Item;
+
+const AddItemScreen: FunctionComponent<Props> = ({ onItemAdded }) => {
+  const [item, setItem] = useState(emptyItem);
+
+  const onTextChange = (name: string, value: string) => {
+    setItem({
+      ...item,
+      [name]: value,
+    });
+  };
+
+  return (
+    <Page title="Add an item">
+      <LabeledInput
+        label="Име на стоката:"
+        onChangeText={(txt) => onTextChange("name", txt)}
+        value={item.name}
+      />
+      <LabeledInput
+        label="Доставна цена:"
+        onChangeText={(txt) => onTextChange("basePrice", txt)}
+        value={item.basePrice}
+        keyboardType="numeric"
+      />
+      <LabeledInput
+        label="Продажна цена:"
+        onChangeText={(txt) => onTextChange("sellPrice", txt)}
+        value={item.sellPrice}
+        keyboardType="numeric"
+      />
+      <Button
+        label="Добавяне на стока"
+        onPress={() => {
+          onItemAdded(item);
+          setItem(emptyItem);
+        }}
+      />
+    </Page>
+  );
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    onItemAdded: (item: Item) => {
+      dispatch(actionCreators.onAddItem(item));
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(AddItemScreen);

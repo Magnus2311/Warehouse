@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { Page } from "../components/Page";
-import { Text } from "../components/Themed";
+import { Text, PageContainer } from "../components/Themed";
 import { Item } from "../helpers/models";
 import { actionCreators } from "../redux/itemActions";
 
@@ -23,7 +23,12 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
   return (
     <Page title="Items List">
       {items.map((item) => {
-        <Text>{item.name}</Text>;
+        return (
+          <PageContainer key={item.id}>
+            <Text>{item.name}</Text>
+            <Text>{item.sellPrice}</Text>
+          </PageContainer>
+        );
       })}
     </Page>
   );

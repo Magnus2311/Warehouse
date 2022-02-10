@@ -1,19 +1,25 @@
-import React, { useState } from "react";
+import React, { FunctionComponent, useState } from "react";
+import { connect } from "react-redux";
 import { Page } from "../components/Page";
 
 import { LabeledInput, Button } from "../components/Themed";
 import { Item } from "../helpers/models";
 import { actionCreators } from "../redux/itemActions";
+import { AppState } from "../redux/store";
 import { RootTabScreenProps } from "../types";
 
-export default function AddItemScreen({
-  navigation,
-}: RootTabScreenProps<"AddItemScreen">) {
-  const [item, setItem] = useState({
-    name: "",
-    basePrice: "",
-    sellPrice: "",
-  } as Item);
+interface Props {
+  onItemAdded: (item: Item) => void;
+}
+
+const emptyItem = {
+  name: "",
+  basePrice: "",
+  sellPrice: "",
+} as Item;
+
+const AddItemScreen: FunctionComponent<Props> = ({ onItemAdded }) => {
+  const [item, setItem] = useState(emptyItem);
 
   const onTextChange = (name: string, value: string) => {
     setItem({
@@ -43,8 +49,21 @@ export default function AddItemScreen({
       />
       <Button
         label="Добавяне на стока"
-        onPress={() => actionCreators.onAddItem(item)}
+        onPress={() => {
+          onItemAdded(item);
+          setItem(emptyItem);
+        }}
       />
     </Page>
   );
-}
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    onItemAdded: (item: Item) => {
+      dispatch(actionCreators.onAddItem(item));
+    },
+  };
+};
+
+export default connect(null, mapDispatchToProps)(AddItemScreen);

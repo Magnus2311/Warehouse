@@ -4,3 +4,7 @@ export interface Item {
   basePrice: string;
   sellPrice: string;
 }
+
+export interface Column {
+  name: string;
+}

@@ -1,1 +1,1 @@
-export const API_PATH = "https://localhost:44355/";
+export const API_PATH = "https://warehouse-magnus.azurewebsites.net/";

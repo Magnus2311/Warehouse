@@ -7,4 +7,6 @@ export interface Item {
 
 export interface Column {
   name: string;
+  propName: string;
+  flex?: number;
 }

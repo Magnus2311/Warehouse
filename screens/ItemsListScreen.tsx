@@ -23,7 +23,14 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
 
   return (
     <Page title="Items List">
-      <Table data={items} columns={[{ name: "name" }, { name: "basePrice" }]} />
+      <Table
+        data={items}
+        columns={[
+          { name: "Име на стока", propName: "name", flex: 5 },
+          { name: "Доставна цена", propName: "basePrice", flex: 1 },
+          { name: "Продажна цена", propName: "sellPrice", flex: 1 },
+        ]}
+      />
     </Page>
   );
 };

@@ -1,6 +1,7 @@
 import { FunctionComponent } from "react";
+import { DataTable } from "react-native-paper";
 import { Column } from "../helpers/models";
-import { View } from "./Themed";
+import { normalize } from "../helpers/screenSizing";
 
 type RowProps = {
   columns: Column[];
@@ -14,33 +15,45 @@ type TableProps = {
 const Table: FunctionComponent<TableProps> = ({ columns, data }) => {
   const renderHeader: FunctionComponent<RowProps> = ({ columns }) => {
     return (
-      <View style={{ flex: 1, alignSelf: "stretch", flexDirection: "row" }}>
+      <DataTable.Header>
         {columns.map((column) => {
-          <View>{column.name}</View>;
+          return (
+            <DataTable.Title
+              key={column.name}
+              style={{ flex: column.flex ?? 1 }}
+            >
+              {column.name}
+            </DataTable.Title>
+          );
         })}
-      </View>
+      </DataTable.Header>
     );
   };
 
   return (
-    <View>
+    <DataTable
+      style={{
+        width: normalize(300),
+      }}
+    >
       {renderHeader({ columns })}
       {data.map((item) => {
         return (
-          <View
-            style={{
-              flex: 1,
-              alignSelf: "stretch",
-              flexDirection: "row",
-            }}
-          >
+          <DataTable.Row key={item.id}>
             {columns.map((column) => {
-              return <View>{item[column.name]}</View>;
+              return (
+                <DataTable.Cell
+                  key={column.name}
+                  style={{ flex: column.flex ?? 1 }}
+                >
+                  {item[column.propName]}
+                </DataTable.Cell>
+              );
             })}
-          </View>
+          </DataTable.Row>
         );
       })}
-    </View>
+    </DataTable>
   );
 };
 

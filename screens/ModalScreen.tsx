@@ -1,33 +1,28 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet } from "react-native";
+import React, { FunctionComponent } from "react";
+import { Platform, StyleSheet, View } from "react-native";
 
-import { Text, View, Separator } from "../components/Themed";
+interface ModalScreenProps {
+  children: React.ReactNode | React.ReactNode[];
+  open: boolean;
+}
 
-export default function ModalScreen() {
+const ModalScreen: FunctionComponent<ModalScreenProps> = ({
+  children,
+  open,
+}) => {
+  if (!open) return null;
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Modal</Text>
-      <Separator />
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
+    <View style={{
+      position: "absolute",
+      top: "50%",
+      left: "50%"
+    }}>
+      {children}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
+export default ModalScreen;

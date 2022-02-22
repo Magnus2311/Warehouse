@@ -66,6 +66,7 @@ function RootNavigator() {
 
 function BottomTabNavigator() {
   const Drawer = createDrawerNavigator();
+  const [isAddItemOpen, setIsAddItemOpen] = React.useState(false);
 
   return (
     <Drawer.Navigator>
@@ -74,10 +75,30 @@ function BottomTabNavigator() {
           name="Добавяне на стока"
           component={AddItemScreen}
           options={{
-            headerRight: () => <Button label="Add" />,
+            headerTitleAlign: "center",
+            headerRight: () => <IconButton icon="plus" size={30} />,
           }}
         />
-        <Drawer.Screen name="Списък със стоки" component={ItemsListScreen} />
+        <Drawer.Screen
+          name="Списък със стоки"
+          component={ItemsListScreen}
+          options={{
+            headerTitleAlign: "center",
+            headerRight: () => (
+              <IconButton
+                icon="plus"
+                size={30}
+                onPress={(e) => {
+                  e.preventDefault();
+                  setIsAddItemOpen(true);
+                  return <ModalScreen open={isAddItemOpen}> 
+                    <AddItemScreen onClose={() => setIsAddItemOpen(false)} />
+                  </ModalScreen>
+                }}
+              />
+            ),
+          }}
+        />
       </Drawer.Group>
     </Drawer.Navigator>
 

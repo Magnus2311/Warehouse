@@ -5,11 +5,10 @@ import { Page } from "../components/Page";
 import { LabeledInput, Button } from "../components/Themed";
 import { Item } from "../helpers/models";
 import { actionCreators } from "../redux/itemActions";
-import { AppState } from "../redux/store";
-import { RootTabScreenProps } from "../types";
 
 interface Props {
   onItemAdded: (item: Item) => void;
+  onClose: () => void;
 }
 
 const emptyItem = {
@@ -18,7 +17,7 @@ const emptyItem = {
   sellPrice: "",
 } as Item;
 
-const AddItemScreen: FunctionComponent<Props> = ({ onItemAdded }) => {
+const AddItemScreen: FunctionComponent<Props> = ({ onItemAdded, onClose }) => {
   const [item, setItem] = useState(emptyItem);
 
   const onTextChange = (name: string, value: string) => {
@@ -52,6 +51,7 @@ const AddItemScreen: FunctionComponent<Props> = ({ onItemAdded }) => {
         onPress={() => {
           onItemAdded(item);
           setItem(emptyItem);
+          onClose();
         }}
       />
     </Page>

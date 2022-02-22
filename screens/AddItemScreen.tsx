@@ -29,7 +29,7 @@ const AddItemScreen: FunctionComponent<Props> = ({ onItemAdded }) => {
   };
 
   return (
-    <Page title="Add an item">
+    <Page>
       <LabeledInput
         label="Име на стоката:"
         onChangeText={(txt) => onTextChange("name", txt)}

@@ -22,7 +22,7 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
   }, []);
 
   return (
-    <Page title="Списък със стоки">
+    <Page>
       <Table
         data={items}
         columns={[

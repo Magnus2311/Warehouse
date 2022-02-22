@@ -95,7 +95,7 @@ export function Separator() {
   return (
     <View
       style={{
-        marginVertical: 30,
+        marginVertical: normalize(10),
         height: 1,
         width: normalize(300),
       }}

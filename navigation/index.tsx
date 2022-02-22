@@ -15,6 +15,8 @@ import AddItemScreen from "../screens/AddItemScreen";
 import ItemsListScreen from "../screens/ItemsListScreen";
 import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
+import { Button } from "../components/Themed";
+import { IconButton } from "react-native-paper";
 
 export default function Navigation({
   colorScheme,
@@ -67,8 +69,16 @@ function BottomTabNavigator() {
 
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="AddItem" component={AddItemScreen} />
-      <Drawer.Screen name="ItemsList" component={ItemsListScreen} />
+      <Drawer.Group>
+        <Drawer.Screen
+          name="Добавяне на стока"
+          component={AddItemScreen}
+          options={{
+            headerRight: () => <Button label="Add" />,
+          }}
+        />
+        <Drawer.Screen name="Списък със стоки" component={ItemsListScreen} />
+      </Drawer.Group>
     </Drawer.Navigator>
 
     // <BottomTab.Navigator

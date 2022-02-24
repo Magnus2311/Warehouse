@@ -15,11 +15,6 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       Root: {
         screens: {
-          AddItemScreen: {
-            screens: {
-              AddItemScreen: "AddItem",
-            },
-          },
           ItemsListScreen: {
             screens: {
               ItemsListScreen: "ItemsList",

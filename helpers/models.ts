@@ -1,3 +1,6 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import React, { ReactNode } from "react";
+
 export interface Item {
   id: string;
   name: string;

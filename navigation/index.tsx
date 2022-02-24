@@ -8,16 +8,18 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import useColorScheme from "../hooks/useColorScheme";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import AddItemScreen from "../screens/AddItemScreen";
 import ItemsListScreen from "../screens/ItemsListScreen";
 import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { Button } from "../components/Themed";
 import { IconButton } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import { useContext } from "react";
+import { createContext } from "react";
+import { useState } from "react";
+import { ModalContext } from "../App";
 
 export default function Navigation({
   colorScheme,
@@ -41,6 +43,8 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const { title } = useContext(ModalContext);
+
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -54,7 +58,11 @@ function RootNavigator() {
         options={{ title: "Oops!" }}
       />
       <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen
+          name="Modal"
+          component={ModalScreen}
+          options={{ title }}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -66,9 +74,8 @@ function RootNavigator() {
  */
 
 function BottomTabNavigator() {
-  const Drawer = createDrawerNavigator();
+  const Drawer = createDrawerNavigator<RootStackParamList>();
   const navigator = useNavigation();
-  const [isAddItemOpen, setIsAddItemOpen] = React.useState(false);
 
   return (
     <Drawer.Navigator>
@@ -86,8 +93,13 @@ function BottomTabNavigator() {
                 size={30}
                 onPress={(e) => {
                   e.preventDefault();
-                  setIsAddItemOpen(true);
-                  navigator.navigate("Modal", { component: AddItemScreen });
+
+                  const { setTitle } = useContext(ModalContext);
+                  setTitle("Добавяне на стока");
+                  navigator.navigate("Modal", {
+                    component: <AddItemScreen />,
+                    title: "Добавяне на стока",
+                  });
                 }}
               />
             ),

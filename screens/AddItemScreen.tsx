@@ -1,3 +1,4 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { FunctionComponent, useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../components/Page";
@@ -5,10 +6,12 @@ import { Page } from "../components/Page";
 import { LabeledInput, Button } from "../components/Themed";
 import { Item } from "../helpers/models";
 import { actionCreators } from "../redux/itemActions";
+import { RootStackParamList } from "../types";
 
 interface Props {
   onItemAdded: (item: Item) => void;
   onClose: () => void;
+  props: NativeStackScreenProps<RootStackParamList>;
 }
 
 const emptyItem = {
@@ -17,8 +20,13 @@ const emptyItem = {
   sellPrice: "",
 } as Item;
 
-const AddItemScreen: FunctionComponent<Props> = ({ onItemAdded, onClose }) => {
+const AddItemScreen: FunctionComponent<Props> = ({
+  onItemAdded,
+  onClose,
+  props,
+}) => {
   const [item, setItem] = useState(emptyItem);
+  const { navigation } = props;
 
   const onTextChange = (name: string, value: string) => {
     setItem({
@@ -52,6 +60,7 @@ const AddItemScreen: FunctionComponent<Props> = ({ onItemAdded, onClose }) => {
           onItemAdded(item);
           setItem(emptyItem);
           onClose();
+          navigation.goBack();
         }}
       />
     </Page>

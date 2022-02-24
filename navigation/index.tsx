@@ -17,6 +17,7 @@ import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { Button } from "../components/Themed";
 import { IconButton } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Navigation({
   colorScheme,
@@ -66,23 +67,18 @@ function RootNavigator() {
 
 function BottomTabNavigator() {
   const Drawer = createDrawerNavigator();
+  const navigator = useNavigation();
   const [isAddItemOpen, setIsAddItemOpen] = React.useState(false);
 
   return (
     <Drawer.Navigator>
       <Drawer.Group>
         <Drawer.Screen
-          name="Добавяне на стока"
-          component={AddItemScreen}
-          options={{
-            headerTitleAlign: "center",
-            headerRight: () => <IconButton icon="plus" size={30} />,
-          }}
-        />
-        <Drawer.Screen
-          name="Списък със стоки"
+          name="ItemsList"
           component={ItemsListScreen}
           options={{
+            title: "Списък със стоки",
+            drawerLabel: "Списък със стоки",
             headerTitleAlign: "center",
             headerRight: () => (
               <IconButton
@@ -91,9 +87,7 @@ function BottomTabNavigator() {
                 onPress={(e) => {
                   e.preventDefault();
                   setIsAddItemOpen(true);
-                  return <ModalScreen open={isAddItemOpen}> 
-                    <AddItemScreen onClose={() => setIsAddItemOpen(false)} />
-                  </ModalScreen>
+                  navigator.navigate("Modal", { component: AddItemScreen });
                 }}
               />
             ),

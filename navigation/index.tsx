@@ -10,16 +10,13 @@ import { ColorSchemeName } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import AddItemScreen from "../screens/AddItemScreen";
 import ItemsListScreen from "../screens/ItemsListScreen";
 import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import { IconButton } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
 import { useContext } from "react";
-import { createContext } from "react";
-import { useState } from "react";
-import { ModalContext } from "../App";
+import { ModalContext } from "../components/contexts/ModalContext";
+import { ModalTypes } from "../helpers/models";
 
 export default function Navigation({
   colorScheme,
@@ -44,7 +41,6 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
   const { title } = useContext(ModalContext);
-
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -61,7 +57,10 @@ function RootNavigator() {
         <Stack.Screen
           name="Modal"
           component={ModalScreen}
-          options={{ title }}
+          options={{
+            title,
+            headerTitleAlign: "center",
+          }}
         />
       </Stack.Group>
     </Stack.Navigator>
@@ -73,9 +72,9 @@ function RootNavigator() {
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
 
-function BottomTabNavigator() {
+function BottomTabNavigator({ navigation }: any) {
   const Drawer = createDrawerNavigator<RootStackParamList>();
-  const navigator = useNavigation();
+  const { setTitle } = useContext(ModalContext);
 
   return (
     <Drawer.Navigator>
@@ -93,12 +92,9 @@ function BottomTabNavigator() {
                 size={30}
                 onPress={(e) => {
                   e.preventDefault();
-
-                  const { setTitle } = useContext(ModalContext);
                   setTitle("Добавяне на стока");
-                  navigator.navigate("Modal", {
-                    component: <AddItemScreen />,
-                    title: "Добавяне на стока",
+                  navigation.navigate("Modal", {
+                    component: ModalTypes.AddItemScreen,
                   });
                 }}
               />

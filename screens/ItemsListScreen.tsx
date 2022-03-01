@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { connect } from "react-redux";
 import { Page } from "../components/Page";
 import Table from "../components/Table";
-import { Text, PageContainer } from "../components/Themed";
 import { Item } from "../helpers/models";
 import { actionCreators } from "../redux/itemActions";
 
@@ -35,6 +34,10 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
   );
 };
 
+const mapStateToProps = (state: AppState) => {
+  return state.items;
+};
+
 const mapDispatchToProps = (dispatch: any) => {
   return {
     onItemsLoaded: () => {
@@ -43,7 +46,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default connect(
-  (state: AppState) => state.items,
-  mapDispatchToProps
-)(ItemsListScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ItemsListScreen);

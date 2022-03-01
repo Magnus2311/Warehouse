@@ -4,17 +4,26 @@ import { Platform } from "react-native";
 import { View } from "../components/Themed";
 import React from "react";
 import { RootStackScreenProps } from "../types";
+import { ModalTypes } from "../helpers/models";
+import AddItemScreen from "./AddItemScreen";
+import { connect } from "react-redux";
 
 const ModalScreen = ({ navigation, route }: RootStackScreenProps<"Modal">) => {
-  const { component, title } = route.params;
+  const { component } = route.params;
 
   return (
     <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-      {component}
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
+      {renderChild(component)}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
     </View>
   );
 };
 
-export default ModalScreen;
+const renderChild = (modalType: ModalTypes) => {
+  switch (modalType) {
+    case ModalTypes.AddItemScreen:
+      return <AddItemScreen />;
+  }
+};
+
+export default connect()(ModalScreen);

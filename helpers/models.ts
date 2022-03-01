@@ -13,3 +13,7 @@ export interface Column {
   propName: string;
   flex?: number;
 }
+
+export enum ModalTypes {
+  AddItemScreen,
+}

@@ -52,7 +52,7 @@ const AddItemScreen: FunctionComponent<Props> = ({ onItemAdded }) => {
         onPress={() => {
           onItemAdded(item);
           setItem(emptyItem);
-          navigator.goBack();
+          navigator.navigate("ItemsList");
         }}
       />
     </Page>

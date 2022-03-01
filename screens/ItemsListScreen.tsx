@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { connect } from "react-redux";
 import { Page } from "../components/Page";
-import { Text, PageContainer } from "../components/Themed";
+import Table from "../components/Table";
 import { Item } from "../helpers/models";
 import { actionCreators } from "../redux/itemActions";
 
@@ -21,17 +21,21 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
   }, []);
 
   return (
-    <Page title="Items List">
-      {items.map((item) => {
-        return (
-          <PageContainer key={item.id}>
-            <Text>{item.name}</Text>
-            <Text>{item.sellPrice}</Text>
-          </PageContainer>
-        );
-      })}
+    <Page>
+      <Table
+        data={items}
+        columns={[
+          { name: "Име на стока", propName: "name", flex: 5 },
+          { name: "Доставна цена", propName: "basePrice", flex: 1 },
+          { name: "Продажна цена", propName: "sellPrice", flex: 1 },
+        ]}
+      />
     </Page>
   );
+};
+
+const mapStateToProps = (state: AppState) => {
+  return state.items;
 };
 
 const mapDispatchToProps = (dispatch: any) => {
@@ -42,7 +46,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default connect(
-  (state: AppState) => state.items,
-  mapDispatchToProps
-)(ItemsListScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ItemsListScreen);

@@ -3,15 +3,15 @@ import { PageContainer, Text, Separator } from "./Themed";
 import { StyleSheet } from "react-native";
 
 interface PageProps {
-  title: string;
+  title?: string;
   children: React.ReactNode | React.ReactNode[];
 }
 
 export function Page({ title, children }: PageProps) {
   return (
     <PageContainer style={styles.container}>
-      <Text style={styles.title}>{title}</Text>
-      <Separator />
+      {title && <Text style={styles.title}>{title}</Text>}
+      {title && <Separator />}
       {children}
     </PageContainer>
   );

@@ -8,13 +8,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import useColorScheme from "../hooks/useColorScheme";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
-import AddItemScreen from "../screens/AddItemScreen";
 import ItemsListScreen from "../screens/ItemsListScreen";
 import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
+import { IconButton } from "react-native-paper";
+import { useContext } from "react";
+import { ModalContext } from "../components/contexts/ModalContext";
+import { ModalTypes } from "../helpers/models";
 
 export default function Navigation({
   colorScheme,
@@ -38,6 +40,7 @@ export default function Navigation({
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
+  const { title } = useContext(ModalContext);
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -51,7 +54,14 @@ function RootNavigator() {
         options={{ title: "Oops!" }}
       />
       <Stack.Group screenOptions={{ presentation: "modal" }}>
-        <Stack.Screen name="Modal" component={ModalScreen} />
+        <Stack.Screen
+          name="Modal"
+          component={ModalScreen}
+          options={{
+            title,
+            headerTitleAlign: "center",
+          }}
+        />
       </Stack.Group>
     </Stack.Navigator>
   );
@@ -62,13 +72,36 @@ function RootNavigator() {
  * https://reactnavigation.org/docs/bottom-tab-navigator
  */
 
-function BottomTabNavigator() {
-  const Drawer = createDrawerNavigator();
+function BottomTabNavigator({ navigation }: any) {
+  const Drawer = createDrawerNavigator<RootStackParamList>();
+  const { setTitle } = useContext(ModalContext);
 
   return (
     <Drawer.Navigator>
-      <Drawer.Screen name="AddItem" component={AddItemScreen} />
-      <Drawer.Screen name="ItemsList" component={ItemsListScreen} />
+      <Drawer.Group>
+        <Drawer.Screen
+          name="ItemsList"
+          component={ItemsListScreen}
+          options={{
+            title: "Списък със стоки",
+            drawerLabel: "Списък със стоки",
+            headerTitleAlign: "center",
+            headerRight: () => (
+              <IconButton
+                icon="plus"
+                size={30}
+                onPress={(e) => {
+                  e.preventDefault();
+                  setTitle("Добавяне на стока");
+                  navigation.navigate("Modal", {
+                    component: ModalTypes.AddItemScreen,
+                  });
+                }}
+              />
+            ),
+          }}
+        />
+      </Drawer.Group>
     </Drawer.Navigator>
 
     // <BottomTab.Navigator

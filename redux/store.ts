@@ -1,6 +1,5 @@
 import { Action } from "redux";
 import { ThunkAction } from "redux-thunk";
-import { Item } from "../helpers/models";
 import * as items from "./itemActions";
 
 export interface AppState {

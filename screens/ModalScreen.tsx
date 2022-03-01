@@ -1,33 +1,29 @@
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet } from "react-native";
+import { Platform } from "react-native";
 
-import { Text, View, Separator } from "../components/Themed";
+import { View } from "../components/Themed";
+import React from "react";
+import { RootStackScreenProps } from "../types";
+import { ModalTypes } from "../helpers/models";
+import AddItemScreen from "./AddItemScreen";
+import { connect } from "react-redux";
 
-export default function ModalScreen() {
+const ModalScreen = ({ navigation, route }: RootStackScreenProps<"Modal">) => {
+  const { component } = route.params;
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Modal</Text>
-      <Separator />
-
-      {/* Use a light status bar on iOS to account for the black space above the modal */}
+    <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      {renderChild(component)}
       <StatusBar style={Platform.OS === "ios" ? "light" : "auto"} />
     </View>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: "80%",
-  },
-});
+const renderChild = (modalType: ModalTypes) => {
+  switch (modalType) {
+    case ModalTypes.AddItemScreen:
+      return <AddItemScreen />;
+  }
+};
+
+export default connect()(ModalScreen);

@@ -78,16 +78,14 @@ export const actionCreators = {
   },
 };
 
+const initialState = {
+  items: [],
+};
+
 export const reducer: Reducer<ItemsState> = (
-  state: ItemsState | undefined,
+  state = initialState,
   incomingAction: Action
 ): ItemsState => {
-  if (state === undefined) {
-    return { items: [] };
-  }
-
-  if (state.items === undefined) state.items = [];
-
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case ADD_ITEM:
@@ -95,6 +93,6 @@ export const reducer: Reducer<ItemsState> = (
     case LOAD_ITEMS:
       return { ...state.items, items: action.items };
     default:
-      return state;
+      return state!;
   }
 };

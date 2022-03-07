@@ -1,14 +1,12 @@
 import { StatusBar } from "expo-status-bar";
 import { Platform } from "react-native";
-
 import { View } from "../components/Themed";
 import React from "react";
 import { RootStackScreenProps } from "../types";
 import { ModalTypes } from "../helpers/models";
 import AddItemScreen from "./AddItemScreen";
-import { connect } from "react-redux";
 
-const ModalScreen = ({ navigation, route }: RootStackScreenProps<"Modal">) => {
+const ModalScreen = ({ route }: RootStackScreenProps<"Modal">) => {
   const { component } = route.params;
 
   return (
@@ -26,4 +24,4 @@ const renderChild = (modalType: ModalTypes) => {
   }
 };
 
-export default connect()(ModalScreen);
+export default ModalScreen;

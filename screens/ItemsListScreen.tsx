@@ -1,8 +1,10 @@
 import { useEffect } from "react";
+import { Platform } from "react-native";
 import { connect } from "react-redux";
 import { Page } from "../components/Page";
 import Table from "../components/Table";
 import { Item } from "../helpers/models";
+import { isMobile } from "../helpers/screenSizing";
 import { actionCreators } from "../redux/itemActions";
 
 import { AppState } from "../redux/store";
@@ -25,9 +27,19 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
       <Table
         data={items}
         columns={[
-          { name: "Име на стока", propName: "name", flex: 5 },
-          { name: "Доставна цена", propName: "basePrice", flex: 1 },
-          { name: "Продажна цена", propName: "sellPrice", flex: 1 },
+          { name: "Име на стока", propName: "name", flex: 6 },
+          {
+            name: isMobile ? "Д-на цена" : "Доставна цена",
+            propName: "basePrice",
+            flex: isMobile ? 2 : 1,
+            isRight: true,
+          },
+          {
+            name: isMobile ? "П-на цена" : "Продажна цена",
+            propName: "sellPrice",
+            flex: isMobile ? 2 : 1,
+            isRight: true,
+          },
         ]}
       />
     </Page>

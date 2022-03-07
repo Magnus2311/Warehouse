@@ -12,3 +12,5 @@ export function normalize(size: number) {
     return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
   }
 }
+
+export const isMobile = Platform.OS === "android" || Platform.OS === "ios";

@@ -12,6 +12,7 @@ export interface Column {
   name: string;
   propName: string;
   flex?: number;
+  isRight?: boolean;
 }
 
 export enum ModalTypes {

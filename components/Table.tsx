@@ -44,7 +44,9 @@ const Table: FunctionComponent<TableProps> = ({ columns, data }) => {
               return (
                 <DataTable.Cell
                   key={column.name}
-                  style={{ flex: column.flex ?? 1 }}
+                  style={{
+                    flex: column.flex ?? 1,
+                  }}
                 >
                   {item[column.propName]}
                 </DataTable.Cell>

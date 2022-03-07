@@ -3,35 +3,44 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
+  useNavigation,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName } from "react-native";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { ColorSchemeName, Pressable } from "react-native";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import ItemsListScreen from "../screens/ItemsListScreen";
-import { RootStackParamList } from "../types";
+import { RootStackParamList, RootTabParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { IconButton } from "react-native-paper";
-import { useContext } from "react";
-import { ModalContext } from "../components/contexts/ModalContext";
 import { ModalTypes } from "../helpers/models";
+import Register from "../screens/authentication/Register";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { connect } from "react-redux";
+import { ModalState } from "../redux/modalActions";
 
-export default function Navigation({
-  colorScheme,
-}: {
+type Props = {
   colorScheme: ColorSchemeName;
-}) {
+  title: string;
+};
+
+const Navigation: React.FunctionComponent<Props> = ({
+  colorScheme,
+  title,
+}: Props) => {
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
       theme={colorScheme === "dark" ? DarkTheme : DefaultTheme}
     >
-      <RootNavigator />
+      <RootNavigator title={title} />
     </NavigationContainer>
   );
-}
+};
+
+const mapStateToProps = (state: ModalState) => state.title;
+
+export default connect(mapStateToProps, null)(Navigation);
 
 /**
  * A root stack navigator is often used for displaying modals on top of all other content.
@@ -39,8 +48,7 @@ export default function Navigation({
  */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-function RootNavigator() {
-  const { title } = useContext(ModalContext);
+function RootNavigator({ title }: { title: string }) {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -67,87 +75,42 @@ function RootNavigator() {
   );
 }
 
-/**
- * A bottom tab navigator displays tab buttons on the bottom of the display to switch screens.
- * https://reactnavigation.org/docs/bottom-tab-navigator
- */
-
 function BottomTabNavigator({ navigation }: any) {
-  const Drawer = createDrawerNavigator<RootStackParamList>();
-  const { setTitle } = useContext(ModalContext);
+  const Drawer = createDrawerNavigator<RootTabParamList>();
 
   return (
     <Drawer.Navigator>
       <Drawer.Group>
         <Drawer.Screen
-          name="ItemsList"
+          name="ItemsListScreen"
           component={ItemsListScreen}
           options={{
             title: "Списък със стоки",
-            drawerLabel: "Списък със стоки",
             headerTitleAlign: "center",
             headerRight: () => (
-              <IconButton
-                icon="plus"
-                size={30}
+              <Pressable
                 onPress={(e) => {
                   e.preventDefault();
-                  setTitle("Добавяне на стока");
                   navigation.navigate("Modal", {
                     component: ModalTypes.AddItemScreen,
                   });
                 }}
-              />
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.5 : 1,
+                })}
+              >
+                <FontAwesome
+                  name="plus-circle"
+                  size={25}
+                  color="green"
+                  style={{ marginRight: 15 }}
+                />
+              </Pressable>
             ),
           }}
         />
+        <Drawer.Screen name="Register" component={Register} />
       </Drawer.Group>
     </Drawer.Navigator>
-
-    // <BottomTab.Navigator
-    //   initialRouteName="TabOne"
-    //   screenOptions={{
-    //     tabBarActiveTintColor: Colors[colorScheme].tint,
-    //   }}
-    // >
-    //   <BottomTab.Screen
-    //     name="TabOne"
-    //     component={TabOneScreen}
-    //     options={({ navigation }: RootTabScreenProps<"TabOne">) => ({
-    //       title: "Tab One",
-    //       tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-    //       headerRight: () => (
-    //         <Pressable
-    //           onPress={() => navigation.navigate("Modal")}
-    //           style={({ pressed }) => ({
-    //             opacity: pressed ? 0.5 : 1,
-    //           })}
-    //         >
-    //           <FontAwesome
-    //             name="info-circle"
-    //             size={25}
-    //             color={Colors[colorScheme].text}
-    //             style={{ marginRight: 15 }}
-    //           />
-    //         </Pressable>
-    //       ),
-    //     })}
-    //   />
-    //   <BottomTab.Screen
-    //     name="TabTwo"
-    //     component={TabTwoScreen}
-    //     options={{
-    //       title: "Tab Two",
-    //       tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-    //     }}
-    //   />
-    // </BottomTab.Navigator>
   );
-}
-
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>["name"];
-  color: string;
-}) {
-  return <FontAwesome size={30} style={{ marginBottom: -3 }} {...props} />;
 }

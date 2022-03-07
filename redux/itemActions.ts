@@ -93,6 +93,6 @@ export const reducer: Reducer<ItemsState> = (
     case LOAD_ITEMS:
       return { ...state.items, items: action.items };
     default:
-      return state!;
+      return state;
   }
 };

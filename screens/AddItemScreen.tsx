@@ -13,6 +13,7 @@ interface Props {
   itemId?: string;
   items: Item[];
   onItemAdded: (item: Item) => void;
+  onItemEdited: (item: Item) => void;
   onModalTitleChanged: (title: string) => void;
 }
 
@@ -27,19 +28,16 @@ const AddItemScreen: FunctionComponent<Props> = ({
   items,
   onItemAdded,
   onModalTitleChanged,
+  onItemEdited,
 }) => {
-  const [item, setItem] = useState(emptyItem);
   const currentItem = items.find((i) => i.id === itemId);
+  const [item, setItem] = useState(currentItem ?? emptyItem);
   const navigator = useNavigation();
-
-  useEffect(() => {
-    if (currentItem) {
-      setItem(currentItem);
-      onModalTitleChanged("Редакция на стока");
-    } else {
-      onModalTitleChanged("Добавяне на стока");
-    }
-  });
+  if (currentItem) {
+    onModalTitleChanged("Редакция на стока");
+  } else {
+    onModalTitleChanged("Добавяне на стока");
+  }
 
   const onTextChange = (name: string, value: string) => {
     setItem({
@@ -68,9 +66,9 @@ const AddItemScreen: FunctionComponent<Props> = ({
         keyboardType="numeric"
       />
       <Button
-        label="Редакция на стока"
+        label={currentItem ? "Редакция на стока" : "Добавяне на стока"}
         onPress={() => {
-          onItemAdded(item);
+          currentItem ? onItemEdited(item) : onItemAdded(item);
           setItem(emptyItem);
           navigator.navigate("Root");
         }}
@@ -85,6 +83,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     onItemAdded: (item: Item) => {
       dispatch(actionCreators.onAddItem(item));
+    },
+    onItemEdited: (item: Item) => {
+      dispatch(actionCreators.onEditItem(item));
     },
     onModalTitleChanged: (modalTitle: string) => {
       dispatch(modalActionCreators.actionCreators.onTitleChange(modalTitle));

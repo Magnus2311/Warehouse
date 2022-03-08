@@ -50,13 +50,15 @@ const Table: FunctionComponent<TableProps> = ({ columns, data }) => {
         return (
           <GestureRecognizer
             onSwipeLeft={() => {
-              translateAnim.setValue(300);
-              setShowAdditionalMenus(item.id);
-              Animated.timing(translateAnim, {
-                toValue: 0,
-                duration: 200,
-                useNativeDriver: true,
-              }).start();
+              if (item.id !== showAdditionalMenus) {
+                translateAnim.setValue(300);
+                setShowAdditionalMenus(item.id);
+                Animated.timing(translateAnim, {
+                  toValue: 0,
+                  duration: 200,
+                  useNativeDriver: true,
+                }).start();
+              }
             }}
             onSwipeRight={() => {
               Animated.timing(translateAnim, {
@@ -81,6 +83,7 @@ const Table: FunctionComponent<TableProps> = ({ columns, data }) => {
               })}
               {showAdditionalMenus == item.id && (
                 <Animated.View
+                  key={item.id}
                   style={{
                     alignSelf: "center",
                     flexDirection: "row",
@@ -89,7 +92,6 @@ const Table: FunctionComponent<TableProps> = ({ columns, data }) => {
                 >
                   <FontAwesome
                     name="edit"
-                    key={item.id}
                     size={30}
                     color="green"
                     style={{
@@ -100,10 +102,10 @@ const Table: FunctionComponent<TableProps> = ({ columns, data }) => {
                       navigator.navigate("Modal", {
                         component: <AddItemScreen itemId={item.id} />,
                       });
+                      setShowAdditionalMenus("");
                     }}
                   />
                   <FontAwesome
-                    key={item.id}
                     name="remove"
                     size={30}
                     color="green"

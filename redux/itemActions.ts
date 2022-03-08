@@ -9,20 +9,30 @@ export interface ItemsState {
   items: Item[];
 }
 
-export interface AddItemAction {
+interface AddItemAction {
   type: "ADD_ITEM";
   item: Item;
 }
 
-export interface LoadItemsAction {
+interface EditItemAction {
+  type: "EDIT_ITEM";
+  item: Item;
+}
+
+interface LoadItemsAction {
   type: "LOAD_ITEMS";
   items: Item[];
 }
 
-export type KnownAction = AddItemAction | LoadItemsAction;
+export type KnownAction = AddItemAction | LoadItemsAction | EditItemAction;
 
 export const addItem = (item: Item): AddItemAction => ({
   type: ADD_ITEM,
+  item,
+});
+
+export const editItem = (item: Item): EditItemAction => ({
+  type: "EDIT_ITEM",
   item,
 });
 
@@ -33,9 +43,9 @@ export const loadItems = (items: Item[]): LoadItemsAction => ({
 
 export const actionCreators = {
   onAddItem: (itemDTO: Item): AppThunk<void, KnownAction> => {
-    return (dispatch) => {
+    return (dispatch: any) => {
       fetch(`${API_PATH}api/items/`, {
-        method: itemDTO.id && itemDTO.id !== "" ? "PUT" : "POST",
+        method: "POST",
         credentials: "omit",
         cache: "no-cache",
         body: JSON.stringify(itemDTO),
@@ -46,7 +56,7 @@ export const actionCreators = {
         .then((response) => {
           if (response.ok) {
             response.json().then((item: Item) => {
-              dispatch<any>(addItem(item));
+              dispatch(addItem(item));
             });
           }
         })
@@ -76,6 +86,30 @@ export const actionCreators = {
       });
     };
   },
+  onEditItem: (itemDTO: Item): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      fetch(`${API_PATH}api/items/`, {
+        method: "PUT",
+        credentials: "omit",
+        cache: "no-cache",
+        body: JSON.stringify(itemDTO),
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) dispatch(editItem(itemDTO));
+        })
+        .catch((error) => {
+          Toast.show({
+            type: "error",
+            text1: "Грешка",
+            text2: "Добавянето на стока беше неуспешно",
+          });
+          console.log(error);
+        });
+    };
+  },
 };
 
 const initialState = {
@@ -92,6 +126,15 @@ export const reducer: Reducer<ItemsState> = (
       return { items: [...state.items, action.item] };
     case LOAD_ITEMS:
       return { ...state.items, items: action.items };
+    case "EDIT_ITEM":
+      return {
+        items: [
+          ...state.items.map((item) => {
+            if (item.id === action.item.id) return { ...action.item };
+            return item;
+          }),
+        ],
+      };
     default:
       return state;
   }

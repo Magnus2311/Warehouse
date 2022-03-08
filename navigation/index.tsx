@@ -3,7 +3,6 @@ import {
   NavigationContainer,
   DefaultTheme,
   DarkTheme,
-  useNavigation,
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
@@ -13,11 +12,11 @@ import NotFoundScreen from "../screens/NotFoundScreen";
 import ItemsListScreen from "../screens/ItemsListScreen";
 import { RootStackParamList, RootTabParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import { ModalTypes } from "../helpers/models";
 import Register from "../screens/authentication/Register";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { connect } from "react-redux";
 import { ModalState } from "../redux/modalActions";
+import AddItemScreen from "../screens/AddItemScreen";
 
 type Props = {
   colorScheme: ColorSchemeName;
@@ -42,10 +41,6 @@ const mapStateToProps = (state: ModalState) => state.title;
 
 export default connect(mapStateToProps, null)(Navigation);
 
-/**
- * A root stack navigator is often used for displaying modals on top of all other content.
- * https://reactnavigation.org/docs/modal
- */
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function RootNavigator({ title }: { title: string }) {
@@ -92,7 +87,7 @@ function BottomTabNavigator({ navigation }: any) {
                 onPress={(e) => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
-                    component: ModalTypes.AddItemScreen,
+                    component: <AddItemScreen />,
                   });
                 }}
                 style={({ pressed }) => ({

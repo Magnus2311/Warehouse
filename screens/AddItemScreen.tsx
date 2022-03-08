@@ -7,8 +7,11 @@ import { LabeledInput, Button } from "../components/Themed";
 import { Item } from "../helpers/models";
 import { actionCreators } from "../redux/itemActions";
 import * as modalActionCreators from "../redux/modalActions";
+import { AppState } from "../redux/store";
 
 interface Props {
+  itemId?: string;
+  items: Item[];
   onItemAdded: (item: Item) => void;
   onModalTitleChanged: (title: string) => void;
 }
@@ -20,14 +23,22 @@ const emptyItem = {
 } as Item;
 
 const AddItemScreen: FunctionComponent<Props> = ({
+  itemId,
+  items,
   onItemAdded,
   onModalTitleChanged,
 }) => {
   const [item, setItem] = useState(emptyItem);
+  const currentItem = items.find((i) => i.id === itemId);
   const navigator = useNavigation();
 
   useEffect(() => {
-    onModalTitleChanged("Добавяне на стока");
+    if (currentItem) {
+      setItem(currentItem);
+      onModalTitleChanged("Редакция на стока");
+    } else {
+      onModalTitleChanged("Добавяне на стока");
+    }
   });
 
   const onTextChange = (name: string, value: string) => {
@@ -57,7 +68,7 @@ const AddItemScreen: FunctionComponent<Props> = ({
         keyboardType="numeric"
       />
       <Button
-        label="Добавяне на стока"
+        label="Редакция на стока"
         onPress={() => {
           onItemAdded(item);
           setItem(emptyItem);
@@ -67,6 +78,8 @@ const AddItemScreen: FunctionComponent<Props> = ({
     </Page>
   );
 };
+
+const mapStateToProps = (state: AppState) => state.items;
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
@@ -79,4 +92,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default connect(undefined, mapDispatchToProps)(AddItemScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(AddItemScreen);

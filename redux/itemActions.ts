@@ -34,8 +34,8 @@ export const loadItems = (items: Item[]): LoadItemsAction => ({
 export const actionCreators = {
   onAddItem: (itemDTO: Item): AppThunk<void, KnownAction> => {
     return (dispatch) => {
-      fetch(`${API_PATH}api/items/add`, {
-        method: "POST",
+      fetch(`${API_PATH}api/items/`, {
+        method: itemDTO.id && itemDTO.id !== "" ? "PUT" : "POST",
         credentials: "omit",
         cache: "no-cache",
         body: JSON.stringify(itemDTO),

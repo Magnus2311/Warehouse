@@ -6,7 +6,6 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { ReactNode } from "react";
-import { ModalTypes } from "./helpers/models";
 
 declare global {
   namespace ReactNavigation {
@@ -16,7 +15,7 @@ declare global {
 
 export type RootStackParamList = {
   Root: NavigatorScreenParams<RootTabParamList> | undefined;
-  Modal: { component: ModalTypes };
+  Modal: { component: ReactNode | ReactNode[] };
   NotFound: undefined;
 };
 

@@ -14,7 +14,3 @@ export interface Column {
   flex?: number;
   isRight?: boolean;
 }
-
-export enum ModalTypes {
-  AddItemScreen,
-}

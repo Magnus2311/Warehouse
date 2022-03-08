@@ -7,9 +7,13 @@ import { LabeledInput, Button } from "../components/Themed";
 import { Item } from "../helpers/models";
 import { actionCreators } from "../redux/itemActions";
 import * as modalActionCreators from "../redux/modalActions";
+import { AppState } from "../redux/store";
 
 interface Props {
+  itemId?: string;
+  items: Item[];
   onItemAdded: (item: Item) => void;
+  onItemEdited: (item: Item) => void;
   onModalTitleChanged: (title: string) => void;
 }
 
@@ -20,15 +24,20 @@ const emptyItem = {
 } as Item;
 
 const AddItemScreen: FunctionComponent<Props> = ({
+  itemId,
+  items,
   onItemAdded,
   onModalTitleChanged,
+  onItemEdited,
 }) => {
-  const [item, setItem] = useState(emptyItem);
+  const currentItem = items.find((i) => i.id === itemId);
+  const [item, setItem] = useState(currentItem ?? emptyItem);
   const navigator = useNavigation();
-
-  useEffect(() => {
+  if (currentItem) {
+    onModalTitleChanged("Редакция на стока");
+  } else {
     onModalTitleChanged("Добавяне на стока");
-  });
+  }
 
   const onTextChange = (name: string, value: string) => {
     setItem({
@@ -57,9 +66,9 @@ const AddItemScreen: FunctionComponent<Props> = ({
         keyboardType="numeric"
       />
       <Button
-        label="Добавяне на стока"
+        label={currentItem ? "Редакция на стока" : "Добавяне на стока"}
         onPress={() => {
-          onItemAdded(item);
+          currentItem ? onItemEdited(item) : onItemAdded(item);
           setItem(emptyItem);
           navigator.navigate("Root");
         }}
@@ -68,10 +77,15 @@ const AddItemScreen: FunctionComponent<Props> = ({
   );
 };
 
+const mapStateToProps = (state: AppState) => state.items;
+
 const mapDispatchToProps = (dispatch: any) => {
   return {
     onItemAdded: (item: Item) => {
       dispatch(actionCreators.onAddItem(item));
+    },
+    onItemEdited: (item: Item) => {
+      dispatch(actionCreators.onEditItem(item));
     },
     onModalTitleChanged: (modalTitle: string) => {
       dispatch(modalActionCreators.actionCreators.onTitleChange(modalTitle));
@@ -79,4 +93,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default connect(undefined, mapDispatchToProps)(AddItemScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(AddItemScreen);

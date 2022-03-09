@@ -24,7 +24,16 @@ interface LoadItemsAction {
   items: Item[];
 }
 
-export type KnownAction = AddItemAction | LoadItemsAction | EditItemAction;
+interface DeleteItemAction {
+  type: "DELETE_ITEM";
+  itemId: string;
+}
+
+export type KnownAction =
+  | AddItemAction
+  | LoadItemsAction
+  | EditItemAction
+  | DeleteItemAction;
 
 export const addItem = (item: Item): AddItemAction => ({
   type: ADD_ITEM,
@@ -34,6 +43,11 @@ export const addItem = (item: Item): AddItemAction => ({
 export const editItem = (item: Item): EditItemAction => ({
   type: "EDIT_ITEM",
   item,
+});
+
+export const deleteItem = (itemId: string): DeleteItemAction => ({
+  type: "DELETE_ITEM",
+  itemId,
 });
 
 export const loadItems = (items: Item[]): LoadItemsAction => ({
@@ -110,6 +124,30 @@ export const actionCreators = {
         });
     };
   },
+  onDeleteItem: (itemId: string): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      fetch(`${API_PATH}api/items/`, {
+        method: "DELETE",
+        credentials: "omit",
+        cache: "no-cache",
+        body: JSON.stringify(itemId),
+        headers: {
+          "content-type": "application/json",
+        },
+      })
+        .then((response) => {
+          if (response.ok) dispatch(deleteItem(itemId));
+        })
+        .catch((error) => {
+          Toast.show({
+            type: "error",
+            text1: "Грешка",
+            text2: "Добавянето на стока беше неуспешно",
+          });
+          console.log(error);
+        });
+    };
+  },
 };
 
 const initialState = {
@@ -134,6 +172,10 @@ export const reducer: Reducer<ItemsState> = (
             return item;
           }),
         ],
+      };
+    case "DELETE_ITEM":
+      return {
+        items: [...state.items.filter((item) => item.id !== action.itemId)],
       };
     default:
       return state;

@@ -37,6 +37,7 @@
     "react-native": "0.64.3",
     "react-native-gesture-handler": "^1.10.3",
     "react-native-paper": "^4.11.2",
+    "react-native-paper-alerts": "^0.1.1",
     "react-native-safe-area-context": "3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-swipe-gestures": "^1.0.5",

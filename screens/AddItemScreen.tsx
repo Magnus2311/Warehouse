@@ -2,11 +2,10 @@ import { useNavigation } from "@react-navigation/native";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../components/Page";
-
 import { LabeledInput, Button } from "../components/Themed";
 import { Item } from "../helpers/models";
 import { actionCreators } from "../redux/itemActions";
-import * as modalActionCreators from "../redux/modalActions";
+import { actionCreators as modalActionCreators } from "../redux/modalActions";
 import { AppState } from "../redux/store";
 
 interface Props {
@@ -88,7 +87,7 @@ const mapDispatchToProps = (dispatch: any) => {
       dispatch(actionCreators.onEditItem(item));
     },
     onModalTitleChanged: (modalTitle: string) => {
-      dispatch(modalActionCreators.actionCreators.onTitleChange(modalTitle));
+      dispatch(modalActionCreators.onTitleChange(modalTitle));
     },
   };
 };

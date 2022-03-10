@@ -1,15 +1,14 @@
-import React, { FunctionComponent, useState, useRef, useEffect } from "react";
+import React, { FunctionComponent, useState, useRef } from "react";
 import { DataTable } from "react-native-paper";
 import GestureRecognizer from "react-native-swipe-gestures";
 import { Column } from "../helpers/models";
 import { normalize } from "../helpers/screenSizing";
 import { FontAwesome } from "@expo/vector-icons";
-import { Alert, Animated } from "react-native";
+import { Animated } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import AddItemScreen from "../screens/AddItemScreen";
 import { actionCreators } from "../redux/itemActions";
 import { connect } from "react-redux";
-import { Dialog } from "react-native-paper";
 import { useAlerts } from "react-native-paper-alerts";
 import { AlertsMethods } from "react-native-paper-alerts/lib/typescript/type";
 
@@ -36,16 +35,17 @@ const Table: FunctionComponent<TableProps> = ({
   const renderHeader: FunctionComponent<RowProps> = ({ columns }) => {
     return (
       <DataTable.Header>
-        {columns.map((column) => {
-          return (
-            <DataTable.Title
-              key={column.name}
-              style={{ flex: column.flex ?? 1 }}
-            >
-              {column.name}
-            </DataTable.Title>
-          );
-        })}
+        {columns &&
+          columns.map((column) => {
+            return (
+              <DataTable.Title
+                key={column.name}
+                style={{ flex: column.flex ?? 1 }}
+              >
+                {column.name}
+              </DataTable.Title>
+            );
+          })}
       </DataTable.Header>
     );
   };
@@ -57,85 +57,86 @@ const Table: FunctionComponent<TableProps> = ({
       }}
     >
       {renderHeader({ columns })}
-      {data.map((item) => {
-        return (
-          <GestureRecognizer
-            key={item.id}
-            onSwipeLeft={() => {
-              if (item.id !== showAdditionalMenus) {
-                translateAnim.setValue(300);
-                setShowAdditionalMenus(item.id);
+      {data &&
+        data.map((item) => {
+          return (
+            <GestureRecognizer
+              key={item.id}
+              onSwipeLeft={() => {
+                if (item.id !== showAdditionalMenus) {
+                  translateAnim.setValue(300);
+                  setShowAdditionalMenus(item.id);
+                  Animated.timing(translateAnim, {
+                    toValue: 0,
+                    duration: 200,
+                    useNativeDriver: true,
+                  }).start();
+                }
+              }}
+              onSwipeRight={() => {
                 Animated.timing(translateAnim, {
-                  toValue: 0,
+                  toValue: 300,
                   duration: 200,
                   useNativeDriver: true,
-                }).start();
-              }
-            }}
-            onSwipeRight={() => {
-              Animated.timing(translateAnim, {
-                toValue: 300,
-                duration: 200,
-                useNativeDriver: true,
-              }).start(() => setShowAdditionalMenus(""));
-            }}
-          >
-            <DataTable.Row>
-              {columns.map((column) => {
-                return (
-                  <DataTable.Cell
-                    key={column.name}
+                }).start(() => setShowAdditionalMenus(""));
+              }}
+            >
+              <DataTable.Row>
+                {columns.map((column) => {
+                  return (
+                    <DataTable.Cell
+                      key={column.name}
+                      style={{
+                        flex: column.flex ?? 1,
+                      }}
+                    >
+                      {item[column.propName]}
+                    </DataTable.Cell>
+                  );
+                })}
+                {showAdditionalMenus == item.id && (
+                  <Animated.View
+                    key={item.id}
                     style={{
-                      flex: column.flex ?? 1,
+                      alignSelf: "center",
+                      flexDirection: "row",
+                      transform: [{ translateX: translateAnim }],
                     }}
                   >
-                    {item[column.propName]}
-                  </DataTable.Cell>
-                );
-              })}
-              {showAdditionalMenus == item.id && (
-                <Animated.View
-                  key={item.id}
-                  style={{
-                    alignSelf: "center",
-                    flexDirection: "row",
-                    transform: [{ translateX: translateAnim }],
-                  }}
-                >
-                  <FontAwesome
-                    name="edit"
-                    size={30}
-                    color="green"
-                    style={{
-                      alignSelf: "center",
-                      marginRight: 5,
-                    }}
-                    onPress={() => {
-                      navigator.navigate("Modal", {
-                        component: <AddItemScreen itemId={item.id} />,
-                      });
-                      setShowAdditionalMenus("");
-                    }}
-                  />
-                  <FontAwesome
-                    name="remove"
-                    size={30}
-                    color="green"
-                    style={{
-                      alignSelf: "center",
-                      marginLeft: 5,
-                      paddingBottom: 4,
-                    }}
-                    onPress={() =>
-                      createTwoButtonAlert(item.id, onDeleteItem, alerts)
-                    }
-                  />
-                </Animated.View>
-              )}
-            </DataTable.Row>
-          </GestureRecognizer>
-        );
-      })}
+                    <FontAwesome
+                      name="edit"
+                      size={30}
+                      color="green"
+                      style={{
+                        alignSelf: "center",
+                        marginRight: 5,
+                      }}
+                      onPress={() => {
+                        navigator.navigate("Modal", {
+                          component: <AddItemScreen itemId={item.id} />,
+                        });
+                        setShowAdditionalMenus("");
+                      }}
+                    />
+                    <FontAwesome
+                      name="remove"
+                      size={30}
+                      color="green"
+                      style={{
+                        alignSelf: "center",
+                        marginLeft: 5,
+                        paddingBottom: 4,
+                      }}
+                      onPress={() =>
+                        createTwoButtonAlert(item.id, onDeleteItem, alerts)
+                      }
+                    />
+                  </Animated.View>
+                )}
+              </DataTable.Row>
+            </GestureRecognizer>
+          );
+        })}
     </DataTable>
   );
 };

@@ -14,15 +14,13 @@ declare global {
 }
 
 export type RootStackParamList = {
-  Root: NavigatorScreenParams<RootTabParamList> | undefined;
+  Root: undefined;
   Modal: { component: ReactNode | ReactNode[] };
   NotFound: undefined;
+  PartnersListScreen: undefined;
+  ItemsListScreen: undefined;
+  Register: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;
-
-export type RootTabParamList = {
-  ItemsListScreen: undefined;
-  Register: undefined;
-};

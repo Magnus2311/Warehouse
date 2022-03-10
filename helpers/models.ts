@@ -8,6 +8,13 @@ export interface Item {
   sellPrice: string;
 }
 
+export interface Partner {
+  id: string;
+  name: string;
+  vatNumber: string;
+  address: string;
+}
+
 export interface Column {
   name: string;
   propName: string;

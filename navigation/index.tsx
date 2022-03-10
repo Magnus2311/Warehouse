@@ -10,13 +10,15 @@ import { ColorSchemeName, Pressable } from "react-native";
 import ModalScreen from "../screens/ModalScreen";
 import NotFoundScreen from "../screens/NotFoundScreen";
 import ItemsListScreen from "../screens/ItemsListScreen";
-import { RootStackParamList, RootTabParamList } from "../types";
+import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
 import Register from "../screens/authentication/Register";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { connect } from "react-redux";
 import { ModalState } from "../redux/modalActions";
 import AddItemScreen from "../screens/AddItemScreen";
+import PartnersListScreen from "../screens/PartnersListScreen";
+import AddPartnerScreen from "../screens/AddPartnerScreen";
 
 type Props = {
   colorScheme: ColorSchemeName;
@@ -71,7 +73,7 @@ function RootNavigator({ title }: { title: string }) {
 }
 
 function BottomTabNavigator({ navigation }: any) {
-  const Drawer = createDrawerNavigator<RootTabParamList>();
+  const Drawer = createDrawerNavigator<RootStackParamList>();
 
   return (
     <Drawer.Navigator>
@@ -88,6 +90,34 @@ function BottomTabNavigator({ navigation }: any) {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddItemScreen />,
+                  });
+                }}
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.5 : 1,
+                })}
+              >
+                <FontAwesome
+                  name="plus-circle"
+                  size={25}
+                  color="green"
+                  style={{ marginRight: 15 }}
+                />
+              </Pressable>
+            ),
+          }}
+        />
+        <Drawer.Screen
+          name="PartnersListScreen"
+          component={PartnersListScreen}
+          options={{
+            title: "Списък с партньори",
+            headerTitleAlign: "center",
+            headerRight: () => (
+              <Pressable
+                onPress={(e) => {
+                  e.preventDefault();
+                  navigation.navigate("Modal", {
+                    component: <AddPartnerScreen />,
                   });
                 }}
                 style={({ pressed }) => ({

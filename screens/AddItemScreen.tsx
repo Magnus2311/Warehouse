@@ -56,13 +56,13 @@ const AddItemScreen: FunctionComponent<Props> = ({
       <LabeledInput
         label="Доставна цена:"
         onChangeText={(txt) => onTextChange("basePrice", txt)}
-        value={item.basePrice}
+        value={item.basePrice.toString()}
         keyboardType="numeric"
       />
       <LabeledInput
         label="Продажна цена:"
         onChangeText={(txt) => onTextChange("sellPrice", txt)}
-        value={item.sellPrice}
+        value={item.sellPrice.toString()}
         keyboardType="numeric"
       />
       <Button

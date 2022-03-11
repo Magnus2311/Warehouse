@@ -21,3 +21,13 @@ export interface Column {
   flex?: number;
   isRight?: boolean;
 }
+
+export interface IListable {
+  id: string;
+}
+
+export interface DeleteModalProps {
+  title: string;
+  content: string;
+  onDelete: (itemId: string) => void;
+}

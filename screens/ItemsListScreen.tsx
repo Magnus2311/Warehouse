@@ -1,12 +1,11 @@
-import { useEffect } from "react";
-import { Platform } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Page } from "../components/Page";
-import Table from "../components/Table";
+import ItemsTable from "../components/Table/types/classes/ItemsTable";
 import { Item } from "../helpers/models";
 import { isMobile } from "../helpers/screenSizing";
 import { actionCreators } from "../redux/itemActions";
-
 import { AppState } from "../redux/store";
 
 interface Props {
@@ -18,29 +17,34 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
   items,
   onItemsLoaded,
 }) => {
+  const navigation = useNavigation();
+
   useEffect(() => {
     onItemsLoaded();
   }, []);
 
+  const columns = [
+    { name: "Име на стока", propName: "name", flex: 6 },
+    {
+      name: isMobile ? "Д-на цена" : "Доставна цена",
+      propName: "basePrice",
+      flex: isMobile ? 2 : 1,
+      isRight: true,
+    },
+    {
+      name: isMobile ? "П-на цена" : "Продажна цена",
+      propName: "sellPrice",
+      flex: isMobile ? 2 : 1,
+      isRight: true,
+    },
+  ];
+
   return (
     <Page>
-      <Table
-        data={items}
-        columns={[
-          { name: "Име на стока", propName: "name", flex: 6 },
-          {
-            name: isMobile ? "Д-на цена" : "Доставна цена",
-            propName: "basePrice",
-            flex: isMobile ? 2 : 1,
-            isRight: true,
-          },
-          {
-            name: isMobile ? "П-на цена" : "Продажна цена",
-            propName: "sellPrice",
-            flex: isMobile ? 2 : 1,
-            isRight: true,
-          },
-        ]}
+      <ItemsTable
+        columns={columns}
+        listableItems={items}
+        navigation={navigation}
       />
     </Page>
   );

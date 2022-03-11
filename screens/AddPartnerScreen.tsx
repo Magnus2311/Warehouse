@@ -1,11 +1,12 @@
 import { connect } from "react-redux";
 import { Partner } from "../helpers/models";
-import { actionCreators, PartnersState } from "../redux/partnerActions";
+import { actionCreators } from "../redux/partnerActions";
 import { actionCreators as modalActionCreators } from "../redux/modalActions";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Button, LabeledInput } from "../components/Themed";
 import { Page } from "../components/Page";
+import { AppState } from "../redux/store";
 
 type AddPartnerScreenProps = {
   partners: Partner[];
@@ -74,7 +75,7 @@ const AddPartnerScreen = ({
   );
 };
 
-const mapStateToProps = (state: PartnersState) => state.partners;
+const mapStateToProps = (state: AppState) => state.partners;
 
 const mapDispatchToProps = (dispatch: any) => {
   return {

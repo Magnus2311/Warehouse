@@ -1,10 +1,11 @@
+import { useNavigation } from "@react-navigation/native";
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Page } from "../components/Page";
-import Table from "../components/Table";
 import { Partner } from "../helpers/models";
-import { actionCreators, PartnersState } from "../redux/partnerActions";
+import { actionCreators } from "../redux/partnerActions";
 import { AppState } from "../redux/store";
+import PartnersTable from "../components/Table/types/classes/PartnersTable";
 
 type PartnersListScreenProps = {
   onPartnersLoaded: () => void;
@@ -17,25 +18,28 @@ const PartnersListScreen = ({
 }: PartnersListScreenProps) => {
   useEffect(() => onPartnersLoaded());
 
+  const columns = [
+    { name: "Име на партньора", propName: "name", flex: 4 },
+    {
+      name: "ДДС Номер",
+      propName: "vatNumber",
+      flex: 1,
+      isRight: true,
+    },
+    {
+      name: "Адрес",
+      propName: "address",
+      flex: 2,
+      isRight: true,
+    },
+  ];
+
   return (
     <Page>
-      <Table
-        data={partners}
-        columns={[
-          { name: "Име на партньора", propName: "name", flex: 4 },
-          {
-            name: "ДДС Номер",
-            propName: "vatNumber",
-            flex: 1,
-            isRight: true,
-          },
-          {
-            name: "Адрес",
-            propName: "address",
-            flex: 2,
-            isRight: true,
-          },
-        ]}
+      <PartnersTable
+        columns={columns}
+        listableItems={partners}
+        navigation={useNavigation()}
       />
     </Page>
   );

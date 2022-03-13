@@ -1,7 +1,11 @@
-import Toast from "react-native-toast-message";
 import { Action, Reducer } from "redux";
-import { API_PATH } from "../helpers/constants";
 import { Item } from "../helpers/models";
+import {
+  deletee,
+  get,
+  post,
+  put,
+} from "../services/communication/connectionService";
 import { ADD_ITEM, LOAD_ITEMS } from "./constants";
 import { AppThunk } from "./store";
 
@@ -58,94 +62,42 @@ export const loadItems = (items: Item[]): LoadItemsAction => ({
 export const actionCreators = {
   onAddItem: (itemDTO: Item): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      fetch(`${API_PATH}api/items/`, {
-        method: "POST",
-        credentials: "omit",
-        cache: "no-cache",
-        body: JSON.stringify(itemDTO),
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            response.json().then((item: Item) => {
-              dispatch(addItem(item));
-            });
-          }
+      post<Item>("api/items/", itemDTO)
+        .then((item) => {
+          dispatch(addItem(item));
         })
-        .catch((error) => {
-          Toast.show({
-            type: "error",
-            text1: "Грешка",
-            text2: "Добавянето на стока беше неуспешно",
-          });
-          console.log(error);
+        .catch((ex) => {
+          console.log(ex);
         });
     };
   },
   onLoadItems: (): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      fetch(`${API_PATH}api/items/`).then((response) => {
-        if (response.ok) {
-          response
-            .json()
-            .then((items) => {
-              dispatch(loadItems(items));
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      });
+      get<Item>("api/items/")
+        .then((items) => {
+          dispatch(loadItems(items));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     };
   },
   onEditItem: (itemDTO: Item): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      fetch(`${API_PATH}api/items/`, {
-        method: "PUT",
-        credentials: "omit",
-        cache: "no-cache",
-        body: JSON.stringify(itemDTO),
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) dispatch(editItem(itemDTO));
+      put<Item>("api/items/", itemDTO)
+        .then((isUpdated) => {
+          isUpdated && dispatch(editItem(itemDTO));
         })
-        .catch((error) => {
-          Toast.show({
-            type: "error",
-            text1: "Грешка",
-            text2: "Добавянето на стока беше неуспешно",
-          });
-          console.log(error);
+        .catch((ex) => {
+          console.log(ex);
         });
     };
   },
   onDeleteItem: (itemId: string): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      fetch(`${API_PATH}api/items/`, {
-        method: "DELETE",
-        credentials: "omit",
-        cache: "no-cache",
-        body: JSON.stringify(itemId),
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) dispatch(deleteItem(itemId));
-        })
-        .catch((error) => {
-          Toast.show({
-            type: "error",
-            text1: "Грешка",
-            text2: "Добавянето на стока беше неуспешно",
-          });
-          console.log(error);
-        });
+      deletee("api/items/", itemId).then((isDeleted) => {
+        isDeleted && dispatch(deleteItem(itemId));
+      });
     };
   },
 };

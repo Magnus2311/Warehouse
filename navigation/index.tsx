@@ -19,6 +19,8 @@ import { ModalState } from "../redux/modalActions";
 import AddItemScreen from "../screens/AddItemScreen";
 import PartnersListScreen from "../screens/PartnersListScreen";
 import AddPartnerScreen from "../screens/AddPartnerScreen";
+import SalesListScreen from "../screens/sales/SalesListScreen";
+import AddSaleScreen from "../screens/sales/AddSaleScreen";
 
 type Props = {
   colorScheme: ColorSchemeName;
@@ -118,6 +120,35 @@ function BottomTabNavigator({ navigation }: any) {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddPartnerScreen />,
+                  });
+                }}
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.5 : 1,
+                })}
+              >
+                <FontAwesome
+                  name="plus-circle"
+                  size={25}
+                  color="green"
+                  style={{ marginRight: 15 }}
+                />
+              </Pressable>
+            ),
+          }}
+        />
+
+        <Drawer.Screen
+          name="SalesListScreen"
+          component={SalesListScreen}
+          options={{
+            title: "Списък с продажби",
+            headerTitleAlign: "center",
+            headerRight: () => (
+              <Pressable
+                onPress={(e) => {
+                  e.preventDefault();
+                  navigation.navigate("Modal", {
+                    component: <AddSaleScreen />,
                   });
                 }}
                 style={({ pressed }) => ({

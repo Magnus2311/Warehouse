@@ -19,6 +19,7 @@ export type RootStackParamList = {
   NotFound: undefined;
   PartnersListScreen: undefined;
   ItemsListScreen: undefined;
+  SalesListScreen: undefined;
   Register: undefined;
 };
 

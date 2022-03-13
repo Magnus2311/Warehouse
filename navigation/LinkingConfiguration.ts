@@ -24,6 +24,7 @@ const linking: LinkingOptions<RootStackParamList> = {
       },
       ItemsListScreen: "ItemsListScreen",
       PartnersListScreen: "PartnersListScreen",
+      SalesListScreen: "SalesListScreen",
       Register: "Register",
       Modal: "modal",
       NotFound: "*",

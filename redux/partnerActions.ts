@@ -1,7 +1,11 @@
-import Toast from "react-native-toast-message";
 import { Action, Reducer } from "redux";
-import { API_PATH } from "../helpers/constants";
 import { Partner } from "../helpers/models";
+import {
+  deletee,
+  get,
+  post,
+  put,
+} from "../services/communication/connectionService";
 import { AppThunk } from "./store";
 
 export interface PartnersState {
@@ -57,94 +61,34 @@ export const loadPartners = (partners: Partner[]): LoadPartnersAction => ({
 export const actionCreators = {
   onAddPartner: (partnerDTO: Partner): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      fetch(`${API_PATH}api/partners/`, {
-        method: "POST",
-        credentials: "omit",
-        cache: "no-cache",
-        body: JSON.stringify(partnerDTO),
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) {
-            response.json().then((partner: Partner) => {
-              dispatch(addPartner(partner));
-            });
-          }
+      post<Partner>("api/partners/", partnerDTO)
+        .then((partner) => {
+          dispatch(addPartner(partner));
         })
-        .catch((error) => {
-          Toast.show({
-            type: "error",
-            text1: "Грешка",
-            text2: "Добавянето на стока беше неуспешно",
-          });
-          console.log(error);
-        });
+        .catch((er) => console.log(er));
     };
   },
   onLoadPartners: (): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      fetch(`${API_PATH}api/partners/`).then((response) => {
-        if (response.ok) {
-          response
-            .json()
-            .then((partners) => {
-              dispatch(loadPartners(partners));
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      });
+      get<Partner>("api/partners/")
+        .then((partners) => {
+          dispatch(loadPartners(partners));
+        })
+        .catch((er) => console.log(er));
     };
   },
   onEditPartner: (partnerDTO: Partner): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      fetch(`${API_PATH}api/partners/`, {
-        method: "PUT",
-        credentials: "omit",
-        cache: "no-cache",
-        body: JSON.stringify(partnerDTO),
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) dispatch(editPartner(partnerDTO));
-        })
-        .catch((error) => {
-          Toast.show({
-            type: "error",
-            text1: "Грешка",
-            text2: "Добавянето на стока беше неуспешно",
-          });
-          console.log(error);
-        });
+      put("api/partners/", partnerDTO).then(
+        (isUpdated) => isUpdated && dispatch(editPartner(partnerDTO))
+      );
     };
   },
   onDeletePartner: (partnerId: string): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      fetch(`${API_PATH}api/partners/`, {
-        method: "DELETE",
-        credentials: "omit",
-        cache: "no-cache",
-        body: JSON.stringify(partnerId),
-        headers: {
-          "content-type": "application/json",
-        },
-      })
-        .then((response) => {
-          if (response.ok) dispatch(deletePartner(partnerId));
-        })
-        .catch((error) => {
-          Toast.show({
-            type: "error",
-            text1: "Грешка",
-            text2: "Добавянето на стока беше неуспешно",
-          });
-          console.log(error);
-        });
+      deletee("api/partners/", partnerId).then(
+        (isDeleted) => isDeleted && dispatch(deletePartner(partnerId))
+      );
     };
   },
 };

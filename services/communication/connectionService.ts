@@ -13,7 +13,7 @@ export async function get<T>(url: string): Promise<T[]> {
   return [];
 }
 
-export async function put<T>(url: string, data: T): Promise<T> {
+export async function put<T>(url: string, data: T): Promise<boolean> {
   const response = await fetch(`${API_PATH}${url}`, {
     method: "PUT",
     credentials: "omit",
@@ -24,15 +24,7 @@ export async function put<T>(url: string, data: T): Promise<T> {
     },
   });
 
-  if (response.ok) {
-    try {
-      return (await response.json()) as T;
-    } catch (ex) {
-      throw ex;
-    }
-  }
-
-  return {} as T;
+  return response.ok;
 }
 
 export async function post<T>(url: string, data: T): Promise<T> {
@@ -68,7 +60,5 @@ export async function deletee(url: string, id: string): Promise<boolean> {
     },
   });
 
-  if (response.ok) return true;
-
-  return false;
+  return response.ok;
 }

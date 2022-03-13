@@ -1,6 +1,4 @@
-import Toast from "react-native-toast-message";
 import { Action, Reducer } from "redux";
-import { API_PATH } from "../helpers/constants";
 import { Item } from "../helpers/models";
 import {
   deletee,
@@ -67,19 +65,9 @@ export const actionCreators = {
       post<Item>("api/items/", itemDTO)
         .then((item) => {
           dispatch(addItem(item));
-          Toast.show({
-            type: "error",
-            text1: "Грешка",
-            text2: "Добавянето на стока беше неуспешно",
-          });
         })
         .catch((ex) => {
           console.log(ex);
-          Toast.show({
-            type: "error",
-            text1: "Грешка",
-            text2: "Добавянето на стока беше неуспешно",
-          });
         });
     };
   },
@@ -97,30 +85,18 @@ export const actionCreators = {
   onEditItem: (itemDTO: Item): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
       put<Item>("api/items/", itemDTO)
-        .then((item) => {
-          dispatch(editItem(item));
+        .then((isUpdated) => {
+          isUpdated && dispatch(editItem(itemDTO));
         })
         .catch((ex) => {
           console.log(ex);
-          Toast.show({
-            type: "error",
-            text1: "Грешка",
-            text2: "Редакцията на стока беше неуспешна",
-          });
         });
     };
   },
   onDeleteItem: (itemId: string): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
       deletee("api/items/", itemId).then((isDeleted) => {
-        if (isDeleted) dispatch(deleteItem(itemId));
-        else {
-          Toast.show({
-            type: "error",
-            text1: "Грешка",
-            text2: "Изтриването на стока беше неуспешно",
-          });
-        }
+        isDeleted && dispatch(deleteItem(itemId));
       });
     };
   },

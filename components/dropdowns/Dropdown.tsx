@@ -1,15 +1,21 @@
 import React, { FunctionComponent, useState } from "react";
-import { Pressable, Text, TextInput } from "react-native";
-import { View } from "../Themed";
+import { Pressable, Text } from "react-native";
+import { isAndroid, normalize } from "../../helpers/screenSizing";
+import { LabeledInput, View } from "../Themed";
 
 interface DropdownProps {
-  items: string[];
+  items: {
+    id: string,
+    title: string
+  }[];
+  setIsOpened?: (isOpened: boolean) => void;
   handleItemChosen: (item: string) => void;
 }
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
   items,
   handleItemChosen,
+  setIsOpened
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [inputText, setInputText] = useState("");
@@ -17,31 +23,40 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 
   const handleInputFocus = () => {
     setIsDropdownOpen(true);
+    setIsOpened && setIsOpened(true);
   };
 
   const handleInputChange = (e: string) => {
     setInputText(e);
     setShownItems(
-      items.filter((item) => item.toLowerCase().includes(e.toLowerCase()))
+      items.filter((item) => item.title.toLowerCase().includes(e.toLowerCase()))
     );
   };
 
-  const handleItemClick = (item: string) => {
-    setInputText(item);
-    handleItemChosen(item);
+  const handleItemClick = (item: {
+    id: string,
+    title: string
+  }) => {
+    setInputText(item.title);
+    handleItemChosen(item.id);
   };
 
   const handleOnBlur = () => {
-    setTimeout(() => setIsDropdownOpen(false), 50);
+    setTimeout(() => {
+      setIsDropdownOpen(false);
+      setIsOpened && setIsOpened(false);
+    }, 85);
   };
 
   return (
     <View
       style={{
         position: "relative",
+        borderColor: "black"
       }}
     >
-      <TextInput
+      <LabeledInput
+        label="Име на партньора"
         onFocus={handleInputFocus}
         onBlur={handleOnBlur}
         value={inputText}
@@ -50,30 +65,36 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
       <View
         style={{
           maxHeight: isDropdownOpen ? 200 : 0,
+          top: 55,
           position: "absolute",
           overflow: "hidden",
-          zIndex: 10000,
           backgroundColor: "white",
-          width: 100,
+          width: normalize(300),
+          justifyContent: "center",
+          alignItems: "center",
+          margin: "0 auto"
         }}
       >
-        {shownItems.map((item, idx) => (
+        <View style={{
+          width: normalize(300),
+          maxWidth: 500,
+        }}>
+          {shownItems.map((item) => (
           <Pressable
-            key={item + idx}
+            key={item.id}
             onPress={() => {
               handleItemClick(item);
             }}
             style={{
-              maxHeight: isDropdownOpen ? 38 : 0,
+              maxHeight: isDropdownOpen ? 25 : 0,
               paddingLeft: 12,
               backgroundColor: "white",
-              zIndex: 10000,
-              height: 38,
+              height: 25,
             }}
           >
-            <Text>{item}</Text>
+            <Text>{item.title}</Text>
           </Pressable>
-        ))}
+        ))}</View>
       </View>
     </View>
   );

@@ -1,13 +1,13 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import { Button } from "../../components/Themed";
 import { Item, Partner, Sale } from "../../helpers/models";
 import { actionCreators as salesActions } from "../../redux/salesActions";
+import { actionCreators as partnersActions } from "../../redux/partnerActions";
 import { actionCreators as modalActions } from "../../redux/modalActions";
 import { AppState } from "../../redux/store";
-import { AutocompleteDropdown } from "react-native-autocomplete-dropdown";
 import Dropdown from "../../components/dropdowns/Dropdown";
 
 interface Props {
@@ -18,6 +18,7 @@ interface Props {
   onSaleAdded: (sale: Sale) => void;
   onSaleEdited: (sale: Sale) => void;
   onModalTitleChanged: (title: string) => void;
+  onPartnersLoaded: () => void;
 }
 
 const emptySale = {
@@ -34,13 +35,17 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   onSaleAdded,
   onModalTitleChanged,
   onSaleEdited,
-  items,
   partners,
+  onPartnersLoaded
 }) => {
   const currentSale = sales.find((i) => i.id === saleId);
   const [sale, setSale] = useState(currentSale ?? emptySale);
+  const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const [selectedItem, setSelectedItem] = useState({} as Partner);
-  const [selectableItems] = useState(partners.map((partner) => partner.name));
+  const [selectableItems] = useState(partners.map((partner) => ({
+    id: partner.id,
+    title: partner.name
+  })));
   const navigator = useNavigation();
   if (currentSale) {
     onModalTitleChanged("Редакция на стока");
@@ -48,9 +53,9 @@ const AddSaleScreen: FunctionComponent<Props> = ({
     onModalTitleChanged("Добавяне на стока");
   }
 
-  const handlePartnerSelect = (partnerName: string) => {
+  const handlePartnerSelect = (partnerId: string) => {
     setSelectedItem(
-      partners.find((p) => p.name === partnerName) ?? ({} as Partner)
+      partners.find((p) => p.id === partnerId) ?? ({} as Partner)
     );
   };
 
@@ -61,20 +66,25 @@ const AddSaleScreen: FunctionComponent<Props> = ({
     });
   };
 
+  useEffect(() => {
+    onPartnersLoaded();
+  })
+
   return (
     <Page>
       <Dropdown
         items={selectableItems}
         handleItemChosen={handlePartnerSelect}
+        setIsOpened={setIsDropdownOpened}
       />
-      <Button
+      {!isDropdownOpened && <Button
         label={currentSale ? "Редакция на стока" : "Добавяне на стока"}
         onPress={() => {
           currentSale ? onSaleEdited(sale) : onSaleAdded(sale);
           setSale(emptySale);
           navigator.navigate("Root");
         }}
-      />
+      />}
     </Page>
   );
 };
@@ -98,6 +108,9 @@ const mapDispatchToProps = (dispatch: any) => {
     onModalTitleChanged: (modalTitle: string) => {
       dispatch(modalActions.onTitleChange(modalTitle));
     },
+    onPartnersLoaded: () => {
+      dispatch(partnersActions.onLoadPartners());
+    }
   };
 };
 

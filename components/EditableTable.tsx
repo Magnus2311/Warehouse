@@ -44,16 +44,18 @@ const EditableTable = ({ items }: Props) => {
           borderBottomColor: "grey",
         }}
       >
-        <View style={{ flexDirection: "row", flex: 5 }}>Име на стоката</View>
+        <View style={{ flexDirection: "row", flex: 5 }}>
+          <Text>Име на стоката</Text>
+        </View>
         <View
           style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}
         >
-          Количество
+          <Text>Количество</Text>
         </View>
         <View
           style={{ flexDirection: "row", flex: 1, justifyContent: "flex-end" }}
         >
-          Общо сума:
+          <Text>Общо сума:</Text>
         </View>
       </View>
 
@@ -135,7 +137,7 @@ const EditableTable = ({ items }: Props) => {
                     justifyContent: "flex-end",
                   }}
                 >
-                  {selectedItem.total}
+                  <Text>{selectedItem.total}</Text>
                 </Pressable>
               </View>
             );
@@ -189,7 +191,7 @@ const EditableTable = ({ items }: Props) => {
                 justifyContent: "flex-end",
               }}
             >
-              1
+              <Text>1</Text>
             </View>
           </View>
         </>

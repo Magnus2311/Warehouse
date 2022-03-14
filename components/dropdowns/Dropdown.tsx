@@ -33,7 +33,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   const handleInputChange = (e: string) => {
     setInputText(e);
     setShownItems(
-      items.filter(item => item.title.toLowerCase().includes(e.toLowerCase()))
+      items.filter((item) => item.title.toLowerCase().includes(e.toLowerCase()))
     );
   };
 
@@ -43,7 +43,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   };
 
   const handleOnBlur = () => {
-    setTimeout(() => setIsDropdownOpen(false), 85);
+    setTimeout(() => setIsDropdownOpen(false), 120);
   };
 
   return (
@@ -92,7 +92,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
             maxWidth: 500,
           }}
         >
-          {shownItems.map(item => (
+          {shownItems.map((item) => (
             <Pressable
               key={item.id}
               onPress={() => {

@@ -45,13 +45,21 @@ const EditableTable = ({ items }: Props) => {
         }}
       >
         <View style={{ flexDirection: "row", flex: 5 }}>Име на стоката</View>
-        <View style={{ flexDirection: "row", flex: 1 }}>Количество</View>
-        <View style={{ flexDirection: "row", flex: 2 }}>Общо сума:</View>
+        <View
+          style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}
+        >
+          Количество
+        </View>
+        <View
+          style={{ flexDirection: "row", flex: 1, justifyContent: "flex-end" }}
+        >
+          Общо сума:
+        </View>
       </View>
 
       {selectedItems && (
         <>
-          {selectedItems.map(selectedItem => {
+          {selectedItems.map((selectedItem) => {
             return (
               <View
                 style={{
@@ -67,13 +75,13 @@ const EditableTable = ({ items }: Props) => {
                       id: selectedItem.id,
                       title: selectedItem.name,
                     }}
-                    items={items.map(item => ({
+                    items={items.map((item) => ({
                       id: item.id,
                       title: item.name,
                     }))}
-                    handleItemChosen={itemId => {
+                    handleItemChosen={(itemId) => {
                       const currentItem = items.find(
-                        item => item.id === itemId
+                        (item) => item.id === itemId
                       )!;
                       setSelectedItems([
                         ...selectedItems,
@@ -88,7 +96,11 @@ const EditableTable = ({ items }: Props) => {
                   />
                 </View>
                 <Pressable
-                  style={{ flexDirection: "row", flex: 1 }}
+                  style={{
+                    flexDirection: "row",
+                    flex: 1,
+                    justifyContent: "center",
+                  }}
                   onPress={() => {
                     setEditingItem({
                       id: selectedItem.id,
@@ -101,9 +113,9 @@ const EditableTable = ({ items }: Props) => {
                   editingItem.col === 1 ? (
                     <Input
                       value={selectedItem.qtty.toString()}
-                      onChangeText={text =>
+                      onChangeText={(text) =>
                         setSelectedItems([
-                          ...selectedItems.filter(item => {
+                          ...selectedItems.filter((item) => {
                             if (item.id === editingItem.id) {
                               return { ...item, qtty: text };
                             }
@@ -116,7 +128,13 @@ const EditableTable = ({ items }: Props) => {
                     <Text>{selectedItem.qtty}</Text>
                   )}
                 </Pressable>
-                <Pressable style={{ flexDirection: "row", flex: 2 }}>
+                <Pressable
+                  style={{
+                    flexDirection: "row",
+                    flex: 1,
+                    justifyContent: "flex-end",
+                  }}
+                >
                   {selectedItem.total}
                 </Pressable>
               </View>
@@ -137,12 +155,12 @@ const EditableTable = ({ items }: Props) => {
                   id: "",
                   title: "",
                 }}
-                items={items.map(item => ({
+                items={items.map((item) => ({
                   id: item.id,
                   title: item.name,
                 }))}
-                handleItemChosen={itemId => {
-                  const currentItem = items.find(item => item.id === itemId)!;
+                handleItemChosen={(itemId) => {
+                  const currentItem = items.find((item) => item.id === itemId)!;
                   setSelectedItems([
                     ...selectedItems,
                     {
@@ -155,10 +173,24 @@ const EditableTable = ({ items }: Props) => {
                 }}
               />
             </View>
-            <View style={{ flexDirection: "row", flex: 1 }}>
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 1,
+                justifyContent: "center",
+              }}
+            >
               <Text>1</Text>
             </View>
-            <View style={{ flexDirection: "row", flex: 2 }}>1</View>
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 1,
+                justifyContent: "flex-end",
+              }}
+            >
+              1
+            </View>
           </View>
         </>
       )}

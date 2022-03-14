@@ -19,7 +19,6 @@ interface Props {
   onSaleAdded: (sale: Sale) => void;
   onSaleEdited: (sale: Sale) => void;
   onModalTitleChanged: (title: string) => void;
-  onPartnersLoaded: () => void;
 }
 
 const emptySale = {
@@ -37,13 +36,12 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   onModalTitleChanged,
   onSaleEdited,
   partners,
-  onPartnersLoaded,
 }) => {
-  const currentSale = sales.find(i => i.id === saleId);
+  const currentSale = sales.find((i) => i.id === saleId);
   const [sale, setSale] = useState(currentSale ?? emptySale);
   const [selectedItem, setSelectedItem] = useState({} as Partner);
   const [selectableItems] = useState(
-    partners.map(partner => ({
+    partners.map((partner) => ({
       id: partner.id,
       title: partner.name,
     }))
@@ -56,7 +54,9 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   }
 
   const handlePartnerSelect = (partnerId: string) => {
-    setSelectedItem(partners.find(p => p.id === partnerId) ?? ({} as Partner));
+    setSelectedItem(
+      partners.find((p) => p.id === partnerId) ?? ({} as Partner)
+    );
   };
 
   const onTextChange = (name: string, value: string) => {
@@ -65,10 +65,6 @@ const AddSaleScreen: FunctionComponent<Props> = ({
       [name]: value,
     });
   };
-
-  useEffect(() => {
-    onPartnersLoaded();
-  });
 
   return (
     <Page>
@@ -109,16 +105,7 @@ const mapDispatchToProps = (dispatch: any) => {
     onModalTitleChanged: (modalTitle: string) => {
       dispatch(modalActions.onTitleChange(modalTitle));
     },
-    onPartnersLoaded: () => {
-      dispatch(partnersActions.onLoadPartners());
-    },
   };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddSaleScreen);
-function TAutocompleteDropdownItem(
-  arg0: { id: string; title: string },
-  TAutocompleteDropdownItem: any
-): [any, any] {
-  throw new Error("Function not implemented.");
-}

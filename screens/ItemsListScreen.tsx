@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
+import { Animated } from "react-native";
 import { connect } from "react-redux";
 import { Page } from "../components/Page";
 import ItemsTable from "../components/Table/types/classes/ItemsTable";

@@ -9,6 +9,7 @@ import { actionCreators as partnersActions } from "../../redux/partnerActions";
 import { actionCreators as modalActions } from "../../redux/modalActions";
 import { AppState } from "../../redux/store";
 import Dropdown from "../../components/dropdowns/Dropdown";
+import EditableTable from "../../components/EditableTable";
 
 interface Props {
   saleId?: string;
@@ -36,16 +37,17 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   onModalTitleChanged,
   onSaleEdited,
   partners,
-  onPartnersLoaded
+  onPartnersLoaded,
 }) => {
-  const currentSale = sales.find((i) => i.id === saleId);
+  const currentSale = sales.find(i => i.id === saleId);
   const [sale, setSale] = useState(currentSale ?? emptySale);
-  const [isDropdownOpened, setIsDropdownOpened] = useState(false);
   const [selectedItem, setSelectedItem] = useState({} as Partner);
-  const [selectableItems] = useState(partners.map((partner) => ({
-    id: partner.id,
-    title: partner.name
-  })));
+  const [selectableItems] = useState(
+    partners.map(partner => ({
+      id: partner.id,
+      title: partner.name,
+    }))
+  );
   const navigator = useNavigation();
   if (currentSale) {
     onModalTitleChanged("Редакция на стока");
@@ -54,9 +56,7 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   }
 
   const handlePartnerSelect = (partnerId: string) => {
-    setSelectedItem(
-      partners.find((p) => p.id === partnerId) ?? ({} as Partner)
-    );
+    setSelectedItem(partners.find(p => p.id === partnerId) ?? ({} as Partner));
   };
 
   const onTextChange = (name: string, value: string) => {
@@ -68,23 +68,24 @@ const AddSaleScreen: FunctionComponent<Props> = ({
 
   useEffect(() => {
     onPartnersLoaded();
-  })
+  });
 
   return (
     <Page>
       <Dropdown
         items={selectableItems}
         handleItemChosen={handlePartnerSelect}
-        setIsOpened={setIsDropdownOpened}
+        label="Име на партньора"
       />
-      {!isDropdownOpened && <Button
+      <EditableTable />
+      <Button
         label={currentSale ? "Редакция на стока" : "Добавяне на стока"}
         onPress={() => {
           currentSale ? onSaleEdited(sale) : onSaleAdded(sale);
           setSale(emptySale);
           navigator.navigate("Root");
         }}
-      />}
+      />
     </Page>
   );
 };
@@ -110,7 +111,7 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     onPartnersLoaded: () => {
       dispatch(partnersActions.onLoadPartners());
-    }
+    },
   };
 };
 

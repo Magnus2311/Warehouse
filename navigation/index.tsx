@@ -82,6 +82,7 @@ function BottomTabNavigator({ navigation }: any) {
       <Drawer.Group>
         <Drawer.Screen
           name="ItemsListScreen"
+          navigationKey="/ItemsListScreen"
           component={ItemsListScreen}
           options={{
             title: "Списък със стоки",
@@ -110,6 +111,7 @@ function BottomTabNavigator({ navigation }: any) {
         />
         <Drawer.Screen
           name="PartnersListScreen"
+          navigationKey="PartnersListScreen"
           component={PartnersListScreen}
           options={{
             title: "Списък с партньори",

@@ -1,67 +1,78 @@
 import React, { FunctionComponent, useState } from "react";
 import { Pressable, Text } from "react-native";
 import { isAndroid, normalize } from "../../helpers/screenSizing";
-import { LabeledInput, View } from "../Themed";
+import { Input, LabeledInput, View } from "../Themed";
 
 interface DropdownProps {
   items: {
-    id: string,
-    title: string
+    id: string;
+    title: string;
   }[];
-  setIsOpened?: (isOpened: boolean) => void;
-  handleItemChosen: (item: string) => void;
+  selectedItem?: {
+    id: string;
+    title: string;
+  };
+  handleItemChosen: (itemId: string) => void;
+  label?: string;
 }
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
   items,
   handleItemChosen,
-  setIsOpened
+  selectedItem,
+  label,
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState(selectedItem?.title ?? "");
   const [shownItems, setShownItems] = useState(items);
 
   const handleInputFocus = () => {
     setIsDropdownOpen(true);
-    setIsOpened && setIsOpened(true);
   };
 
   const handleInputChange = (e: string) => {
     setInputText(e);
     setShownItems(
-      items.filter((item) => item.title.toLowerCase().includes(e.toLowerCase()))
+      items.filter(item => item.title.toLowerCase().includes(e.toLowerCase()))
     );
   };
 
-  const handleItemClick = (item: {
-    id: string,
-    title: string
-  }) => {
+  const handleItemClick = (item: { id: string; title: string }) => {
     setInputText(item.title);
     handleItemChosen(item.id);
   };
 
   const handleOnBlur = () => {
-    setTimeout(() => {
-      setIsDropdownOpen(false);
-      setIsOpened && setIsOpened(false);
-    }, 85);
+    setTimeout(() => setIsDropdownOpen(false), 85);
   };
 
   return (
     <View
       style={{
         position: "relative",
-        borderColor: "black"
+        borderColor: "black",
       }}
     >
-      <LabeledInput
-        label="Име на партньора"
-        onFocus={handleInputFocus}
-        onBlur={handleOnBlur}
-        value={inputText}
-        onChangeText={handleInputChange}
-      />
+      {label ? (
+        <LabeledInput
+          label={label}
+          onFocus={handleInputFocus}
+          onBlur={handleOnBlur}
+          value={inputText}
+          onChangeText={handleInputChange}
+        />
+      ) : (
+        <Input
+          onFocus={handleInputFocus}
+          onBlur={handleOnBlur}
+          value={inputText}
+          onChangeText={handleInputChange}
+          style={{
+            borderWidth: 0,
+          }}
+        />
+      )}
+
       <View
         style={{
           maxHeight: isDropdownOpen ? 200 : 0,
@@ -72,29 +83,33 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
           width: normalize(300),
           justifyContent: "center",
           alignItems: "center",
-          margin: "0 auto"
+          margin: "0 auto",
         }}
       >
-        <View style={{
-          width: normalize(300),
-          maxWidth: 500,
-        }}>
-          {shownItems.map((item) => (
-          <Pressable
-            key={item.id}
-            onPress={() => {
-              handleItemClick(item);
-            }}
-            style={{
-              maxHeight: isDropdownOpen ? 25 : 0,
-              paddingLeft: 12,
-              backgroundColor: "white",
-              height: 25,
-            }}
-          >
-            <Text>{item.title}</Text>
-          </Pressable>
-        ))}</View>
+        <View
+          style={{
+            width: normalize(300),
+            maxWidth: 500,
+          }}
+        >
+          {shownItems.map(item => (
+            <Pressable
+              key={item.id}
+              onPress={() => {
+                handleItemClick(item);
+              }}
+              style={{
+                maxHeight: isDropdownOpen ? 25 : 0,
+                paddingLeft: 12,
+                backgroundColor: "white",
+                height: 25,
+                zIndex: 15000,
+              }}
+            >
+              <Text>{item.title}</Text>
+            </Pressable>
+          ))}
+        </View>
       </View>
     </View>
   );

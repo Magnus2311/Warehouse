@@ -115,7 +115,7 @@ export function Input(props: InputProps) {
         {
           color,
           borderColor: color,
-          borderWidth: 1,
+          borderWidth: 0.2,
           width: normalize(300),
           maxWidth: 500,
           borderRadius: 5,
@@ -146,7 +146,7 @@ export function Button(props: ButtonProps) {
           alignItems: "center",
           marginTop: normalize(5),
           borderColor: "rgba(240,246,252,0.1)",
-          zIndex: 1
+          zIndex: 1,
         },
         style,
       ]}

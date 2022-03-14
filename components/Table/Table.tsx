@@ -5,7 +5,6 @@ import { Column, DeleteModalProps } from "../../helpers/models";
 import { normalize } from "../../helpers/screenSizing";
 import { FontAwesome } from "@expo/vector-icons";
 import { Animated } from "react-native";
-import { connect } from "react-redux";
 import { useAlerts } from "react-native-paper-alerts";
 import { AlertsMethods } from "react-native-paper-alerts/lib/typescript/type";
 

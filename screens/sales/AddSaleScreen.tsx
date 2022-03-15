@@ -70,6 +70,7 @@ const AddSaleScreen: FunctionComponent<Props> = ({
         items={selectableItems}
         handleItemChosen={handlePartnerSelect}
         label="Име на партньора"
+        border={true}
       />
       <EditableTable />
       <Button

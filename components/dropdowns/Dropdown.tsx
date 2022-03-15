@@ -14,6 +14,7 @@ interface DropdownProps {
   };
   handleItemChosen: (itemId: string) => void;
   label?: string;
+  border?: boolean;
 }
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
@@ -21,6 +22,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   handleItemChosen,
   selectedItem,
   label,
+  border,
 }) => {
   const [inputText, setInputText] = useState(selectedItem?.title ?? "");
   const [shownItems, setShownItems] = useState(items);
@@ -87,6 +89,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
           onBlur={handleOnBlur}
           value={inputText}
           onChangeText={handleInputChange}
+          style={{
+            borderWidth: border ? 1 : 0,
+          }}
         />
 
         <Animated.View

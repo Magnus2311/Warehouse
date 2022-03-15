@@ -5,22 +5,48 @@ import { Page } from "../../components/Page";
 import SalesTable from "../../components/Table/types/classes/SalesTable";
 import { Sale } from "../../helpers/models";
 import { isMobile } from "../../helpers/screenSizing";
-import { actionCreators } from "../../redux/salesActions";
+import { actionCreators as salesActions } from "../../redux/salesActions";
+import { actionCreators as partnersActions } from "../../redux/partnerActions";
+import { actionCreators as itemActions } from "../../redux/itemActions";
 import { AppState } from "../../redux/store";
 
 interface Props {
   onSalesLoaded: () => void;
+  onPartnersLoaded: () => void;
+  onItemsLoaded: () => void;
   sales: Sale[];
 }
+
+const mapStateToProps = (state: AppState) => {
+  return state.sales;
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    onSalesLoaded: () => {
+      dispatch(salesActions.onLoadSales());
+    },
+    onPartnersLoaded: () => {
+      dispatch(partnersActions.onLoadPartners());
+    },
+    onItemsLoaded: () => {
+      dispatch(itemActions.onLoadItems());
+    }
+  };
+};
 
 const SalesListScreen: React.FunctionComponent<Props> = ({
   sales,
   onSalesLoaded,
+  onItemsLoaded,
+  onPartnersLoaded
 }) => {
   const navigation = useNavigation();
 
   useEffect(() => {
     onSalesLoaded();
+    onItemsLoaded();
+    onPartnersLoaded();
   }, []);
 
   const columns = [
@@ -48,18 +74,6 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
       />
     </Page>
   );
-};
-
-const mapStateToProps = (state: AppState) => {
-  return state.sales;
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    onSalesLoaded: () => {
-      dispatch(actionCreators.onLoadSales());
-    },
-  };
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SalesListScreen);

@@ -1,6 +1,6 @@
 import React, { FunctionComponent, useRef, useState } from "react";
 import { Animated, Pressable, Text } from "react-native";
-import { isAndroid, normalize } from "../../helpers/screenSizing";
+import { normalize } from "../../helpers/screenSizing";
 import { Input, LabeledInput, View } from "../Themed";
 
 interface DropdownProps {
@@ -22,15 +22,25 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   selectedItem,
   label,
 }) => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [inputText, setInputText] = useState(selectedItem?.title ?? "");
   const [shownItems, setShownItems] = useState(items);
-  const height = useRef(new Animated.Value(50)).current;
+  const height = useRef(new Animated.Value(label ? 50 : 26.67)).current;
+  const rowHeight = useRef(new Animated.Value(26.67)).current;
+  const contentHeight = useRef(new Animated.Value(0)).current;
 
   const toggleDropdown = (isOpen: boolean) => {
-    setIsDropdownOpen(isOpen);
     Animated.timing(height, {
-      toValue: isOpen ? 250 : 60,
+      toValue: isOpen ? 250 : label ? 50 : 26.67,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(rowHeight, {
+      toValue: isOpen ? 26.67 : 0,
+      duration: isOpen ? 400 : 200,
+      useNativeDriver: false,
+    }).start();
+    Animated.timing(contentHeight, {
+      toValue: isOpen ? 200 : 0,
       duration: 200,
       useNativeDriver: false,
     }).start();
@@ -43,7 +53,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   const handleInputChange = (e: string) => {
     setInputText(e);
     setShownItems(
-      items.filter((item) => item.title.toLowerCase().includes(e.toLowerCase()))
+      items.filter(item => item.title.toLowerCase().includes(e.toLowerCase()))
     );
   };
 
@@ -67,7 +77,8 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         style={{
           position: "relative",
           borderColor: "black",
-          height: 250,
+          height: 23,
+          alignSelf: "stretch",
         }}
       >
         {label ? (
@@ -90,42 +101,46 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
           />
         )}
 
-        <View
+        <Animated.View
           style={{
-            maxHeight: isDropdownOpen ? 200 : 0,
-            top: 55,
-            position: "absolute",
-            backgroundColor: "white",
+            maxHeight: contentHeight,
+            position: "relative",
             width: normalize(300),
+            maxWidth: 500,
             justifyContent: "center",
             alignItems: "center",
+            alignSelf: "center",
           }}
         >
-          <View
+          <Animated.View
             style={{
-              width: normalize(300),
-              maxWidth: 500,
+              maxHeight: contentHeight,
+              overflow: "scroll",
+              alignSelf: "stretch",
             }}
           >
-            {shownItems.map((item) => (
-              <Pressable
-                key={item.id}
-                onPress={() => {
-                  handleItemClick(item);
-                }}
+            {shownItems.map(item => (
+              <Animated.View
                 style={{
-                  maxHeight: isDropdownOpen ? 25 : 0,
-                  paddingLeft: 12,
-                  backgroundColor: "white",
-                  height: 25,
-                  zIndex: 15000,
+                  maxHeight: rowHeight,
                 }}
               >
-                <Text>{item.title}</Text>
-              </Pressable>
+                <Pressable
+                  key={item.id}
+                  onPress={() => {
+                    handleItemClick(item);
+                  }}
+                  style={{
+                    paddingLeft: 12,
+                    height: 25,
+                  }}
+                >
+                  <Text>{item.title}</Text>
+                </Pressable>
+              </Animated.View>
             ))}
-          </View>
-        </View>
+          </Animated.View>
+        </Animated.View>
       </View>
     </Animated.View>
   );

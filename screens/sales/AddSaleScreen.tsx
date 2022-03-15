@@ -37,11 +37,11 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   onSaleEdited,
   partners,
 }) => {
-  const currentSale = sales.find((i) => i.id === saleId);
+  const currentSale = sales.find(i => i.id === saleId);
   const [sale, setSale] = useState(currentSale ?? emptySale);
   const [selectedItem, setSelectedItem] = useState({} as Partner);
   const [selectableItems] = useState(
-    partners.map((partner) => ({
+    partners.map(partner => ({
       id: partner.id,
       title: partner.name,
     }))
@@ -54,9 +54,7 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   }
 
   const handlePartnerSelect = (partnerId: string) => {
-    setSelectedItem(
-      partners.find((p) => p.id === partnerId) ?? ({} as Partner)
-    );
+    setSelectedItem(partners.find(p => p.id === partnerId) ?? ({} as Partner));
   };
 
   const onTextChange = (name: string, value: string) => {

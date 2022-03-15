@@ -9,6 +9,8 @@ import useColorScheme from "./hooks/useColorScheme";
 import Navigation from "./navigation";
 import configureStore from "./redux/configureStore";
 
+import "./helpers/styleFunctions";
+
 export default function App() {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();

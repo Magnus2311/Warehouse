@@ -1,34 +1,34 @@
 import React, { useState } from "react";
-import { Pressable, Text } from "react-native";
+import { Pressable } from "react-native";
 import { connect } from "react-redux";
 import { Item } from "../helpers/models";
+import { randomString } from "../helpers/randomFunctions";
 import { normalize } from "../helpers/screenSizing";
 import { AppState } from "../redux/store";
 import Dropdown from "./dropdowns/Dropdown";
-import { Input, View } from "./Themed";
+import { Input, Text, View } from "./Themed";
 
 type Props = {
   items: Item[];
 };
 
 type SelectedItem = {
+  uniqueId: string;
   id: string;
   name: string;
   qtty: number;
+  price: number;
   total: number;
 };
 
 const EditableTable = ({ items }: Props) => {
   const [selectedItems, setSelectedItems] = useState([] as SelectedItem[]);
-  const [editingItem, setEditingItem] = useState({
-    id: "",
-    col: -1,
-  } as {
-    id: string;
-    col: number;
-  });
-
-  const resetEditingItem = () => setEditingItem({ id: "", col: -1 });
+  const [itemsForDropdown] = useState(
+    items.map(item => ({
+      id: item.id,
+      title: item.name,
+    }))
+  );
 
   return (
     <View
@@ -42,15 +42,27 @@ const EditableTable = ({ items }: Props) => {
           flexDirection: "row",
           borderBottomWidth: 2,
           borderBottomColor: "grey",
+          backgroundColor: "none",
         }}
       >
-        <View style={{ flexDirection: "row", flex: 5 }}>
-          <Text>Име на стоката</Text>
+        <View
+          style={{
+            flexDirection: "row",
+            flex: 5,
+            justifyContent: "flex-start",
+          }}
+        >
+          <Text>Име на стоката:</Text>
         </View>
         <View
           style={{ flexDirection: "row", flex: 1, justifyContent: "center" }}
         >
-          <Text>Количество</Text>
+          <Text>Количество:</Text>
+        </View>
+        <View
+          style={{ flexDirection: "row", flex: 1, justifyContent: "flex-end" }}
+        >
+          <Text>Цена:</Text>
         </View>
         <View
           style={{ flexDirection: "row", flex: 1, justifyContent: "flex-end" }}
@@ -58,12 +70,12 @@ const EditableTable = ({ items }: Props) => {
           <Text>Общо сума:</Text>
         </View>
       </View>
-
       {selectedItems && (
         <>
-          {selectedItems.map((selectedItem) => {
+          {selectedItems.map(selectedItem => {
             return (
               <View
+                key={selectedItem.id}
                 style={{
                   display: "flex",
                   flexDirection: "row",
@@ -71,74 +83,104 @@ const EditableTable = ({ items }: Props) => {
                   borderBottomColor: "grey",
                 }}
               >
-                <View style={{ flexDirection: "row", flex: 5 }}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    flex: 5,
+                    alignSelf: "stretch",
+                  }}
+                >
                   <Dropdown
+                    key={selectedItem.id}
                     selectedItem={{
                       id: selectedItem.id,
                       title: selectedItem.name,
                     }}
-                    items={items.map((item) => ({
-                      id: item.id,
-                      title: item.name,
-                    }))}
-                    handleItemChosen={(itemId) => {
-                      const currentItem = items.find(
-                        (item) => item.id === itemId
-                      )!;
-                      setSelectedItems([
-                        ...selectedItems,
-                        {
-                          id: currentItem.id,
-                          name: currentItem.name,
-                          qtty: 1,
-                          total: Number(currentItem.sellPrice),
-                        },
-                      ]);
+                    items={itemsForDropdown}
+                    handleItemChosen={itemId => {
+                      setTimeout(() => {
+                        const currentItem = items.find(
+                          item => item.id === itemId
+                        )!;
+                        setSelectedItems(
+                          selectedItems.map(item => {
+                            if (selectedItem.uniqueId === item.uniqueId)
+                              return {
+                                uniqueId: randomString(),
+                                id: currentItem.id,
+                                name: currentItem.name,
+                                qtty: 1,
+                                price: Number(currentItem.sellPrice),
+                                total: Number(currentItem.sellPrice),
+                              };
+
+                            return item;
+                          })
+                        );
+                      }, 300);
                     }}
                   />
                 </View>
-                <Pressable
+                <Input
+                  autoFocus={true}
+                  keyboardType="numeric"
+                  style={{
+                    textAlign: "center",
+                    borderWidth: 0,
+                    flexDirection: "row",
+                    flex: 1,
+                    alignSelf: "stretch",
+                  }}
+                  value={selectedItem.qtty.toString()}
+                  onChangeText={text =>
+                    setSelectedItems(
+                      selectedItems.map(item => {
+                        if (selectedItem.id === item.id) {
+                          return {
+                            ...item,
+                            qtty: Number(text),
+                            total: Number(text) * item.price,
+                          };
+                        }
+                        return item;
+                      })
+                    )
+                  }
+                />
+                <Input
+                  style={{
+                    textAlign: "center",
+                    borderWidth: 0,
+                    flexDirection: "row",
+                    flex: 1,
+                    alignSelf: "stretch",
+                  }}
+                  keyboardType="numeric"
+                  value={selectedItem.price.toString()}
+                  onChangeText={text =>
+                    setSelectedItems(
+                      selectedItems.map(item => {
+                        if (selectedItem.uniqueId === item.uniqueId) {
+                          return {
+                            ...item,
+                            price: Number(text),
+                            total: item.qtty * Number(text),
+                          };
+                        }
+                        return item;
+                      })
+                    )
+                  }
+                />
+                <Text
                   style={{
                     flexDirection: "row",
                     flex: 1,
-                    justifyContent: "center",
-                  }}
-                  onPress={() => {
-                    setEditingItem({
-                      id: selectedItem.id,
-                      col: 1,
-                    });
-                  }}
-                  onBlur={() => resetEditingItem()}
-                >
-                  {editingItem.id === selectedItem.id &&
-                  editingItem.col === 1 ? (
-                    <Input
-                      value={selectedItem.qtty.toString()}
-                      onChangeText={(text) =>
-                        setSelectedItems([
-                          ...selectedItems.filter((item) => {
-                            if (item.id === editingItem.id) {
-                              return { ...item, qtty: text };
-                            }
-                            return item;
-                          }),
-                        ])
-                      }
-                    />
-                  ) : (
-                    <Text>{selectedItem.qtty}</Text>
-                  )}
-                </Pressable>
-                <Pressable
-                  style={{
-                    flexDirection: "row",
-                    flex: 1,
-                    justifyContent: "flex-end",
+                    textAlign: "center",
                   }}
                 >
-                  <Text>{selectedItem.total}</Text>
-                </Pressable>
+                  {selectedItem.total}
+                </Text>
               </View>
             );
           })}
@@ -153,22 +195,17 @@ const EditableTable = ({ items }: Props) => {
           >
             <View style={{ flexDirection: "row", flex: 5 }}>
               <Dropdown
-                selectedItem={{
-                  id: "",
-                  title: "",
-                }}
-                items={items.map((item) => ({
-                  id: item.id,
-                  title: item.name,
-                }))}
-                handleItemChosen={(itemId) => {
-                  const currentItem = items.find((item) => item.id === itemId)!;
+                items={itemsForDropdown}
+                handleItemChosen={itemId => {
+                  const currentItem = items.find(item => item.id === itemId)!;
                   setSelectedItems([
                     ...selectedItems,
                     {
+                      uniqueId: randomString(),
                       id: currentItem.id,
                       name: currentItem.name,
                       qtty: 1,
+                      price: Number(currentItem.sellPrice),
                       total: Number(currentItem.sellPrice),
                     },
                   ]);
@@ -182,7 +219,7 @@ const EditableTable = ({ items }: Props) => {
                 justifyContent: "center",
               }}
             >
-              <Text>1</Text>
+              <Text></Text>
             </View>
             <View
               style={{
@@ -191,7 +228,53 @@ const EditableTable = ({ items }: Props) => {
                 justifyContent: "flex-end",
               }}
             >
-              <Text>1</Text>
+              <Text></Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 1,
+                justifyContent: "flex-end",
+              }}
+            >
+              <Text></Text>
+            </View>
+          </View>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              borderBottomWidth: 2,
+              borderBottomColor: "grey",
+              backgroundColor: "none",
+            }}
+          >
+            <View style={{ flexDirection: "row", flex: 6 }}>
+              <Text></Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 1,
+                justifyContent: "flex-start",
+              }}
+            >
+              <Text>Общо сума:</Text>
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                flex: 1,
+                justifyContent: "flex-end",
+              }}
+            >
+              <Text>
+                {selectedItems.length > 0
+                  ? selectedItems
+                      ?.map(item => item.total)
+                      ?.reduce((a, b) => a + b)
+                  : 0.0}
+              </Text>
             </View>
           </View>
         </>

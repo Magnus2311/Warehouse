@@ -81,6 +81,34 @@ function BottomTabNavigator({ navigation }: any) {
     <Drawer.Navigator>
       <Drawer.Group>
         <Drawer.Screen
+          name="SalesListScreen"
+          component={SalesListScreen}
+          options={{
+            title: "Списък с продажби",
+            headerTitleAlign: "center",
+            headerRight: () => (
+              <Pressable
+                onPress={e => {
+                  e.preventDefault();
+                  navigation.navigate("Modal", {
+                    component: <AddSaleScreen />,
+                  });
+                }}
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.5 : 1,
+                })}
+              >
+                <FontAwesome
+                  name="plus-circle"
+                  size={25}
+                  color="green"
+                  style={{ marginRight: 15 }}
+                />
+              </Pressable>
+            ),
+          }}
+        />
+        <Drawer.Screen
           name="ItemsListScreen"
           navigationKey="/ItemsListScreen"
           component={ItemsListScreen}
@@ -89,7 +117,7 @@ function BottomTabNavigator({ navigation }: any) {
             headerTitleAlign: "center",
             headerRight: () => (
               <Pressable
-                onPress={(e) => {
+                onPress={e => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddItemScreen />,
@@ -118,7 +146,7 @@ function BottomTabNavigator({ navigation }: any) {
             headerTitleAlign: "center",
             headerRight: () => (
               <Pressable
-                onPress={(e) => {
+                onPress={e => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddPartnerScreen />,
@@ -139,34 +167,6 @@ function BottomTabNavigator({ navigation }: any) {
           }}
         />
 
-        <Drawer.Screen
-          name="SalesListScreen"
-          component={SalesListScreen}
-          options={{
-            title: "Списък с продажби",
-            headerTitleAlign: "center",
-            headerRight: () => (
-              <Pressable
-                onPress={(e) => {
-                  e.preventDefault();
-                  navigation.navigate("Modal", {
-                    component: <AddSaleScreen />,
-                  });
-                }}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.5 : 1,
-                })}
-              >
-                <FontAwesome
-                  name="plus-circle"
-                  size={25}
-                  color="green"
-                  style={{ marginRight: 15 }}
-                />
-              </Pressable>
-            ),
-          }}
-        />
         <Drawer.Screen name="Register" component={Register} />
       </Drawer.Group>
     </Drawer.Navigator>

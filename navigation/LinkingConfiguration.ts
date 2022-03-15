@@ -6,7 +6,6 @@
 
 import { LinkingOptions } from "@react-navigation/native";
 import * as Linking from "expo-linking";
-
 import { RootStackParamList } from "../types";
 
 const linking: LinkingOptions<RootStackParamList> = {
@@ -15,16 +14,15 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       Root: {
         screens: {
-          ItemsListScreen: {
+          SalesListScreen: {
             screens: {
-              ItemsListScreen: "ItemsList",
+              SalesListScreen: "SalesListScreen",
             },
           },
         },
       },
       ItemsListScreen: "ItemsListScreen",
       PartnersListScreen: "PartnersListScreen",
-      SalesListScreen: "SalesListScreen",
       Register: "Register",
       Modal: "modal",
       NotFound: "*",

@@ -3,7 +3,6 @@
  * https://docs.expo.io/guides/color-schemes/
  */
 
-import { useState } from "react";
 import {
   Text as DefaultText,
   View as DefaultView,
@@ -119,21 +118,21 @@ export function Input(props: LabeledInputProps) {
           marginBottom: 10,
           justifyContent: "center",
           alignItems: "center",
+          borderWidth: 0,
         },
-        props.style,
       ]}
-      {...props}
     >
-      <View>
-        <Text style={{ marginLeft: 1, marginBottom: 2 }} {...props}>
-          {label}
-        </Text>
+      <View
+        style={{
+          borderWidth: 0,
+        }}
+      >
+        <Text style={{ marginLeft: 1, marginBottom: 2 }}>{label}</Text>
         <DefaultTextInput
           style={[
             {
               color,
               borderColor: color,
-              borderWidth: 0,
               width: normalize(300),
               maxWidth: 500,
               borderRadius: 5,

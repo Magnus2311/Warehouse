@@ -56,7 +56,9 @@ export function Text(props: TextProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
 
-  return <DefaultText style={[{ color }, style]} {...otherProps} />;
+  return (
+    <DefaultText style={[{ color, margin: "auto" }, style]} {...otherProps} />
+  );
 }
 
 export function Header(props: TextProps) {
@@ -115,7 +117,7 @@ export function Input(props: InputProps) {
         {
           color,
           borderColor: color,
-          borderWidth: 1,
+          borderWidth: 0.2,
           width: normalize(300),
           maxWidth: 500,
           borderRadius: 5,
@@ -146,6 +148,7 @@ export function Button(props: ButtonProps) {
           alignItems: "center",
           marginTop: normalize(5),
           borderColor: "rgba(240,246,252,0.1)",
+          zIndex: 1,
         },
         style,
       ]}

@@ -15,6 +15,14 @@ export interface Partner {
   address: string;
 }
 
+export interface Sale {
+  id: string;
+  date: Date;
+  itemsId: string[];
+  partnerId: string;
+  description: string;
+}
+
 export interface Column {
   name: string;
   propName: string;

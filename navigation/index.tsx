@@ -19,6 +19,8 @@ import { ModalState } from "../redux/modalActions";
 import AddItemScreen from "../screens/AddItemScreen";
 import PartnersListScreen from "../screens/PartnersListScreen";
 import AddPartnerScreen from "../screens/AddPartnerScreen";
+import SalesListScreen from "../screens/sales/SalesListScreen";
+import AddSaleScreen from "../screens/sales/AddSaleScreen";
 
 type Props = {
   colorScheme: ColorSchemeName;
@@ -79,14 +81,43 @@ function BottomTabNavigator({ navigation }: any) {
     <Drawer.Navigator>
       <Drawer.Group>
         <Drawer.Screen
+          name="SalesListScreen"
+          component={SalesListScreen}
+          options={{
+            title: "Списък с продажби",
+            headerTitleAlign: "center",
+            headerRight: () => (
+              <Pressable
+                onPress={e => {
+                  e.preventDefault();
+                  navigation.navigate("Modal", {
+                    component: <AddSaleScreen />,
+                  });
+                }}
+                style={({ pressed }) => ({
+                  opacity: pressed ? 0.5 : 1,
+                })}
+              >
+                <FontAwesome
+                  name="plus-circle"
+                  size={25}
+                  color="green"
+                  style={{ marginRight: 15 }}
+                />
+              </Pressable>
+            ),
+          }}
+        />
+        <Drawer.Screen
           name="ItemsListScreen"
+          navigationKey="/ItemsListScreen"
           component={ItemsListScreen}
           options={{
             title: "Списък със стоки",
             headerTitleAlign: "center",
             headerRight: () => (
               <Pressable
-                onPress={(e) => {
+                onPress={e => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddItemScreen />,
@@ -108,13 +139,14 @@ function BottomTabNavigator({ navigation }: any) {
         />
         <Drawer.Screen
           name="PartnersListScreen"
+          navigationKey="PartnersListScreen"
           component={PartnersListScreen}
           options={{
             title: "Списък с партньори",
             headerTitleAlign: "center",
             headerRight: () => (
               <Pressable
-                onPress={(e) => {
+                onPress={e => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddPartnerScreen />,
@@ -134,6 +166,7 @@ function BottomTabNavigator({ navigation }: any) {
             ),
           }}
         />
+
         <Drawer.Screen name="Register" component={Register} />
       </Drawer.Group>
     </Drawer.Navigator>

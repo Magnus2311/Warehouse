@@ -7,16 +7,16 @@ import { actionCreators } from "../redux/partnerActions";
 import { AppState } from "../redux/store";
 import PartnersTable from "../components/Table/types/classes/PartnersTable";
 
-type PartnersListScreenProps = {
+interface PartnersListScreenProps {
   onPartnersLoaded: () => void;
   partners: Partner[];
-};
+}
 
 const PartnersListScreen = ({
   onPartnersLoaded,
   partners,
 }: PartnersListScreenProps) => {
-  useEffect(() => onPartnersLoaded());
+  useEffect(() => onPartnersLoaded(), []);
 
   const columns = [
     { name: "Име на партньора", propName: "name", flex: 4 },

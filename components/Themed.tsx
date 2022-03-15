@@ -35,7 +35,7 @@ type ThemeProps = {
 };
 
 type DefaultLabeledInputProps = {
-  label: string;
+  label?: string;
 };
 
 type DefaultButtonProps = {
@@ -107,17 +107,53 @@ export function Separator() {
   );
 }
 
-export function Input(props: InputProps) {
+export function Input(props: LabeledInputProps) {
   const { style, lightColor, darkColor, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
-
-  return (
+  const { label } = props;
+  return label ? (
+    <View
+      style={[
+        {
+          width: normalize(300),
+          marginBottom: 10,
+          justifyContent: "center",
+          alignItems: "center",
+        },
+        props.style,
+      ]}
+      {...props}
+    >
+      <View>
+        <Text style={{ marginLeft: 1, marginBottom: 2 }} {...props}>
+          {label}
+        </Text>
+        <DefaultTextInput
+          style={[
+            {
+              color,
+              borderColor: color,
+              borderWidth: 0,
+              width: normalize(300),
+              maxWidth: 500,
+              borderRadius: 5,
+              padding: 3,
+              paddingBottom: 5,
+              paddingLeft: 5,
+            },
+            style,
+          ]}
+          {...otherProps}
+        />
+      </View>
+    </View>
+  ) : (
     <DefaultTextInput
       style={[
         {
           color,
           borderColor: color,
-          borderWidth: 0.2,
+          borderWidth: 0,
           width: normalize(300),
           maxWidth: 500,
           borderRadius: 5,
@@ -156,31 +192,5 @@ export function Button(props: ButtonProps) {
     >
       <Text style={{ color: "white" }}>{label}</Text>
     </TouchableOpacity>
-  );
-}
-
-export function LabeledInput(props: LabeledInputProps) {
-  const { label } = props;
-
-  return (
-    <View
-      style={[
-        {
-          width: normalize(300),
-          marginBottom: 10,
-          justifyContent: "center",
-          alignItems: "center",
-        },
-        props.style,
-      ]}
-      {...props}
-    >
-      <View>
-        <Text style={{ marginLeft: 1, marginBottom: 2 }} {...props}>
-          {label}
-        </Text>
-        <Input {...props} />
-      </View>
-    </View>
   );
 }

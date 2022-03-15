@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useRef, useState } from "react";
 import { Animated, Pressable, Text } from "react-native";
 import { normalize } from "../../helpers/screenSizing";
-import { Input, LabeledInput, View } from "../Themed";
+import { Input, View } from "../Themed";
 
 interface DropdownProps {
   items: {
@@ -81,25 +81,13 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
           alignSelf: "stretch",
         }}
       >
-        {label ? (
-          <LabeledInput
-            label={label}
-            onFocus={handleInputFocus}
-            onBlur={handleOnBlur}
-            value={inputText}
-            onChangeText={handleInputChange}
-          />
-        ) : (
-          <Input
-            onFocus={handleInputFocus}
-            onBlur={handleOnBlur}
-            value={inputText}
-            onChangeText={handleInputChange}
-            style={{
-              borderWidth: 0,
-            }}
-          />
-        )}
+        <Input
+          label={label}
+          onFocus={handleInputFocus}
+          onBlur={handleOnBlur}
+          value={inputText}
+          onChangeText={handleInputChange}
+        />
 
         <Animated.View
           style={{

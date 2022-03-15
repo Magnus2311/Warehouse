@@ -4,7 +4,7 @@ import { actionCreators } from "../redux/partnerActions";
 import { actionCreators as modalActionCreators } from "../redux/modalActions";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Button, LabeledInput } from "../components/Themed";
+import { Button, Input } from "../components/Themed";
 import { Page } from "../components/Page";
 import { AppState } from "../redux/store";
 
@@ -30,7 +30,7 @@ const AddPartnerScreen = ({
   onPartnerEdited,
   partnerId,
 }: AddPartnerScreenProps) => {
-  const currentPartner = partners && partners.find((p) => p.id === partnerId);
+  const currentPartner = partners && partners.find(p => p.id === partnerId);
   const [partner, setPartner] = useState(currentPartner ?? emptyPartner);
   const navigator = useNavigation();
   if (currentPartner) {
@@ -48,19 +48,19 @@ const AddPartnerScreen = ({
 
   return (
     <Page>
-      <LabeledInput
+      <Input
         label="Име на партньора:"
-        onChangeText={(txt) => onTextChange("name", txt)}
+        onChangeText={txt => onTextChange("name", txt)}
         value={partner.name}
       />
-      <LabeledInput
+      <Input
         label="ДДС Номер:"
-        onChangeText={(txt) => onTextChange("vatNumber", txt)}
+        onChangeText={txt => onTextChange("vatNumber", txt)}
         value={partner.vatNumber}
       />
-      <LabeledInput
+      <Input
         label="Адрес:"
-        onChangeText={(txt) => onTextChange("address", txt)}
+        onChangeText={txt => onTextChange("address", txt)}
         value={partner.address}
       />
       <Button

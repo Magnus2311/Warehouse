@@ -35,6 +35,7 @@ type ThemeProps = {
 
 type DefaultLabeledInputProps = {
   label?: string;
+  border?: boolean;
 };
 
 type DefaultButtonProps = {
@@ -107,7 +108,7 @@ export function Separator() {
 }
 
 export function Input(props: LabeledInputProps) {
-  const { style, lightColor, darkColor, ...otherProps } = props;
+  const { style, lightColor, darkColor, border, ...otherProps } = props;
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
   const { label } = props;
   return label ? (
@@ -139,6 +140,7 @@ export function Input(props: LabeledInputProps) {
               padding: 3,
               paddingBottom: 5,
               paddingLeft: 5,
+              borderWidth: border ? 1 : 0,
             },
             style,
           ]}

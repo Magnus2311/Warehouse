@@ -30,7 +30,7 @@ const AddPartnerScreen = ({
   onPartnerEdited,
   partnerId,
 }: AddPartnerScreenProps) => {
-  const currentPartner = partners && partners.find(p => p.id === partnerId);
+  const currentPartner = partners && partners.find((p) => p.id === partnerId);
   const [partner, setPartner] = useState(currentPartner ?? emptyPartner);
   const navigator = useNavigation();
   if (currentPartner) {
@@ -50,18 +50,21 @@ const AddPartnerScreen = ({
     <Page>
       <Input
         label="Име на партньора:"
-        onChangeText={txt => onTextChange("name", txt)}
+        onChangeText={(txt) => onTextChange("name", txt)}
         value={partner.name}
+        border={true}
       />
       <Input
         label="ДДС Номер:"
-        onChangeText={txt => onTextChange("vatNumber", txt)}
+        onChangeText={(txt) => onTextChange("vatNumber", txt)}
         value={partner.vatNumber}
+        border={true}
       />
       <Input
         label="Адрес:"
-        onChangeText={txt => onTextChange("address", txt)}
+        onChangeText={(txt) => onTextChange("address", txt)}
         value={partner.address}
+        border={true}
       />
       <Button
         label={currentPartner ? "Редакция" : "Добавяне"}

@@ -29,7 +29,7 @@ const AddItemScreen: FunctionComponent<Props> = ({
   onModalTitleChanged,
   onItemEdited,
 }) => {
-  const currentItem = items.find(i => i.id === itemId);
+  const currentItem = items.find((i) => i.id === itemId);
   const [item, setItem] = useState(currentItem ?? emptyItem);
   const navigator = useNavigation();
   if (currentItem) {
@@ -49,20 +49,23 @@ const AddItemScreen: FunctionComponent<Props> = ({
     <Page>
       <Input
         label="Име на стоката:"
-        onChangeText={txt => onTextChange("name", txt)}
+        onChangeText={(txt) => onTextChange("name", txt)}
         value={item.name}
+        border={true}
       />
       <Input
         label="Доставна цена:"
-        onChangeText={txt => onTextChange("basePrice", txt)}
+        onChangeText={(txt) => onTextChange("basePrice", txt)}
         value={item.basePrice.toString()}
         keyboardType="numeric"
+        border={true}
       />
       <Input
         label="Продажна цена:"
-        onChangeText={txt => onTextChange("sellPrice", txt)}
+        onChangeText={(txt) => onTextChange("sellPrice", txt)}
         value={item.sellPrice.toString()}
         keyboardType="numeric"
+        border={true}
       />
       <Button
         label={currentItem ? "Редакция на стока" : "Добавяне на стока"}

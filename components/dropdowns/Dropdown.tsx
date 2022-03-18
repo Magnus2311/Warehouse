@@ -15,6 +15,11 @@ interface DropdownProps {
   handleItemChosen: (itemId: string) => void;
   label?: string;
   border?: boolean;
+  style?: {
+    margin?: number;
+    marginTop?: number;
+    marginBottom?: number;
+  };
 }
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
@@ -23,6 +28,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   selectedItem,
   label,
   border,
+  style,
 }) => {
   const [inputText, setInputText] = useState(selectedItem?.title ?? "");
   const [shownItems, setShownItems] = useState(items);
@@ -55,7 +61,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   const handleInputChange = (e: string) => {
     setInputText(e);
     setShownItems(
-      items.filter(item => item.title.toLowerCase().includes(e.toLowerCase()))
+      items.filter((item) => item.title.toLowerCase().includes(e.toLowerCase()))
     );
   };
 
@@ -73,6 +79,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
       style={{
         height: height,
         maxHeight: height,
+        margin: style?.margin ?? 0,
+        marginBottom: style?.marginBottom ?? 0,
+        marginTop: style?.marginTop ?? 0,
       }}
     >
       <View
@@ -112,7 +121,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               alignSelf: "stretch",
             }}
           >
-            {shownItems.map(item => (
+            {shownItems.map((item) => (
               <Animated.View
                 style={{
                   maxHeight: rowHeight,

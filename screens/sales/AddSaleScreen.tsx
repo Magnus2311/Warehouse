@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../../components/Page";
-import { Button } from "../../components/Themed";
+import { Button, View } from "../../components/Themed";
 import { Item, Partner, Sale } from "../../helpers/models";
 import { actionCreators as salesActions } from "../../redux/salesActions";
 import { actionCreators as partnersActions } from "../../redux/partnerActions";
@@ -10,6 +10,7 @@ import { actionCreators as modalActions } from "../../redux/modalActions";
 import { AppState } from "../../redux/store";
 import Dropdown from "../../components/dropdowns/Dropdown";
 import EditableTable from "../../components/EditableTable";
+import { getHeight } from "../../helpers/screenSizing";
 
 interface Props {
   saleId?: string;
@@ -37,11 +38,11 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   onSaleEdited,
   partners,
 }) => {
-  const currentSale = sales.find(i => i.id === saleId);
+  const currentSale = sales.find((i) => i.id === saleId);
   const [sale, setSale] = useState(currentSale ?? emptySale);
   const [selectedItem, setSelectedItem] = useState({} as Partner);
   const [selectableItems] = useState(
-    partners.map(partner => ({
+    partners.map((partner) => ({
       id: partner.id,
       title: partner.name,
     }))
@@ -54,7 +55,9 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   }
 
   const handlePartnerSelect = (partnerId: string) => {
-    setSelectedItem(partners.find(p => p.id === partnerId) ?? ({} as Partner));
+    setSelectedItem(
+      partners.find((p) => p.id === partnerId) ?? ({} as Partner)
+    );
   };
 
   const onTextChange = (name: string, value: string) => {
@@ -66,21 +69,31 @@ const AddSaleScreen: FunctionComponent<Props> = ({
 
   return (
     <Page>
-      <Dropdown
-        items={selectableItems}
-        handleItemChosen={handlePartnerSelect}
-        label="Име на партньора"
-        border={true}
-      />
-      <EditableTable />
-      <Button
-        label={currentSale ? "Редакция на стока" : "Добавяне на стока"}
-        onPress={() => {
-          currentSale ? onSaleEdited(sale) : onSaleAdded(sale);
-          setSale(emptySale);
-          navigator.navigate("Root");
+      <View
+        style={{
+          height: getHeight(),
         }}
-      />
+      >
+        <Dropdown
+          items={selectableItems}
+          handleItemChosen={handlePartnerSelect}
+          label="Име на партньора"
+          border={true}
+          style={{ marginBottom: 15 }}
+        />
+        <EditableTable />
+        <Button
+          label={currentSale ? "Редакция на стока" : "Добавяне на стока"}
+          onPress={() => {
+            currentSale ? onSaleEdited(sale) : onSaleAdded(sale);
+            setSale(emptySale);
+            navigator.navigate("Root");
+          }}
+          style={{
+            alignSelf: "center",
+          }}
+        />
+      </View>
     </Page>
   );
 };

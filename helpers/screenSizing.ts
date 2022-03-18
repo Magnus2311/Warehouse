@@ -2,6 +2,9 @@ import { Dimensions, Platform, PixelRatio } from "react-native";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
+export const getHeight = () => Dimensions.get("window").height;
+export const getWidth = () => Dimensions.get("window").width;
+
 const scale = SCREEN_WIDTH / 320;
 
 export function normalize(size: number) {

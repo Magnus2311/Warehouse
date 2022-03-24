@@ -1,31 +1,22 @@
 import React, { useState } from "react";
-import { connect } from "react-redux";
-import { Item } from "../helpers/models";
+import { Item, Sale, SaleItem } from "../helpers/models";
 import { randomString } from "../helpers/randomFunctions";
 import { getHeight, normalize } from "../helpers/screenSizing";
-import { AppState } from "../redux/store";
 import Dropdown from "./dropdowns/Dropdown";
 import { Input, Text, View } from "./Themed";
 
 type Props = {
   items: Item[];
+  saleItems: SaleItem[];
+  setSelectedItems: (selectedItem: SaleItem[]) => void;
+  sale: Sale;
 };
 
-type SelectedItem = {
-  uniqueId: string;
-  id: string;
-  name: string;
-  qtty: number;
-  price: number;
-  total: number;
-};
-
-const EditableTable = ({ items }: Props) => {
+const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
   const [selectedItem, setSelectedItem] = useState({
     id: "",
     title: "",
   });
-  const [selectedItems, setSelectedItems] = useState([] as SelectedItem[]);
   const [itemsForDropdown] = useState(
     items.map(item => ({
       id: item.id,
@@ -74,7 +65,7 @@ const EditableTable = ({ items }: Props) => {
           <Text>Общо сума:</Text>
         </View>
       </View>
-      {selectedItems && (
+      {saleItems && (
         <>
           <View
             style={{
@@ -82,10 +73,10 @@ const EditableTable = ({ items }: Props) => {
               overflow: "scroll",
             }}
           >
-            {selectedItems.map(selectedItem => {
+            {saleItems.map(selectedItem => {
               return (
                 <View
-                  key={selectedItem.id}
+                  key={selectedItem.itemId}
                   style={{
                     display: "flex",
                     flexDirection: "row",
@@ -101,9 +92,9 @@ const EditableTable = ({ items }: Props) => {
                     }}
                   >
                     <Dropdown
-                      key={selectedItem.id}
+                      key={selectedItem.itemId}
                       selectedItem={{
-                        id: selectedItem.id,
+                        id: selectedItem.itemId,
                         title: selectedItem.name,
                       }}
                       placeholder="Въведете име на стока"
@@ -114,11 +105,11 @@ const EditableTable = ({ items }: Props) => {
                             item => item.id === itemId
                           )!;
                           setSelectedItems(
-                            selectedItems.map(item => {
-                              if (selectedItem.uniqueId === item.uniqueId)
+                            saleItems.map(item => {
+                              if (selectedItem.id === item.id)
                                 return {
-                                  uniqueId: randomString(),
-                                  id: currentItem.id,
+                                  id: randomString(),
+                                  itemId: currentItem.id,
                                   name: currentItem.name,
                                   qtty: 1,
                                   price: Number(currentItem.sellPrice),
@@ -145,8 +136,8 @@ const EditableTable = ({ items }: Props) => {
                     value={selectedItem.qtty.toString()}
                     onChangeText={text =>
                       setSelectedItems(
-                        selectedItems.map(item => {
-                          if (selectedItem.uniqueId === item.uniqueId) {
+                        saleItems.map(item => {
+                          if (selectedItem.id === item.id) {
                             return {
                               ...item,
                               qtty: Number(text),
@@ -170,8 +161,8 @@ const EditableTable = ({ items }: Props) => {
                     value={selectedItem.price.toString()}
                     onChangeText={text =>
                       setSelectedItems(
-                        selectedItems.map(item => {
-                          if (selectedItem.uniqueId === item.uniqueId) {
+                        saleItems.map(item => {
+                          if (selectedItem.id === item.id) {
                             return {
                               ...item,
                               price: Number(text),
@@ -212,10 +203,10 @@ const EditableTable = ({ items }: Props) => {
                   handleItemChosen={itemId => {
                     const currentItem = items.find(item => item.id === itemId)!;
                     setSelectedItems([
-                      ...selectedItems,
+                      ...saleItems,
                       {
-                        uniqueId: randomString(),
-                        id: currentItem.id,
+                        id: randomString(),
+                        itemId: currentItem.id,
                         name: currentItem.name,
                         qtty: 1,
                         price: Number(currentItem.sellPrice),
@@ -286,10 +277,8 @@ const EditableTable = ({ items }: Props) => {
               }}
             >
               <Text>
-                {selectedItems.length > 0
-                  ? selectedItems
-                      ?.map(item => item.total)
-                      ?.reduce((a, b) => a + b)
+                {saleItems.length > 0
+                  ? saleItems?.map(item => item.total)?.reduce((a, b) => a + b)
                   : 0.0}
               </Text>
             </View>
@@ -300,10 +289,4 @@ const EditableTable = ({ items }: Props) => {
   );
 };
 
-const mapStateToProps = (state: AppState) => {
-  return {
-    items: state.items!.items,
-  };
-};
-
-export default connect(mapStateToProps)(EditableTable);
+export default EditableTable;

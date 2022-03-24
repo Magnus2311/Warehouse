@@ -18,9 +18,19 @@ export interface Partner {
 export interface Sale {
   id: string;
   date: Date;
-  itemsId: string[];
+  saleItems: SaleItem[];
   partnerId: string;
   description: string;
+  totalAmount: number;
+}
+
+export interface SaleItem {
+  id: string;
+  name: string;
+  qtty: number;
+  price: number;
+  total: number;
+  itemId: string;
 }
 
 export interface Column {

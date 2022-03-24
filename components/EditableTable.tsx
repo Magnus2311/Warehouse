@@ -141,7 +141,7 @@ const EditableTable = ({ items }: Props) => {
                     onChangeText={(text) =>
                       setSelectedItems(
                         selectedItems.map((item) => {
-                          if (selectedItem.id === item.id) {
+                          if (selectedItem.uniqueId === item.uniqueId) {
                             return {
                               ...item,
                               qtty: Number(text),

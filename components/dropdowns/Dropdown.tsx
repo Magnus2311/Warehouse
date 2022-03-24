@@ -20,6 +20,7 @@ interface DropdownProps {
     marginTop?: number;
     marginBottom?: number;
   };
+  setInputTextA?: (text: string) => void;
 }
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
@@ -61,13 +62,16 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   const handleInputChange = (e: string) => {
     setInputText(e);
     setShownItems(
-      items.filter((item) => item.title.toLowerCase().includes(e.toLowerCase()))
+      items.filter(item => item.title.toLowerCase().includes(e.toLowerCase()))
     );
   };
 
   const handleItemClick = (item: { id: string; title: string }) => {
     setInputText(item.title);
     handleItemChosen(item.id);
+    if (selectedItem?.id === "") {
+      setInputText("");
+    }
   };
 
   const handleOnBlur = () => {
@@ -97,6 +101,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
           onFocus={handleInputFocus}
           onBlur={handleOnBlur}
           value={inputText}
+          placeholder={"Въведете име на стока"}
           onChangeText={handleInputChange}
           style={{
             borderWidth: border ? 1 : 0,
@@ -121,7 +126,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               alignSelf: "stretch",
             }}
           >
-            {shownItems.map((item) => (
+            {shownItems.map(item => (
               <Animated.View
                 style={{
                   maxHeight: rowHeight,

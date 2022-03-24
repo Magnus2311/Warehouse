@@ -21,9 +21,13 @@ type SelectedItem = {
 };
 
 const EditableTable = ({ items }: Props) => {
+  const [selectedItem, setSelectedItem] = useState({
+    id: "",
+    title: "",
+  });
   const [selectedItems, setSelectedItems] = useState([] as SelectedItem[]);
   const [itemsForDropdown] = useState(
-    items.map((item) => ({
+    items.map(item => ({
       id: item.id,
       title: item.name,
     }))
@@ -78,7 +82,7 @@ const EditableTable = ({ items }: Props) => {
               overflow: "scroll",
             }}
           >
-            {selectedItems.map((selectedItem) => {
+            {selectedItems.map(selectedItem => {
               return (
                 <View
                   key={selectedItem.id}
@@ -103,13 +107,13 @@ const EditableTable = ({ items }: Props) => {
                         title: selectedItem.name,
                       }}
                       items={itemsForDropdown}
-                      handleItemChosen={(itemId) => {
+                      handleItemChosen={itemId => {
                         setTimeout(() => {
                           const currentItem = items.find(
-                            (item) => item.id === itemId
+                            item => item.id === itemId
                           )!;
                           setSelectedItems(
-                            selectedItems.map((item) => {
+                            selectedItems.map(item => {
                               if (selectedItem.uniqueId === item.uniqueId)
                                 return {
                                   uniqueId: randomString(),
@@ -138,9 +142,9 @@ const EditableTable = ({ items }: Props) => {
                       alignSelf: "stretch",
                     }}
                     value={selectedItem.qtty.toString()}
-                    onChangeText={(text) =>
+                    onChangeText={text =>
                       setSelectedItems(
-                        selectedItems.map((item) => {
+                        selectedItems.map(item => {
                           if (selectedItem.uniqueId === item.uniqueId) {
                             return {
                               ...item,
@@ -163,9 +167,9 @@ const EditableTable = ({ items }: Props) => {
                     }}
                     keyboardType="numeric"
                     value={selectedItem.price.toString()}
-                    onChangeText={(text) =>
+                    onChangeText={text =>
                       setSelectedItems(
-                        selectedItems.map((item) => {
+                        selectedItems.map(item => {
                           if (selectedItem.uniqueId === item.uniqueId) {
                             return {
                               ...item,
@@ -201,11 +205,10 @@ const EditableTable = ({ items }: Props) => {
             >
               <View style={{ flexDirection: "row", flex: 5 }}>
                 <Dropdown
+                  selectedItem={selectedItem}
                   items={itemsForDropdown}
-                  handleItemChosen={(itemId) => {
-                    const currentItem = items.find(
-                      (item) => item.id === itemId
-                    )!;
+                  handleItemChosen={itemId => {
+                    const currentItem = items.find(item => item.id === itemId)!;
                     setSelectedItems([
                       ...selectedItems,
                       {
@@ -217,6 +220,8 @@ const EditableTable = ({ items }: Props) => {
                         total: Number(currentItem.sellPrice),
                       },
                     ]);
+
+                    setSelectedItem({ id: "", title: "" });
                   }}
                 />
               </View>
@@ -281,7 +286,7 @@ const EditableTable = ({ items }: Props) => {
               <Text>
                 {selectedItems.length > 0
                   ? selectedItems
-                      ?.map((item) => item.total)
+                      ?.map(item => item.total)
                       ?.reduce((a, b) => a + b)
                   : 0.0}
               </Text>

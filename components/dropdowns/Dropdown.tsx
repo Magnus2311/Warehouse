@@ -20,7 +20,7 @@ interface DropdownProps {
     marginTop?: number;
     marginBottom?: number;
   };
-  setInputTextA?: (text: string) => void;
+  placeholder: string;
 }
 
 const Dropdown: FunctionComponent<DropdownProps> = ({
@@ -30,6 +30,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   label,
   border,
   style,
+  placeholder,
 }) => {
   const [inputText, setInputText] = useState(selectedItem?.title ?? "");
   const [shownItems, setShownItems] = useState(items);
@@ -101,7 +102,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
           onFocus={handleInputFocus}
           onBlur={handleOnBlur}
           value={inputText}
-          placeholder={"Въведете име на стока"}
+          placeholder={placeholder}
           onChangeText={handleInputChange}
           style={{
             borderWidth: border ? 1 : 0,

@@ -106,6 +106,7 @@ const EditableTable = ({ items }: Props) => {
                         id: selectedItem.id,
                         title: selectedItem.name,
                       }}
+                      placeholder="Въведете име на партньор"
                       items={itemsForDropdown}
                       handleItemChosen={itemId => {
                         setTimeout(() => {
@@ -205,6 +206,7 @@ const EditableTable = ({ items }: Props) => {
             >
               <View style={{ flexDirection: "row", flex: 5 }}>
                 <Dropdown
+                  placeholder="Въведете име на стока"
                   selectedItem={selectedItem}
                   items={itemsForDropdown}
                   handleItemChosen={itemId => {

@@ -106,9 +106,10 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                           )!;
                           setSelectedItems(
                             saleItems.map(item => {
-                              if (selectedItem.id === item.id)
+                              if (selectedItem.uniqueId === item.uniqueId)
                                 return {
-                                  id: randomString(),
+                                  id: "",
+                                  uniqueId: randomString(),
                                   itemId: currentItem.id,
                                   name: currentItem.name,
                                   qtty: 1,
@@ -137,7 +138,7 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                     onChangeText={text =>
                       setSelectedItems(
                         saleItems.map(item => {
-                          if (selectedItem.id === item.id) {
+                          if (selectedItem.uniqueId === item.uniqueId) {
                             return {
                               ...item,
                               qtty: Number(text),
@@ -162,7 +163,7 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                     onChangeText={text =>
                       setSelectedItems(
                         saleItems.map(item => {
-                          if (selectedItem.id === item.id) {
+                          if (selectedItem.uniqueId === item.uniqueId) {
                             return {
                               ...item,
                               price: Number(text),
@@ -205,7 +206,8 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                     setSelectedItems([
                       ...saleItems,
                       {
-                        id: randomString(),
+                        id: "",
+                        uniqueId: randomString(),
                         itemId: currentItem.id,
                         name: currentItem.name,
                         qtty: 1,

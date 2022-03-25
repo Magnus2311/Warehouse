@@ -26,6 +26,7 @@ export interface Sale {
 
 export interface SaleItem {
   id: string;
+  uniqueId: string;
   name: string;
   qtty: number;
   price: number;

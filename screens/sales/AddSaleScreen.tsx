@@ -61,13 +61,14 @@ const AddSaleScreen: FunctionComponent<Props> = ({
 
   const [selectedItems, setSelectedItems] = useState<SaleItem[]>(
     currentSale
-      ? items.map(item => ({
-          itemId: item.id,
+      ? currentSale.saleItems.map(item => ({
+          uniqueId: randomString(),
+          itemId: item.itemId,
           name: item.name,
-          qtty: 1,
-          total: 1,
-          price: 1,
-          id: randomString(),
+          qtty: item.qtty,
+          total: item.total,
+          price: item.price,
+          id: item.id,
         }))
       : []
   );
@@ -113,7 +114,7 @@ const AddSaleScreen: FunctionComponent<Props> = ({
           label={currentSale ? "Редакция на стока" : "Добавяне на стока"}
           onPress={() => {
             sale.totalAmount = selectedItems
-              .map(item => item.total)
+              .map(item => Number(item.total))
               .reduce((a, b) => a + b);
             sale.saleItems = selectedItems;
             currentSale ? onSaleEdited(sale) : onSaleAdded(sale);

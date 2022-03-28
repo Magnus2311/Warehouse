@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { textToDecimalFormat, toDecimalFormat } from "../helpers/extensions";
 import { Item, Sale, SaleItem } from "../helpers/models";
 import { randomString } from "../helpers/randomFunctions";
 import { getHeight, normalize } from "../helpers/screenSizing";
@@ -112,9 +113,11 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                                   uniqueId: randomString(),
                                   itemId: currentItem.id,
                                   name: currentItem.name,
-                                  qtty: 1,
-                                  price: Number(currentItem.sellPrice),
-                                  total: Number(currentItem.sellPrice),
+                                  qtty: "1",
+                                  price: currentItem.sellPrice,
+                                  total: toDecimalFormat(
+                                    Number(currentItem.sellPrice)
+                                  ),
                                 };
 
                               return item;
@@ -141,8 +144,10 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                           if (selectedItem.uniqueId === item.uniqueId) {
                             return {
                               ...item,
-                              qtty: Number(text),
-                              total: Number(text) * item.price,
+                              qtty: text,
+                              total: toDecimalFormat(
+                                Number(text) * Number(item.price)
+                              ),
                             };
                           }
                           return item;
@@ -166,8 +171,10 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                           if (selectedItem.uniqueId === item.uniqueId) {
                             return {
                               ...item,
-                              price: Number(text),
-                              total: item.qtty * Number(text),
+                              price: text,
+                              total: toDecimalFormat(
+                                Number(item.qtty) * Number(text)
+                              ),
                             };
                           }
                           return item;
@@ -182,7 +189,7 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                       textAlign: "center",
                     }}
                   >
-                    {selectedItem.total}
+                    {textToDecimalFormat(selectedItem.total)}
                   </Text>
                 </View>
               );
@@ -210,9 +217,9 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                         uniqueId: randomString(),
                         itemId: currentItem.id,
                         name: currentItem.name,
-                        qtty: 1,
-                        price: Number(currentItem.sellPrice),
-                        total: Number(currentItem.sellPrice),
+                        qtty: "1",
+                        price: currentItem.sellPrice,
+                        total: toDecimalFormat(Number(currentItem.sellPrice)),
                       },
                     ]);
 
@@ -279,9 +286,13 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
               }}
             >
               <Text>
-                {saleItems.length > 0
-                  ? saleItems?.map(item => item.total)?.reduce((a, b) => a + b)
-                  : 0.0}
+                {toDecimalFormat(
+                  saleItems.length > 0
+                    ? saleItems
+                        ?.map(item => Number(item.total))
+                        ?.reduce((a, b) => a + b)
+                    : 0.0
+                )}
               </Text>
             </View>
           </View>

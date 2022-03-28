@@ -9,6 +9,7 @@ import { actionCreators as salesActions } from "../../redux/salesActions";
 import { actionCreators as partnersActions } from "../../redux/partnerActions";
 import { actionCreators as itemActions } from "../../redux/itemActions";
 import { AppState } from "../../redux/store";
+import { getDateFormated, toDecimalFormat } from "../../helpers/extensions";
 
 interface Props {
   onSalesLoaded: () => void;
@@ -57,14 +58,14 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
   const columns = [
     { name: "Име на стока", propName: "partner", flex: 6 },
     {
-      name: isMobile ? "Д-на цена" : "Доставна цена",
+      name: "Дата",
       propName: "date",
       flex: isMobile ? 2 : 1,
       isRight: true,
     },
     {
-      name: isMobile ? "П-на цена" : "Продажна цена",
-      propName: "sellPrice",
+      name: "Обща сума",
+      propName: "total",
       flex: isMobile ? 2 : 1,
       isRight: true,
     },
@@ -78,8 +79,9 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
           id: sale.id,
           partner:
             partners.find(partner => partner.id === sale.partnerId)?.name ?? "",
-          date: sale.date,
+          date: getDateFormated(sale.date),
           description: sale.description,
+          total: toDecimalFormat(sale.totalAmount),
         }))}
         navigation={navigation}
       />

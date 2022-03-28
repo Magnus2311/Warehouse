@@ -28,9 +28,9 @@ export interface SaleItem {
   id: string;
   uniqueId: string;
   name: string;
-  qtty: number;
-  price: number;
-  total: number;
+  qtty: string;
+  price: string;
+  total: string;
   itemId: string;
 }
 

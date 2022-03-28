@@ -5,10 +5,24 @@ import { actionCreators } from "../../../../redux/itemActions";
 import { AppState } from "../../../../redux/store";
 import TableModel from "./TableModel";
 import AddItemScreen from "../../../../screens/AddItemScreen";
+import { Item, TableAction } from "../../../../helpers/models";
+import { BuyItemScreen } from "../../../../screens/items/BuyItemScreen";
 
 class ItemsTable extends TableModel {
   render() {
     const { listableItems, columns } = this.props;
+    const additionalActions = [
+      {
+        name: "plus",
+        color: "green",
+        onPress: (item: Item) => {
+          const { navigation } = this.props;
+          navigation.navigate("Modal", {
+            component: <BuyItemScreen item={item} />,
+          });
+        },
+      } as TableAction,
+    ];
     return (
       <Table
         data={listableItems}
@@ -19,6 +33,7 @@ class ItemsTable extends TableModel {
           onDelete: this.onDelete,
         }}
         onEdit={this.onEdit}
+        additionalActions={additionalActions}
       />
     );
   }

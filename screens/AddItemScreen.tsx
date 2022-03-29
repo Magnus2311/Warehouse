@@ -61,6 +61,13 @@ const AddItemScreen: FunctionComponent<Props> = ({
         border={true}
       />
       <Input
+        label="Количество:"
+        onChangeText={(txt) => onTextChange("qtty", txt)}
+        value={item.qtty}
+        keyboardType="numeric"
+        border={true}
+      />
+      <Input
         label="Продажна цена:"
         onChangeText={(txt) => onTextChange("sellPrice", txt)}
         value={item.sellPrice.toString()}

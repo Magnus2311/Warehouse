@@ -6,7 +6,7 @@ import { AppState } from "../../../../redux/store";
 import TableModel from "./TableModel";
 import AddItemScreen from "../../../../screens/AddItemScreen";
 import { Item, TableAction } from "../../../../helpers/models";
-import { BuyItemScreen } from "../../../../screens/items/BuyItemScreen";
+import BuyItemScreen from "../../../../screens/items/BuyItemScreen";
 
 class ItemsTable extends TableModel {
   render() {

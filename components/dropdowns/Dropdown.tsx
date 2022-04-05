@@ -8,10 +8,12 @@ interface DropdownProps {
     id: string;
     title: string;
   }[];
-  selectedItem?: {
-    id: string;
-    title: string;
-  };
+  selectedItem?:
+    | {
+        id: string;
+        title: string;
+      }
+    | undefined;
   handleItemChosen: (itemId: string) => void;
   label?: string;
   border?: boolean;

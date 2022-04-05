@@ -176,7 +176,9 @@ export function Button(props: ButtonProps) {
     <TouchableOpacity
       style={[
         {
-          backgroundColor: "rgba(35, 134, 38, 0.9)",
+          backgroundColor: otherProps.disabled
+            ? "rgba(35, 134, 38, 0.45)"
+            : "rgba(35, 134, 38, 0.9)",
           borderWidth: 1,
           padding: 5,
           borderRadius: 5,
@@ -190,6 +192,7 @@ export function Button(props: ButtonProps) {
         style,
       ]}
       onPress={onPress}
+      {...otherProps}
     >
       <Text style={{ color: "white" }}>{label}</Text>
     </TouchableOpacity>

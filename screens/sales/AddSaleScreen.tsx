@@ -1,16 +1,16 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import { Button, View } from "../../components/Themed";
-import { Item, Partner, Sale } from "../../helpers/models";
+import { Item, Partner, Sale, SaleItem } from "../../helpers/models";
 import { actionCreators as salesActions } from "../../redux/salesActions";
-import { actionCreators as partnersActions } from "../../redux/partnerActions";
 import { actionCreators as modalActions } from "../../redux/modalActions";
 import { AppState } from "../../redux/store";
 import Dropdown from "../../components/dropdowns/Dropdown";
 import EditableTable from "../../components/EditableTable";
 import { getHeight } from "../../helpers/screenSizing";
+import { randomString } from "../../helpers/randomFunctions";
 
 interface Props {
   saleId?: string;
@@ -26,8 +26,9 @@ const emptySale = {
   id: "",
   date: new Date(),
   description: "",
-  itemsId: [],
+  saleItems: [],
   partnerId: "",
+  totalAmount: 0,
 } as Sale;
 
 const AddSaleScreen: FunctionComponent<Props> = ({
@@ -37,12 +38,12 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   onModalTitleChanged,
   onSaleEdited,
   partners,
+  items,
 }) => {
-  const currentSale = sales.find((i) => i.id === saleId);
+  const currentSale = sales.find(i => i.id === saleId);
   const [sale, setSale] = useState(currentSale ?? emptySale);
-  const [selectedItem, setSelectedItem] = useState({} as Partner);
   const [selectableItems] = useState(
-    partners.map((partner) => ({
+    partners.map(partner => ({
       id: partner.id,
       title: partner.name,
     }))
@@ -55,17 +56,22 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   }
 
   const handlePartnerSelect = (partnerId: string) => {
-    setSelectedItem(
-      partners.find((p) => p.id === partnerId) ?? ({} as Partner)
-    );
+    setSale({ ...sale, partnerId });
   };
 
-  const onTextChange = (name: string, value: string) => {
-    setSale({
-      ...sale,
-      [name]: value,
-    });
-  };
+  const [selectedItems, setSelectedItems] = useState<SaleItem[]>(
+    currentSale
+      ? currentSale.saleItems.map(item => ({
+          uniqueId: randomString(),
+          itemId: item.itemId,
+          name: item.name,
+          qtty: item.qtty,
+          total: item.total,
+          price: item.price,
+          id: item.id,
+        }))
+      : []
+  );
 
   return (
     <Page>
@@ -75,16 +81,42 @@ const AddSaleScreen: FunctionComponent<Props> = ({
         }}
       >
         <Dropdown
+          placeholder="Въведете име на партньора"
+          selectedItem={
+            currentSale
+              ? {
+                  id: currentSale.partnerId,
+                  title:
+                    partners.find(
+                      partner => partner.id === currentSale.partnerId
+                    )?.name ?? "",
+                }
+              : undefined
+          }
           items={selectableItems}
           handleItemChosen={handlePartnerSelect}
           label="Име на партньора"
           border={true}
           style={{ marginBottom: 15 }}
         />
-        <EditableTable />
+        <EditableTable
+          items={items}
+          saleItems={selectedItems}
+          setSelectedItems={setSelectedItems}
+          sale={sale}
+        />
         <Button
+          disabled={
+            selectedItems === undefined ||
+            selectedItems.length === 0 ||
+            sale.partnerId === ""
+          }
           label={currentSale ? "Редакция на стока" : "Добавяне на стока"}
           onPress={() => {
+            sale.totalAmount = selectedItems
+              .map(item => Number(item.total))
+              .reduce((a, b) => a + b);
+            sale.saleItems = selectedItems;
             currentSale ? onSaleEdited(sale) : onSaleAdded(sale);
             setSale(emptySale);
             navigator.navigate("Root");

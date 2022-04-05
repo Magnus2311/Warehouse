@@ -14,8 +14,8 @@ class SalesTable extends TableModel {
         data={listableItems}
         columns={columns}
         deleteProps={{
-          title: "Изтриване на стока",
-          content: "Желаете ли да изтриете избраната стока",
+          title: "Изтриване на продажба",
+          content: "Желаете ли да изтриете избраната продажба",
           onDelete: this.onDelete,
         }}
         onEdit={this.onEdit}

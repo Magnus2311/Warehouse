@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState, useRef } from "react";
 import { DataTable } from "react-native-paper";
 import GestureRecognizer from "react-native-swipe-gestures";
-import { Column, DeleteModalProps } from "../../helpers/models";
+import { Column, DeleteModalProps, TableAction } from "../../helpers/models";
 import { normalize } from "../../helpers/screenSizing";
 import { FontAwesome } from "@expo/vector-icons";
 import { Animated } from "react-native";
@@ -17,6 +17,7 @@ type TableProps = {
   data: any[];
   deleteProps?: DeleteModalProps;
   onEdit?: (itemId: string) => void;
+  additionalActions?: TableAction[];
 };
 
 const Table: FunctionComponent<TableProps> = ({
@@ -24,6 +25,7 @@ const Table: FunctionComponent<TableProps> = ({
   data,
   deleteProps,
   onEdit,
+  additionalActions,
 }) => {
   const [showAdditionalMenus, setShowAdditionalMenus] = useState("");
   const translateAnim = useRef(new Animated.Value(300)).current;
@@ -33,7 +35,7 @@ const Table: FunctionComponent<TableProps> = ({
     return (
       <DataTable.Header>
         {columns &&
-          columns.map((column) => {
+          columns.map(column => {
             return (
               <DataTable.Title
                 key={column.name}
@@ -55,7 +57,7 @@ const Table: FunctionComponent<TableProps> = ({
     >
       {renderHeader({ columns })}
       {data &&
-        data.map((item) => {
+        data.map(item => {
           return (
             <GestureRecognizer
               key={item.id}
@@ -79,7 +81,7 @@ const Table: FunctionComponent<TableProps> = ({
               }}
             >
               <DataTable.Row>
-                {columns.map((column) => {
+                {columns.map(column => {
                   return (
                     <DataTable.Cell
                       key={column.name}
@@ -91,47 +93,60 @@ const Table: FunctionComponent<TableProps> = ({
                     </DataTable.Cell>
                   );
                 })}
-                {showAdditionalMenus == item.id && (onEdit || deleteProps) && (
-                  <Animated.View
-                    key={item.id}
-                    style={{
-                      alignSelf: "center",
-                      flexDirection: "row",
-                      transform: [{ translateX: translateAnim }],
-                    }}
-                  >
-                    {onEdit && (
-                      <FontAwesome
-                        name="edit"
-                        size={30}
-                        color="green"
-                        style={{
-                          alignSelf: "center",
-                          marginRight: 5,
-                        }}
-                        onPress={() => {
-                          onEdit(item.id);
-                          setShowAdditionalMenus("");
-                        }}
-                      />
-                    )}
-                    {deleteProps && (
-                      <FontAwesome
-                        name="remove"
-                        size={30}
-                        color="green"
-                        style={{
-                          alignSelf: "center",
-                          marginLeft: 5,
-                          paddingBottom: 4,
-                        }}
-                        onPress={() =>
-                          createTwoButtonAlert(item.id, deleteProps, alerts)
-                        }
-                      />
-                    )}
-                  </Animated.View>
-                )}
+                {showAdditionalMenus == item.id &&
+                  (onEdit || deleteProps || additionalActions) && (
+                    <Animated.View
+                      key={item.id}
+                      style={{
+                        alignSelf: "center",
+                        flexDirection: "row",
+                        transform: [{ translateX: translateAnim }],
+                      }}
+                    >
+                      {additionalActions &&
+                        additionalActions.map(action => (
+                          <FontAwesome
+                            name={action.name}
+                            size={30}
+                            color={action.color}
+                            style={{
+                              alignSelf: "center",
+                              marginRight: 10,
+                            }}
+                            onPress={() => action.onPress(item)}
+                          />
+                        ))}
+                      {onEdit && (
+                        <FontAwesome
+                          name="edit"
+                          size={30}
+                          color="green"
+                          style={{
+                            alignSelf: "center",
+                            marginRight: 10,
+                          }}
+                          onPress={() => {
+                            onEdit(item.id);
+                            setShowAdditionalMenus("");
+                          }}
+                        />
+                      )}
+                      {deleteProps && (
+                        <FontAwesome
+                          name="remove"
+                          size={30}
+                          color="green"
+                          style={{
+                            alignSelf: "center",
+                            paddingBottom: 4,
+                          }}
+                          onPress={() =>
+                            createTwoButtonAlert(item.id, deleteProps, alerts)
+                          }
+                        />
+                      )}
+                    </Animated.View>
+                  )}
               </DataTable.Row>
             </GestureRecognizer>
           );

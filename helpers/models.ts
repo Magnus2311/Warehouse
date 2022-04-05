@@ -1,11 +1,11 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { ReactNode } from "react";
+import { ICONS } from "./icons";
 
 export interface Item {
   id: string;
   name: string;
   basePrice: string;
   sellPrice: string;
+  qtty: string;
 }
 
 export interface Partner {
@@ -49,4 +49,10 @@ export interface DeleteModalProps {
   title: string;
   content: string;
   onDelete: (itemId: string) => void;
+}
+
+export interface TableAction {
+  name: ICONS;
+  color: string;
+  onPress: (item: IListable) => void;
 }

@@ -4,7 +4,7 @@ import Table from "../../Table";
 import { actionCreators } from "../../../../redux/itemActions";
 import { AppState } from "../../../../redux/store";
 import TableModel from "./TableModel";
-import AddItemScreen from "../../../../screens/AddItemScreen";
+import AddItemScreen from "../../../../screens/items/AddItemScreen";
 import { Item, TableAction } from "../../../../helpers/models";
 import BuyItemScreen from "../../../../screens/items/BuyItemScreen";
 

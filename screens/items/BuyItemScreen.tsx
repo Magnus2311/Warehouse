@@ -32,20 +32,21 @@ const BuyItemScreen: FunctionComponent<Props> = ({
       <Input label="Име на стоката:" value={currentItem.name} border={true} />
       <Input
         label="Доставна цена:"
-        value={currentItem.basePrice.toString()}
+        onChangeText={txt => onTextChange("basePrice", txt)}
+        value={currentItem.basePrice}
         keyboardType="numeric"
         border={true}
       />
       <Input
         label="Количество:"
-        onChangeText={(txt) => onTextChange("qtty", txt)}
+        onChangeText={txt => onTextChange("qtty", txt)}
         value={currentItem.qtty}
         keyboardType="numeric"
         border={true}
       />
       <Input
         label="Продажна цена:"
-        value={currentItem.sellPrice.toString()}
+        value={currentItem.sellPrice}
         keyboardType="numeric"
         border={true}
       />

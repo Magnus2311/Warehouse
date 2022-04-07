@@ -4,17 +4,20 @@ import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import { Button, Input, Text } from "../../components/Themed";
 import { toDecimalFormat } from "../../helpers/extensions";
-import { Item } from "../../helpers/models";
+import { BuyItem, Item } from "../../helpers/models";
 import { actionCreators } from "../../redux/modalActions";
+import { actionCreators as itemsActions } from "../../redux/itemActions";
 
 type Props = {
   item: Item;
   onModalTitleChanged: (modalTitle: string) => void;
+  onBuyItem: (buyItem: BuyItem) => void;
 };
 
 const BuyItemScreen: FunctionComponent<Props> = ({
   item,
   onModalTitleChanged,
+  onBuyItem,
 }) => {
   const [currentItem, setItem] = useState({ ...item, qtty: "1" });
   const onTextChange = (name: string, value: string) => {
@@ -63,6 +66,11 @@ const BuyItemScreen: FunctionComponent<Props> = ({
       <Button
         label={"Завършване на покупка"}
         onPress={() => {
+          onBuyItem({
+            qtty: currentItem.qtty,
+            basePrice: currentItem.basePrice,
+            itemId: currentItem.id,
+          });
           navigator.goBack();
         }}
       />
@@ -74,6 +82,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     onModalTitleChanged: (modalTitle: string) => {
       dispatch(actionCreators.onTitleChange(modalTitle));
+    },
+    onBuyItem: (buyItem: BuyItem) => {
+      dispatch(itemsActions.onBuyItem(buyItem));
     },
   };
 };

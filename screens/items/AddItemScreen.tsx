@@ -53,20 +53,24 @@ const AddItemScreen: FunctionComponent<Props> = ({
         value={item.name}
         border={true}
       />
-      <Input
-        label="Доставна цена:"
-        onChangeText={txt => onTextChange("basePrice", txt)}
-        value={item.basePrice.toString()}
-        keyboardType="numeric"
-        border={true}
-      />
-      <Input
-        label="Количество:"
-        onChangeText={txt => onTextChange("qtty", txt)}
-        value={item.qtty}
-        keyboardType="numeric"
-        border={true}
-      />
+      {!currentItem && (
+        <Input
+          label="Доставна цена:"
+          onChangeText={txt => onTextChange("basePrice", txt)}
+          value={item.basePrice.toString()}
+          keyboardType="numeric"
+          border={true}
+        />
+      )}
+      {!currentItem && (
+        <Input
+          label="Количество:"
+          onChangeText={txt => onTextChange("qtty", txt)}
+          value={item.qtty}
+          keyboardType="numeric"
+          border={true}
+        />
+      )}
       <Input
         label="Продажна цена:"
         onChangeText={txt => onTextChange("sellPrice", txt)}

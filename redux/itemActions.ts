@@ -148,7 +148,21 @@ export const reducer: Reducer<ItemsState> = (
         items: [...state.items.filter(item => item.id !== action.itemId)],
       };
     case "BUY_ITEM":
-      ...
+      return {
+        items: [
+          ...state.items.map(item => {
+            if (item.id === action.buyItem.itemId)
+              return {
+                ...item,
+                qtty: (
+                  Number(item.qtty) + Number(action.buyItem.qtty)
+                ).toString(),
+                basePrice: action.buyItem.basePrice,
+              };
+            return item;
+          }),
+        ],
+      };
     default:
       return state;
   }

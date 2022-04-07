@@ -37,6 +37,12 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
       flex: isMobile ? 2 : 1,
       isRight: true,
     },
+    {
+      name: "К-во",
+      propName: "qtty",
+      flex: 1,
+      isRight: true,
+    },
   ];
 
   return (

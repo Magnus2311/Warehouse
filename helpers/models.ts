@@ -60,5 +60,5 @@ export interface TableAction {
 export interface BuyItem {
   itemId: string;
   qtty: string;
-  buyPrice: string;
+  basePrice: string;
 }

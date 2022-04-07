@@ -113,7 +113,10 @@ const Table: FunctionComponent<TableProps> = ({
                               alignSelf: "center",
                               marginRight: 10,
                             }}
-                            onPress={() => action.onPress(item)}
+                            onPress={() => {
+                              action.onPress(item);
+                              setShowAdditionalMenus("");
+                            }}
                           />
                         ))}
                       {onEdit && (

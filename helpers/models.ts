@@ -56,3 +56,9 @@ export interface TableAction {
   color: string;
   onPress: (item: IListable) => void;
 }
+
+export interface BuyItem {
+  itemId: string;
+  qtty: string;
+  basePrice: string;
+}

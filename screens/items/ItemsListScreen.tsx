@@ -1,13 +1,12 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef } from "react";
-import { Animated } from "react-native";
 import { connect } from "react-redux";
-import { Page } from "../components/Page";
-import ItemsTable from "../components/Table/types/classes/ItemsTable";
-import { Item } from "../helpers/models";
-import { isMobile } from "../helpers/screenSizing";
-import { actionCreators } from "../redux/itemActions";
-import { AppState } from "../redux/store";
+import { Page } from "../../components/Page";
+import ItemsTable from "../../components/Table/types/classes/ItemsTable";
+import { Item } from "../../helpers/models";
+import { isMobile } from "../../helpers/screenSizing";
+import { actionCreators } from "../../redux/itemActions";
+import { AppState } from "../../redux/store";
 
 interface Props {
   onItemsLoaded: () => void;
@@ -36,6 +35,12 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
       name: isMobile ? "П-на цена" : "Продажна цена",
       propName: "sellPrice",
       flex: isMobile ? 2 : 1,
+      isRight: true,
+    },
+    {
+      name: "К-во",
+      propName: "qtty",
+      flex: 1,
       isRight: true,
     },
   ];

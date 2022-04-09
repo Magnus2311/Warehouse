@@ -3,6 +3,7 @@ import { ICONS } from "./icons";
 export interface Item {
   id: string;
   name: string;
+  partnerId: string;
   basePrice: string;
   sellPrice: string;
   qtty: string;

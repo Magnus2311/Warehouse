@@ -7,6 +7,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Animated } from "react-native";
 import { useAlerts } from "react-native-paper-alerts";
 import { AlertsMethods } from "react-native-paper-alerts/lib/typescript/type";
+import { toDecimalFormat } from "../../helpers/extensions";
 
 type RowProps = {
   columns: Column[];
@@ -35,7 +36,7 @@ const Table: FunctionComponent<TableProps> = ({
     return (
       <DataTable.Header>
         {columns &&
-          columns.map(column => {
+          columns.map((column) => {
             return (
               <DataTable.Title
                 key={column.name}
@@ -57,7 +58,7 @@ const Table: FunctionComponent<TableProps> = ({
     >
       {renderHeader({ columns })}
       {data &&
-        data.map(item => {
+        data.map((item) => {
           return (
             <GestureRecognizer
               key={item.id}
@@ -81,7 +82,7 @@ const Table: FunctionComponent<TableProps> = ({
               }}
             >
               <DataTable.Row>
-                {columns.map(column => {
+                {columns.map((column) => {
                   return (
                     <DataTable.Cell
                       key={column.name}
@@ -89,7 +90,9 @@ const Table: FunctionComponent<TableProps> = ({
                         flex: column.flex ?? 1,
                       }}
                     >
-                      {item[column.propName]}
+                      {column.isMoney
+                        ? toDecimalFormat(Number(item[column.propName]))
+                        : item[column.propName]}
                     </DataTable.Cell>
                   );
                 })}
@@ -104,7 +107,7 @@ const Table: FunctionComponent<TableProps> = ({
                       }}
                     >
                       {additionalActions &&
-                        additionalActions.map(action => (
+                        additionalActions.map((action) => (
                           <FontAwesome
                             name={action.name}
                             size={30}

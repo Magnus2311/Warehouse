@@ -40,6 +40,7 @@ export interface Column {
   propName: string;
   flex?: number;
   isRight?: boolean;
+  isMoney?: boolean;
 }
 
 export interface IListable {

@@ -42,7 +42,11 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
 
   const toggleDropdown = (isOpen: boolean) => {
     Animated.timing(height, {
-      toValue: isOpen ? 250 : label ? 50 : 26.67,
+      toValue: isOpen
+        ? Math.min(250, 50 + shownItems.length * 26.67)
+        : label
+        ? 50
+        : 26.67,
       duration: 200,
       useNativeDriver: false,
     }).start();
@@ -65,7 +69,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   const handleInputChange = (e: string) => {
     setInputText(e);
     setShownItems(
-      items.filter(item => item.title.toLowerCase().includes(e.toLowerCase()))
+      items.filter((item) => item.title.toLowerCase().includes(e.toLowerCase()))
     );
   };
 
@@ -129,7 +133,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               alignSelf: "stretch",
             }}
           >
-            {shownItems.map(item => (
+            {shownItems.map((item) => (
               <Animated.View
                 style={{
                   maxHeight: rowHeight,

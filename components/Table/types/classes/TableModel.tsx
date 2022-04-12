@@ -1,6 +1,6 @@
 import { NavigationProp } from "@react-navigation/native";
 import React from "react";
-import { Column, IListable } from "../../../../helpers/models";
+import { AlertModalProps, Column, IListable } from "../../../../helpers/models";
 import { RootStackParamList } from "../../../../types";
 
 type TableModelProps = {
@@ -11,6 +11,7 @@ type TableModelProps = {
   showDeleted?: {
     showDeleted: boolean;
     setShowDeleted: (showDeleted: boolean) => void;
+    recoverProps: AlertModalProps;
   };
 };
 

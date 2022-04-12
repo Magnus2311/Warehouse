@@ -3,7 +3,7 @@ import { DataTable } from "react-native-paper";
 import GestureRecognizer from "react-native-swipe-gestures";
 import {
   Column,
-  DeleteModalProps,
+  AlertModalProps as AlertModalProps,
   IListable,
   TableAction,
 } from "../../helpers/models";
@@ -21,12 +21,13 @@ type RowProps = {
 type TableProps = {
   columns: Column[];
   data: IListable[];
-  deleteProps?: DeleteModalProps;
+  deleteProps?: AlertModalProps;
   onEdit?: (itemId: string) => void;
   additionalActions?: TableAction[];
   showDeleted?: {
     showDeleted: boolean;
     setShowDeleted: (showDeleted: boolean) => void;
+    recoverProps: AlertModalProps;
   };
 };
 
@@ -126,7 +127,10 @@ const Table: FunctionComponent<TableProps> = ({
                   );
                 })}
                 {showAdditionalMenus == item.id &&
-                  (onEdit || deleteProps || additionalActions) && (
+                  (onEdit ||
+                    deleteProps ||
+                    additionalActions ||
+                    (showDeleted && item.isDeleted)) && (
                     <Animated.View
                       key={item.id}
                       style={{
@@ -180,6 +184,24 @@ const Table: FunctionComponent<TableProps> = ({
                           }
                         />
                       )}
+                      {showDeleted && item.isDeleted && (
+                        <FontAwesome
+                          name="arrow-down"
+                          size={30}
+                          color="green"
+                          style={{
+                            alignSelf: "center",
+                            paddingBottom: 4,
+                          }}
+                          onPress={() =>
+                            createTwoButtonAlert(
+                              item.id,
+                              showDeleted.recoverProps,
+                              alerts
+                            )
+                          }
+                        />
+                      )}
                     </Animated.View>
                   )}
               </DataTable.Row>
@@ -192,14 +214,17 @@ const Table: FunctionComponent<TableProps> = ({
 
 const createTwoButtonAlert = (
   itemId: string,
-  deleteProps: DeleteModalProps,
+  alertProps: AlertModalProps,
   alerts: AlertsMethods
 ) =>
-  alerts.alert(deleteProps.title, deleteProps.content, [
+  alerts.alert(alertProps.title, alertProps.content, [
     {
-      text: "Отказ",
+      text: alertProps.cancelBtnTxt,
     },
-    { text: "Изтриване", onPress: () => deleteProps.onDelete(itemId) },
+    {
+      text: alertProps.acceptBtnTxt,
+      onPress: () => alertProps.onAction(itemId),
+    },
   ]);
 
 export default Table;

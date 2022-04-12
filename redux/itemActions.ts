@@ -135,8 +135,15 @@ export const actionCreators = {
   },
   onBuyItem: (item: BuyItem): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      post("api/items/buy-item", item).then((item) => {
+      post<BuyItem>("api/items/buy-item", item).then((item) => {
         dispatch(buyItem(item));
+      });
+    };
+  },
+  onItemRecovery: (itemId: string): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      post<Item>("api/items/item-recovery", itemId).then((item: Item) => {
+        dispatch(editItem(item));
       });
     };
   },

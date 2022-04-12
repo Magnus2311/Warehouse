@@ -13,6 +13,7 @@ import { getDateFormated, toDecimalFormat } from "../../helpers/extensions";
 
 interface Props {
   onSalesLoaded: () => void;
+  onSaleRecovery: (itemId: string) => void;
   onAllSalesLoaded: () => void;
   onPartnersLoaded: () => void;
   onItemsLoaded: () => void;
@@ -39,6 +40,9 @@ const mapDispatchToProps = (dispatch: any) => {
     onSalesLoaded: () => {
       dispatch(salesActions.onLoadSales());
     },
+    onSaleRecovery: (saleId: string) => {
+      dispatch(salesActions.onSaleRecovery(saleId));
+    },
     onAllSalesLoaded: () => {
       dispatch(salesActions.onLoadAllSales());
     },
@@ -55,6 +59,7 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
   sales,
   partners,
   onSalesLoaded,
+  onSaleRecovery,
   onItemsLoaded,
   onPartnersLoaded,
   onAllSalesLoaded,
@@ -103,7 +108,17 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
             } as SaleListable)
         )}
         navigation={navigation}
-        showDeleted={{ setShowDeleted, showDeleted }}
+        showDeleted={{
+          setShowDeleted,
+          showDeleted,
+          recoverProps: {
+            title: "Възстановяване на продажба",
+            content: "Желаете ли да възстановите избраната продажба",
+            cancelBtnTxt: "Отказ",
+            acceptBtnTxt: "Възстановяване",
+            onAction: onSaleRecovery,
+          },
+        }}
       />
     </Page>
   );

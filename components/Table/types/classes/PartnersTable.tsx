@@ -16,7 +16,9 @@ class PartnersTable extends TableModel {
         deleteProps={{
           title: "Изтриване на партньор",
           content: "Желаете ли да изтриете избраният партньор",
-          onDelete: this.onDelete,
+          cancelBtnTxt: "Отказ",
+          acceptBtnTxt: "Изтриване",
+          onAction: this.onDelete,
         }}
         onEdit={this.onEdit}
         showDeleted={showDeleted}

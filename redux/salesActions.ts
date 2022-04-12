@@ -121,6 +121,13 @@ export const actionCreators = {
       });
     };
   },
+  onSaleRecovery: (saleId: string): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      post<Sale>("api/sales/sale-recovery", saleId).then((sale: Sale) => {
+        dispatch(editSale(sale));
+      });
+    };
+  },
 };
 
 const initialState = {

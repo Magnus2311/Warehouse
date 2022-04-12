@@ -4,7 +4,7 @@ import { useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import ItemsTable from "../../components/Table/types/classes/ItemsTable";
-import { Column, Item } from "../../helpers/models";
+import { Column, IListable, Item } from "../../helpers/models";
 import { isMobile } from "../../helpers/screenSizing";
 import { actionCreators } from "../../redux/itemActions";
 import { AppState } from "../../redux/store";
@@ -12,6 +12,7 @@ import { AppState } from "../../redux/store";
 interface Props {
   onItemsLoaded: () => void;
   onAllItemsLoaded: () => void;
+  onItemRecovery: (itemId: string) => void;
   items: Item[];
 }
 
@@ -19,6 +20,7 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
   items,
   onItemsLoaded,
   onAllItemsLoaded,
+  onItemRecovery,
 }) => {
   const navigation = useNavigation();
 
@@ -59,7 +61,17 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
         columns={columns}
         listableItems={items}
         navigation={navigation}
-        showDeleted={{ showDeleted, setShowDeleted }}
+        showDeleted={{
+          showDeleted,
+          setShowDeleted,
+          recoverProps: {
+            title: "Възстановяване на стока",
+            content: "Желаете ли да възстановите избраната стока",
+            cancelBtnTxt: "Отказ",
+            acceptBtnTxt: "Възстановяване",
+            onAction: onItemRecovery,
+          },
+        }}
       />
     </Page>
   );
@@ -73,6 +85,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     onItemsLoaded: () => {
       dispatch(actionCreators.onLoadItems());
+    },
+    onItemRecovery: (itemId: string) => {
+      dispatch(actionCreators.onItemRecovery(itemId));
     },
     onAllItemsLoaded: () => {
       dispatch(actionCreators.onLoadAllItems());

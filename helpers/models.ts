@@ -45,10 +45,12 @@ export interface IListable {
   [name: string]: string | boolean | Date | SaleItem[] | number;
 }
 
-export interface DeleteModalProps {
+export interface AlertModalProps {
   title: string;
   content: string;
-  onDelete: (itemId: string) => void;
+  cancelBtnTxt: string;
+  acceptBtnTxt: string;
+  onAction: (itemId: string) => void;
 }
 
 export interface TableAction {

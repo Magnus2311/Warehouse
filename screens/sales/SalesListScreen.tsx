@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import SalesTable from "../../components/Table/types/classes/SalesTable";
@@ -13,6 +13,7 @@ import { getDateFormated, toDecimalFormat } from "../../helpers/extensions";
 
 interface Props {
   onSalesLoaded: () => void;
+  onAllSalesLoaded: () => void;
   onPartnersLoaded: () => void;
   onItemsLoaded: () => void;
   sales: Sale[];
@@ -31,11 +32,14 @@ const mapDispatchToProps = (dispatch: any) => {
     onSalesLoaded: () => {
       dispatch(salesActions.onLoadSales());
     },
+    onAllSalesLoaded: () => {
+      dispatch(salesActions.onLoadAllSales());
+    },
     onPartnersLoaded: () => {
-      dispatch(partnersActions.onLoadPartners());
+      dispatch(partnersActions.onLoadAllPartners());
     },
     onItemsLoaded: () => {
-      dispatch(itemActions.onLoadItems());
+      dispatch(itemActions.onLoadAllItems());
     },
   };
 };
@@ -46,14 +50,17 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
   onSalesLoaded,
   onItemsLoaded,
   onPartnersLoaded,
+  onAllSalesLoaded,
 }) => {
   const navigation = useNavigation();
 
+  const [showDeleted, setShowDeleted] = useState(false);
+
   useEffect(() => {
-    onSalesLoaded();
+    showDeleted ? onAllSalesLoaded() : onSalesLoaded();
     onItemsLoaded();
     onPartnersLoaded();
-  }, []);
+  }, [showDeleted]);
 
   const columns = [
     { name: "Име на стока", propName: "partner", flex: 6 },
@@ -75,15 +82,17 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
     <Page>
       <SalesTable
         columns={columns}
-        listableItems={sales.map(sale => ({
+        listableItems={sales.map((sale) => ({
           id: sale.id,
           partner:
-            partners.find(partner => partner.id === sale.partnerId)?.name ?? "",
+            partners.find((partner) => partner.id === sale.partnerId)?.name ??
+            "",
           date: getDateFormated(sale.date),
           description: sale.description,
           total: toDecimalFormat(sale.totalAmount),
         }))}
         navigation={navigation}
+        showDeleted={{ setShowDeleted, showDeleted }}
       />
     </Page>
   );

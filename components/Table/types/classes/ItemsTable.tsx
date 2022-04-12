@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import Table from "../../Table";
 import { actionCreators } from "../../../../redux/itemActions";
@@ -10,7 +10,7 @@ import BuyItemScreen from "../../../../screens/items/BuyItemScreen";
 
 class ItemsTable extends TableModel {
   render() {
-    const { listableItems, columns } = this.props;
+    const { listableItems, columns, showDeleted } = this.props;
     const additionalActions = [
       {
         name: "plus",
@@ -34,6 +34,7 @@ class ItemsTable extends TableModel {
         }}
         onEdit={this.onEdit}
         additionalActions={additionalActions}
+        showDeleted={showDeleted}
       />
     );
   }

@@ -27,6 +27,11 @@ interface LoadSalesAction {
   sales: Sale[];
 }
 
+interface LoadAllSalesAction {
+  type: "LOAD_ALL_SALES";
+  sales: Sale[];
+}
+
 interface DeleteSaleAction {
   type: "DELETE_SALE";
   saleId: string;
@@ -36,7 +41,8 @@ export type KnownAction =
   | AddSaleAction
   | LoadSalesAction
   | EditSaleAction
-  | DeleteSaleAction;
+  | DeleteSaleAction
+  | LoadAllSalesAction;
 
 export const addSale = (sale: Sale): AddSaleAction => ({
   type: "ADD_SALE",
@@ -58,6 +64,11 @@ export const loadSales = (sales: Sale[]): LoadSalesAction => ({
   sales,
 });
 
+export const loadAllSales = (sales: Sale[]): LoadAllSalesAction => ({
+  type: "LOAD_ALL_SALES",
+  sales,
+});
+
 export const actionCreators = {
   onAddSale: (saleDTO: Sale): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
@@ -73,6 +84,17 @@ export const actionCreators = {
   onLoadSales: (): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
       get<Sale>("api/sales/")
+        .then((sales) => {
+          dispatch(loadSales(sales));
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+  },
+  onLoadAllSales: (): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      get<Sale>("api/sales/get-all")
         .then((sales) => {
           dispatch(loadSales(sales));
         })
@@ -114,6 +136,8 @@ export const reducer: Reducer<SalesState> = (
     case "ADD_SALE":
       return { sales: [...state.sales, action.sale] };
     case "LOAD_SALES":
+      return { ...state.sales, sales: action.sales };
+    case "LOAD_ALL_SALES":
       return { ...state.sales, sales: action.sales };
     case "EDIT_SALE":
       return {

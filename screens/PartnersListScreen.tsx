@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../components/Page";
 import { Partner } from "../helpers/models";
@@ -9,14 +9,21 @@ import PartnersTable from "../components/Table/types/classes/PartnersTable";
 
 interface PartnersListScreenProps {
   onPartnersLoaded: () => void;
+  onAllPartnersLoaded: () => void;
   partners: Partner[];
 }
 
 const PartnersListScreen = ({
   onPartnersLoaded,
   partners,
+  onAllPartnersLoaded,
 }: PartnersListScreenProps) => {
-  useEffect(() => onPartnersLoaded(), []);
+  const [showDeleted, setShowDeleted] = useState(false);
+
+  useEffect(
+    () => (showDeleted ? onAllPartnersLoaded() : onPartnersLoaded()),
+    [showDeleted]
+  );
 
   const columns = [
     { name: "Име на партньора", propName: "name", flex: 4 },
@@ -40,6 +47,7 @@ const PartnersListScreen = ({
         columns={columns}
         listableItems={partners}
         navigation={useNavigation()}
+        showDeleted={{ setShowDeleted, showDeleted }}
       />
     </Page>
   );
@@ -53,6 +61,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     onPartnersLoaded: () => {
       dispatch(actionCreators.onLoadPartners());
+    },
+    onAllPartnersLoaded: () => {
+      dispatch(actionCreators.onLoadAllPartners());
     },
   };
 };

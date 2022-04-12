@@ -8,7 +8,7 @@ import AddSaleScreen from "../../../../screens/sales/AddSaleScreen";
 
 class SalesTable extends TableModel {
   render() {
-    const { listableItems, columns } = this.props;
+    const { listableItems, columns, showDeleted } = this.props;
     return (
       <Table
         data={listableItems}
@@ -19,6 +19,7 @@ class SalesTable extends TableModel {
           onDelete: this.onDelete,
         }}
         onEdit={this.onEdit}
+        showDeleted={showDeleted}
       />
     );
   }

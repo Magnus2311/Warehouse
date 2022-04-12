@@ -9,6 +9,7 @@ import PartnersTable from "../components/Table/types/classes/PartnersTable";
 
 interface PartnersListScreenProps {
   onPartnersLoaded: () => void;
+  onPartnerRecovery: (partnerId: string) => void;
   onAllPartnersLoaded: () => void;
   partners: Partner[];
 }
@@ -17,6 +18,7 @@ const PartnersListScreen = ({
   onPartnersLoaded,
   partners,
   onAllPartnersLoaded,
+  onPartnerRecovery,
 }: PartnersListScreenProps) => {
   const [showDeleted, setShowDeleted] = useState(false);
 
@@ -47,7 +49,17 @@ const PartnersListScreen = ({
         columns={columns}
         listableItems={partners}
         navigation={useNavigation()}
-        showDeleted={{ setShowDeleted, showDeleted }}
+        showDeleted={{
+          setShowDeleted,
+          showDeleted,
+          recoverProps: {
+            title: "Възстановяване на партньор",
+            content: "Желаете ли да възстановите избрания партньор",
+            cancelBtnTxt: "Отказ",
+            acceptBtnTxt: "Възстановяване",
+            onAction: onPartnerRecovery,
+          },
+        }}
       />
     </Page>
   );
@@ -61,6 +73,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     onPartnersLoaded: () => {
       dispatch(actionCreators.onLoadPartners());
+    },
+    onPartnerRecovery: (partnerId: string) => {
+      dispatch(actionCreators.onPartnerRecovery(partnerId));
     },
     onAllPartnersLoaded: () => {
       dispatch(actionCreators.onLoadAllPartners());

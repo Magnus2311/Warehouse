@@ -113,6 +113,15 @@ export const actionCreators = {
       );
     };
   },
+  onPartnerRecovery: (partnerId: string): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      post<Partner>("api/partners/partner-recovery", partnerId).then(
+        (sale: Partner) => {
+          dispatch(editPartner(sale));
+        }
+      );
+    };
+  },
 };
 
 const initialState = {

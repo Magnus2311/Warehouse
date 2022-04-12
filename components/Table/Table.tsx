@@ -1,7 +1,12 @@
 import React, { FunctionComponent, useState, useRef } from "react";
 import { DataTable } from "react-native-paper";
 import GestureRecognizer from "react-native-swipe-gestures";
-import { Column, DeleteModalProps, TableAction } from "../../helpers/models";
+import {
+  Column,
+  AlertModalProps as AlertModalProps,
+  IListable,
+  TableAction,
+} from "../../helpers/models";
 import { normalize } from "../../helpers/screenSizing";
 import { FontAwesome } from "@expo/vector-icons";
 import { Animated, Switch } from "react-native";
@@ -15,13 +20,14 @@ type RowProps = {
 
 type TableProps = {
   columns: Column[];
-  data: any[];
-  deleteProps?: DeleteModalProps;
+  data: IListable[];
+  deleteProps?: AlertModalProps;
   onEdit?: (itemId: string) => void;
   additionalActions?: TableAction[];
   showDeleted?: {
     showDeleted: boolean;
     setShowDeleted: (showDeleted: boolean) => void;
+    recoverProps: AlertModalProps;
   };
 };
 
@@ -99,7 +105,13 @@ const Table: FunctionComponent<TableProps> = ({
                 }).start(() => setShowAdditionalMenus(""));
               }}
             >
-              <DataTable.Row>
+              <DataTable.Row
+                style={{
+                  backgroundColor: item.isDeleted
+                    ? "rgba(255, 0, 0, 0.05)"
+                    : "white",
+                }}
+              >
                 {columns.map((column) => {
                   return (
                     <DataTable.Cell
@@ -115,7 +127,10 @@ const Table: FunctionComponent<TableProps> = ({
                   );
                 })}
                 {showAdditionalMenus == item.id &&
-                  (onEdit || deleteProps || additionalActions) && (
+                  (onEdit ||
+                    deleteProps ||
+                    additionalActions ||
+                    (showDeleted && item.isDeleted)) && (
                     <Animated.View
                       key={item.id}
                       style={{
@@ -169,6 +184,24 @@ const Table: FunctionComponent<TableProps> = ({
                           }
                         />
                       )}
+                      {showDeleted && item.isDeleted && (
+                        <FontAwesome
+                          name="arrow-down"
+                          size={30}
+                          color="green"
+                          style={{
+                            alignSelf: "center",
+                            paddingBottom: 4,
+                          }}
+                          onPress={() =>
+                            createTwoButtonAlert(
+                              item.id,
+                              showDeleted.recoverProps,
+                              alerts
+                            )
+                          }
+                        />
+                      )}
                     </Animated.View>
                   )}
               </DataTable.Row>
@@ -181,14 +214,17 @@ const Table: FunctionComponent<TableProps> = ({
 
 const createTwoButtonAlert = (
   itemId: string,
-  deleteProps: DeleteModalProps,
+  alertProps: AlertModalProps,
   alerts: AlertsMethods
 ) =>
-  alerts.alert(deleteProps.title, deleteProps.content, [
+  alerts.alert(alertProps.title, alertProps.content, [
     {
-      text: "Отказ",
+      text: alertProps.cancelBtnTxt,
     },
-    { text: "Изтриване", onPress: () => deleteProps.onDelete(itemId) },
+    {
+      text: alertProps.acceptBtnTxt,
+      onPress: () => alertProps.onAction(itemId),
+    },
   ]);
 
 export default Table;

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import SalesTable from "../../components/Table/types/classes/SalesTable";
-import { Partner, Sale } from "../../helpers/models";
+import { IListable, Partner, Sale } from "../../helpers/models";
 import { isMobile } from "../../helpers/screenSizing";
 import { actionCreators as salesActions } from "../../redux/salesActions";
 import { actionCreators as partnersActions } from "../../redux/partnerActions";
@@ -13,11 +13,19 @@ import { getDateFormated, toDecimalFormat } from "../../helpers/extensions";
 
 interface Props {
   onSalesLoaded: () => void;
+  onSaleRecovery: (itemId: string) => void;
   onAllSalesLoaded: () => void;
   onPartnersLoaded: () => void;
   onItemsLoaded: () => void;
   sales: Sale[];
   partners: Partner[];
+}
+
+interface SaleListable extends IListable {
+  partner: string;
+  date: string;
+  description: string;
+  total: string;
 }
 
 const mapStateToProps = (state: AppState) => {
@@ -31,6 +39,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     onSalesLoaded: () => {
       dispatch(salesActions.onLoadSales());
+    },
+    onSaleRecovery: (saleId: string) => {
+      dispatch(salesActions.onSaleRecovery(saleId));
     },
     onAllSalesLoaded: () => {
       dispatch(salesActions.onLoadAllSales());
@@ -48,6 +59,7 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
   sales,
   partners,
   onSalesLoaded,
+  onSaleRecovery,
   onItemsLoaded,
   onPartnersLoaded,
   onAllSalesLoaded,
@@ -82,17 +94,31 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
     <Page>
       <SalesTable
         columns={columns}
-        listableItems={sales.map((sale) => ({
-          id: sale.id,
-          partner:
-            partners.find((partner) => partner.id === sale.partnerId)?.name ??
-            "",
-          date: getDateFormated(sale.date),
-          description: sale.description,
-          total: toDecimalFormat(sale.totalAmount),
-        }))}
+        listableItems={sales.map(
+          (sale) =>
+            ({
+              id: sale.id,
+              partner:
+                partners.find((partner) => partner.id === sale.partnerId)
+                  ?.name ?? "",
+              date: getDateFormated(sale.date),
+              description: sale.description,
+              total: toDecimalFormat(sale.totalAmount),
+              isDeleted: sale.isDeleted,
+            } as SaleListable)
+        )}
         navigation={navigation}
-        showDeleted={{ setShowDeleted, showDeleted }}
+        showDeleted={{
+          setShowDeleted,
+          showDeleted,
+          recoverProps: {
+            title: "Възстановяване на продажба",
+            content: "Желаете ли да възстановите избраната продажба",
+            cancelBtnTxt: "Отказ",
+            acceptBtnTxt: "Възстановяване",
+            onAction: onSaleRecovery,
+          },
+        }}
       />
     </Page>
   );

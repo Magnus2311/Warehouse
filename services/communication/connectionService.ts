@@ -27,7 +27,7 @@ export async function put<T>(url: string, data: T): Promise<boolean> {
   return response.ok;
 }
 
-export async function post<T>(url: string, data: T): Promise<T> {
+export async function post<T>(url: string, data: any): Promise<T> {
   const response = await fetch(`${API_PATH}${url}`, {
     method: "POST",
     credentials: "omit",

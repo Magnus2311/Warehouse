@@ -30,7 +30,9 @@ class ItemsTable extends TableModel {
         deleteProps={{
           title: "Изтриване на стока",
           content: "Желаете ли да изтриете избраната стока",
-          onDelete: this.onDelete,
+          cancelBtnTxt: "Отказ",
+          acceptBtnTxt: "Изтриване",
+          onAction: this.onDelete,
         }}
         onEdit={this.onEdit}
         additionalActions={additionalActions}

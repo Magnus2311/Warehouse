@@ -1,5 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef } from "react";
+import { useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import ItemsTable from "../../components/Table/types/classes/ItemsTable";
@@ -10,18 +11,22 @@ import { AppState } from "../../redux/store";
 
 interface Props {
   onItemsLoaded: () => void;
+  onAllItemsLoaded: () => void;
   items: Item[];
 }
 
 const ItemsListScreen: React.FunctionComponent<Props> = ({
   items,
   onItemsLoaded,
+  onAllItemsLoaded,
 }) => {
   const navigation = useNavigation();
 
+  const [showDeleted, setShowDeleted] = useState(false);
+
   useEffect(() => {
-    onItemsLoaded();
-  }, []);
+    showDeleted ? onAllItemsLoaded() : onItemsLoaded();
+  }, [showDeleted]);
 
   const columns = [
     { name: "Име на стока", propName: "name", flex: 6 },
@@ -54,6 +59,7 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
         columns={columns}
         listableItems={items}
         navigation={navigation}
+        showDeleted={{ showDeleted, setShowDeleted }}
       />
     </Page>
   );
@@ -67,6 +73,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     onItemsLoaded: () => {
       dispatch(actionCreators.onLoadItems());
+    },
+    onAllItemsLoaded: () => {
+      dispatch(actionCreators.onLoadAllItems());
     },
   };
 };

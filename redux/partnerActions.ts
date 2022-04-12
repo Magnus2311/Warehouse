@@ -27,6 +27,11 @@ interface LoadPartnersAction {
   partners: Partner[];
 }
 
+interface LoadAllPartnersAction {
+  type: "LOAD_ALL_PARTNERS";
+  partners: Partner[];
+}
+
 interface DeletePartnerAction {
   type: "DELETE_PARTNER";
   partnerId: string;
@@ -36,7 +41,8 @@ export type KnownAction =
   | AddPartnerAction
   | LoadPartnersAction
   | EditPartnerAction
-  | DeletePartnerAction;
+  | DeletePartnerAction
+  | LoadAllPartnersAction;
 
 export const addPartner = (partner: Partner): AddPartnerAction => ({
   type: "ADD_PARTNER",
@@ -58,6 +64,13 @@ export const loadPartners = (partners: Partner[]): LoadPartnersAction => ({
   partners,
 });
 
+export const loadAllPartners = (
+  partners: Partner[]
+): LoadAllPartnersAction => ({
+  type: "LOAD_ALL_PARTNERS",
+  partners,
+});
+
 export const actionCreators = {
   onAddPartner: (partnerDTO: Partner): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
@@ -71,6 +84,15 @@ export const actionCreators = {
   onLoadPartners: (): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
       get<Partner>("api/partners/")
+        .then((partners) => {
+          dispatch(loadPartners(partners));
+        })
+        .catch((er) => console.log(er));
+    };
+  },
+  onLoadAllPartners: (): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      get<Partner>("api/partners/get-all")
         .then((partners) => {
           dispatch(loadPartners(partners));
         })
@@ -106,6 +128,8 @@ export const reducer: Reducer<PartnersState> = (
     case "ADD_PARTNER":
       return { partners: [...state.partners, action.partner] };
     case "LOAD_PARTNERS":
+      return { ...state.partners, partners: action.partners };
+    case "LOAD_ALL_PARTNERS":
       return { ...state.partners, partners: action.partners };
     case "EDIT_PARTNER":
       return {

@@ -8,6 +8,10 @@ type TableModelProps = {
   listableItems: IListable[];
   dispatch: any;
   navigation: NavigationProp<RootStackParamList>;
+  showDeleted?: {
+    showDeleted: boolean;
+    setShowDeleted: (showDeleted: boolean) => void;
+  };
 };
 
 export default abstract class TableModel extends React.Component<TableModelProps> {

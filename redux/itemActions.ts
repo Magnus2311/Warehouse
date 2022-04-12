@@ -28,6 +28,11 @@ interface LoadItemsAction {
   items: Item[];
 }
 
+interface LoadAllItemsAction {
+  type: "LOAD_ALL_ITEMS";
+  items: Item[];
+}
+
 interface DeleteItemAction {
   type: "DELETE_ITEM";
   itemId: string;
@@ -41,6 +46,7 @@ interface BuyItemsAction {
 export type KnownAction =
   | AddItemAction
   | LoadItemsAction
+  | LoadAllItemsAction
   | EditItemAction
   | DeleteItemAction
   | BuyItemsAction;
@@ -65,6 +71,11 @@ export const loadItems = (items: Item[]): LoadItemsAction => ({
   items,
 });
 
+export const loadAllItems = (items: Item[]): LoadAllItemsAction => ({
+  type: "LOAD_ALL_ITEMS",
+  items,
+});
+
 export const buyItem = (buyItem: BuyItem): BuyItemsAction => ({
   type: "BUY_ITEM",
   buyItem,
@@ -74,10 +85,10 @@ export const actionCreators = {
   onAddItem: (itemDTO: Item): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
       post<Item>("api/items/", itemDTO)
-        .then(item => {
+        .then((item) => {
           dispatch(addItem(item));
         })
-        .catch(ex => {
+        .catch((ex) => {
           console.log(ex);
         });
     };
@@ -85,10 +96,21 @@ export const actionCreators = {
   onLoadItems: (): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
       get<Item>("api/items/")
-        .then(items => {
+        .then((items) => {
           dispatch(loadItems(items));
         })
-        .catch(error => {
+        .catch((error) => {
+          console.log(error);
+        });
+    };
+  },
+  onLoadAllItems: (): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      get<Item>("api/items/get-all")
+        .then((items) => {
+          dispatch(loadAllItems(items));
+        })
+        .catch((error) => {
           console.log(error);
         });
     };
@@ -96,24 +118,24 @@ export const actionCreators = {
   onEditItem: (itemDTO: Item): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
       put<Item>("api/items/", itemDTO)
-        .then(isUpdated => {
+        .then((isUpdated) => {
           isUpdated && dispatch(editItem(itemDTO));
         })
-        .catch(ex => {
+        .catch((ex) => {
           console.log(ex);
         });
     };
   },
   onDeleteItem: (itemId: string): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      deletee("api/items/", itemId).then(isDeleted => {
+      deletee("api/items/", itemId).then((isDeleted) => {
         isDeleted && dispatch(deleteItem(itemId));
       });
     };
   },
   onBuyItem: (item: BuyItem): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      post("api/items/buy-item", item).then(item => {
+      post("api/items/buy-item", item).then((item) => {
         dispatch(buyItem(item));
       });
     };
@@ -134,10 +156,12 @@ export const reducer: Reducer<ItemsState> = (
       return { items: [...state.items, action.item] };
     case LOAD_ITEMS:
       return { ...state.items, items: action.items };
+    case "LOAD_ALL_ITEMS":
+      return { ...state.items, items: action.items };
     case "EDIT_ITEM":
       return {
         items: [
-          ...state.items.map(item => {
+          ...state.items.map((item) => {
             if (item.id === action.item.id) return { ...action.item };
             return item;
           }),
@@ -145,12 +169,12 @@ export const reducer: Reducer<ItemsState> = (
       };
     case "DELETE_ITEM":
       return {
-        items: [...state.items.filter(item => item.id !== action.itemId)],
+        items: [...state.items.filter((item) => item.id !== action.itemId)],
       };
     case "BUY_ITEM":
       return {
         items: [
-          ...state.items.map(item => {
+          ...state.items.map((item) => {
             if (item.id === action.buyItem.itemId)
               return {
                 ...item,

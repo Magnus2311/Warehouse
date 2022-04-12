@@ -4,7 +4,7 @@ import GestureRecognizer from "react-native-swipe-gestures";
 import { Column, DeleteModalProps, TableAction } from "../../helpers/models";
 import { normalize } from "../../helpers/screenSizing";
 import { FontAwesome } from "@expo/vector-icons";
-import { Animated } from "react-native";
+import { Animated, Switch } from "react-native";
 import { useAlerts } from "react-native-paper-alerts";
 import { AlertsMethods } from "react-native-paper-alerts/lib/typescript/type";
 import { toDecimalFormat } from "../../helpers/extensions";
@@ -19,6 +19,10 @@ type TableProps = {
   deleteProps?: DeleteModalProps;
   onEdit?: (itemId: string) => void;
   additionalActions?: TableAction[];
+  showDeleted?: {
+    showDeleted: boolean;
+    setShowDeleted: (showDeleted: boolean) => void;
+  };
 };
 
 const Table: FunctionComponent<TableProps> = ({
@@ -27,6 +31,7 @@ const Table: FunctionComponent<TableProps> = ({
   deleteProps,
   onEdit,
   additionalActions,
+  showDeleted,
 }) => {
   const [showAdditionalMenus, setShowAdditionalMenus] = useState("");
   const translateAnim = useRef(new Animated.Value(300)).current;
@@ -35,17 +40,30 @@ const Table: FunctionComponent<TableProps> = ({
   const renderHeader: FunctionComponent<RowProps> = ({ columns }) => {
     return (
       <DataTable.Header>
-        {columns &&
-          columns.map((column) => {
-            return (
-              <DataTable.Title
-                key={column.name}
-                style={{ flex: column.flex ?? 1 }}
-              >
-                {column.name}
-              </DataTable.Title>
-            );
-          })}
+        <>
+          {columns &&
+            columns.map((column) => {
+              return (
+                <DataTable.Title
+                  key={column.name}
+                  style={{ flex: column.flex ?? 1 }}
+                >
+                  {column.name}
+                </DataTable.Title>
+              );
+            })}
+          {showDeleted && (
+            <DataTable.Title>
+              <Switch
+                trackColor={{ false: "#767577", true: "#81b0ff" }}
+                thumbColor={showDeleted.showDeleted ? "#f5dd4b" : "#f4f3f4"}
+                ios_backgroundColor="#3e3e3e"
+                onValueChange={showDeleted.setShowDeleted}
+                value={showDeleted.showDeleted}
+              />
+            </DataTable.Title>
+          )}
+        </>
       </DataTable.Header>
     );
   };

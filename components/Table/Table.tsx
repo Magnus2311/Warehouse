@@ -1,7 +1,12 @@
 import React, { FunctionComponent, useState, useRef } from "react";
 import { DataTable } from "react-native-paper";
 import GestureRecognizer from "react-native-swipe-gestures";
-import { Column, DeleteModalProps, TableAction } from "../../helpers/models";
+import {
+  Column,
+  DeleteModalProps,
+  IListable,
+  TableAction,
+} from "../../helpers/models";
 import { normalize } from "../../helpers/screenSizing";
 import { FontAwesome } from "@expo/vector-icons";
 import { Animated, Switch } from "react-native";
@@ -15,7 +20,7 @@ type RowProps = {
 
 type TableProps = {
   columns: Column[];
-  data: any[];
+  data: IListable[];
   deleteProps?: DeleteModalProps;
   onEdit?: (itemId: string) => void;
   additionalActions?: TableAction[];
@@ -99,7 +104,13 @@ const Table: FunctionComponent<TableProps> = ({
                 }).start(() => setShowAdditionalMenus(""));
               }}
             >
-              <DataTable.Row>
+              <DataTable.Row
+                style={{
+                  backgroundColor: item.isDeleted
+                    ? "rgba(255, 0, 0, 0.05)"
+                    : "white",
+                }}
+              >
                 {columns.map((column) => {
                   return (
                     <DataTable.Cell

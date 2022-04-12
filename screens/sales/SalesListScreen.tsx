@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import SalesTable from "../../components/Table/types/classes/SalesTable";
-import { Partner, Sale } from "../../helpers/models";
+import { IListable, Partner, Sale } from "../../helpers/models";
 import { isMobile } from "../../helpers/screenSizing";
 import { actionCreators as salesActions } from "../../redux/salesActions";
 import { actionCreators as partnersActions } from "../../redux/partnerActions";
@@ -18,6 +18,13 @@ interface Props {
   onItemsLoaded: () => void;
   sales: Sale[];
   partners: Partner[];
+}
+
+interface SaleListable extends IListable {
+  partner: string;
+  date: string;
+  description: string;
+  total: string;
 }
 
 const mapStateToProps = (state: AppState) => {
@@ -82,15 +89,19 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
     <Page>
       <SalesTable
         columns={columns}
-        listableItems={sales.map((sale) => ({
-          id: sale.id,
-          partner:
-            partners.find((partner) => partner.id === sale.partnerId)?.name ??
-            "",
-          date: getDateFormated(sale.date),
-          description: sale.description,
-          total: toDecimalFormat(sale.totalAmount),
-        }))}
+        listableItems={sales.map(
+          (sale) =>
+            ({
+              id: sale.id,
+              partner:
+                partners.find((partner) => partner.id === sale.partnerId)
+                  ?.name ?? "",
+              date: getDateFormated(sale.date),
+              description: sale.description,
+              total: toDecimalFormat(sale.totalAmount),
+              isDeleted: sale.isDeleted,
+            } as SaleListable)
+        )}
         navigation={navigation}
         showDeleted={{ setShowDeleted, showDeleted }}
       />

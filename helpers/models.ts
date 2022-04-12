@@ -1,7 +1,5 @@
 import { ICONS } from "./icons";
-
-export interface Item {
-  id: string;
+export interface Item extends IListable {
   name: string;
   partnerId: string;
   basePrice: string;
@@ -9,15 +7,13 @@ export interface Item {
   qtty: string;
 }
 
-export interface Partner {
-  id: string;
+export interface Partner extends IListable {
   name: string;
   vatNumber: string;
   address: string;
 }
 
-export interface Sale {
-  id: string;
+export interface Sale extends IListable {
   date: Date;
   saleItems: SaleItem[];
   partnerId: string;
@@ -45,6 +41,8 @@ export interface Column {
 
 export interface IListable {
   id: string;
+  isDeleted: boolean;
+  [name: string]: string | boolean | Date | SaleItem[] | number;
 }
 
 export interface DeleteModalProps {

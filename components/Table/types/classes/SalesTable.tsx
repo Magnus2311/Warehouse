@@ -16,7 +16,9 @@ class SalesTable extends TableModel {
         deleteProps={{
           title: "Изтриване на продажба",
           content: "Желаете ли да изтриете избраната продажба",
-          onDelete: this.onDelete,
+          cancelBtnTxt: "Отказ",
+          acceptBtnTxt: "Изтриване",
+          onAction: this.onDelete,
         }}
         onEdit={this.onEdit}
         showDeleted={showDeleted}

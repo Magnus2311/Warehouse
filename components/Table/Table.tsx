@@ -7,12 +7,14 @@ import {
   IListable,
   TableAction,
 } from "../../helpers/models";
-import { normalize } from "../../helpers/screenSizing";
+import { isMobile, normalize } from "../../helpers/screenSizing";
 import { FontAwesome } from "@expo/vector-icons";
 import { Animated, Switch } from "react-native";
 import { useAlerts } from "react-native-paper-alerts";
 import { AlertsMethods } from "react-native-paper-alerts/lib/typescript/type";
 import { toDecimalFormat } from "../../helpers/extensions";
+import MobileBody from "./MobileBody";
+import TableBody from "./TableBody";
 
 type RowProps = {
   columns: Column[];
@@ -39,10 +41,6 @@ const Table: FunctionComponent<TableProps> = ({
   additionalActions,
   showDeleted,
 }) => {
-  const [showAdditionalMenus, setShowAdditionalMenus] = useState("");
-  const translateAnim = useRef(new Animated.Value(300)).current;
-  const alerts = useAlerts();
-
   const renderHeader: FunctionComponent<RowProps> = ({ columns }) => {
     return (
       <DataTable.Header>
@@ -59,15 +57,14 @@ const Table: FunctionComponent<TableProps> = ({
               );
             })}
           {showDeleted && (
-            <DataTable.Title>
-              <Switch
-                trackColor={{ false: "#767577", true: "#81b0ff" }}
-                thumbColor={showDeleted.showDeleted ? "#f5dd4b" : "#f4f3f4"}
-                ios_backgroundColor="#3e3e3e"
-                onValueChange={showDeleted.setShowDeleted}
-                value={showDeleted.showDeleted}
-              />
-            </DataTable.Title>
+            <Switch
+              trackColor={{ false: "#767577", true: "#81b0ff" }}
+              thumbColor={showDeleted.showDeleted ? "#f5dd4b" : "#f4f3f4"}
+              ios_backgroundColor="#3e3e3e"
+              onValueChange={showDeleted.setShowDeleted}
+              style={{ alignSelf: "flex-end", marginBottom: 14 }}
+              value={showDeleted.showDeleted}
+            />
           )}
         </>
       </DataTable.Header>
@@ -81,150 +78,27 @@ const Table: FunctionComponent<TableProps> = ({
       }}
     >
       {renderHeader({ columns })}
-      {data &&
-        data.map((item) => {
-          return (
-            <GestureRecognizer
-              key={item.id}
-              onSwipeLeft={() => {
-                if (item.id !== showAdditionalMenus) {
-                  translateAnim.setValue(300);
-                  setShowAdditionalMenus(item.id);
-                  Animated.timing(translateAnim, {
-                    toValue: 0,
-                    duration: 200,
-                    useNativeDriver: true,
-                  }).start();
-                }
-              }}
-              onSwipeRight={() => {
-                Animated.timing(translateAnim, {
-                  toValue: 300,
-                  duration: 200,
-                  useNativeDriver: true,
-                }).start(() => setShowAdditionalMenus(""));
-              }}
-            >
-              <DataTable.Row
-                style={{
-                  backgroundColor: item.isDeleted
-                    ? "rgba(255, 0, 0, 0.05)"
-                    : "white",
-                }}
-              >
-                {columns.map((column) => {
-                  return (
-                    <DataTable.Cell
-                      key={column.name}
-                      style={{
-                        flex: column.flex ?? 1,
-                      }}
-                    >
-                      {column.isMoney
-                        ? toDecimalFormat(Number(item[column.propName]))
-                        : item[column.propName]}
-                    </DataTable.Cell>
-                  );
-                })}
-                {showAdditionalMenus == item.id &&
-                  (onEdit ||
-                    deleteProps ||
-                    additionalActions ||
-                    (showDeleted && item.isDeleted)) && (
-                    <Animated.View
-                      key={item.id}
-                      style={{
-                        alignSelf: "center",
-                        flexDirection: "row",
-                        transform: [{ translateX: translateAnim }],
-                      }}
-                    >
-                      {additionalActions &&
-                        additionalActions.map((action) => (
-                          <FontAwesome
-                            name={action.name}
-                            size={30}
-                            color={action.color}
-                            style={{
-                              alignSelf: "center",
-                              marginRight: 10,
-                            }}
-                            onPress={() => {
-                              action.onPress(item);
-                              setShowAdditionalMenus("");
-                            }}
-                          />
-                        ))}
-                      {onEdit && (
-                        <FontAwesome
-                          name="edit"
-                          size={30}
-                          color="green"
-                          style={{
-                            alignSelf: "center",
-                            marginRight: 10,
-                          }}
-                          onPress={() => {
-                            onEdit(item.id);
-                            setShowAdditionalMenus("");
-                          }}
-                        />
-                      )}
-                      {deleteProps && !item.isDeleted && (
-                        <FontAwesome
-                          name="remove"
-                          size={30}
-                          color="green"
-                          style={{
-                            alignSelf: "center",
-                            paddingBottom: 4,
-                          }}
-                          onPress={() =>
-                            createTwoButtonAlert(item.id, deleteProps, alerts)
-                          }
-                        />
-                      )}
-                      {showDeleted && item.isDeleted && (
-                        <FontAwesome
-                          name="arrow-down"
-                          size={30}
-                          color="green"
-                          style={{
-                            alignSelf: "center",
-                            paddingBottom: 4,
-                          }}
-                          onPress={() =>
-                            createTwoButtonAlert(
-                              item.id,
-                              showDeleted.recoverProps,
-                              alerts
-                            )
-                          }
-                        />
-                      )}
-                    </Animated.View>
-                  )}
-              </DataTable.Row>
-            </GestureRecognizer>
-          );
-        })}
+      {isMobile ? (
+        <MobileBody
+          columns={columns}
+          data={data}
+          deleteProps={deleteProps}
+          onEdit={onEdit}
+          additionalActions={additionalActions}
+          showDeleted={showDeleted}
+        />
+      ) : (
+        <TableBody
+          columns={columns}
+          data={data}
+          deleteProps={deleteProps}
+          onEdit={onEdit}
+          additionalActions={additionalActions}
+          showDeleted={showDeleted}
+        />
+      )}
     </DataTable>
   );
 };
-
-const createTwoButtonAlert = (
-  itemId: string,
-  alertProps: AlertModalProps,
-  alerts: AlertsMethods
-) =>
-  alerts.alert(alertProps.title, alertProps.content, [
-    {
-      text: alertProps.cancelBtnTxt,
-    },
-    {
-      text: alertProps.acceptBtnTxt,
-      onPress: () => alertProps.onAction(itemId),
-    },
-  ]);
 
 export default Table;

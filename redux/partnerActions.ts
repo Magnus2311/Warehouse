@@ -10,6 +10,7 @@ import { AppThunk } from "./store";
 
 export interface PartnersState {
   partners: Partner[];
+  showDeleted: boolean;
 }
 
 interface AddPartnerAction {
@@ -37,12 +38,18 @@ interface DeletePartnerAction {
   partnerId: string;
 }
 
+interface SetShowDeletedAction {
+  type: "SET_SHOW_DELETED";
+  showDeleted: boolean;
+}
+
 export type KnownAction =
   | AddPartnerAction
   | LoadPartnersAction
   | EditPartnerAction
   | DeletePartnerAction
-  | LoadAllPartnersAction;
+  | LoadAllPartnersAction
+  | SetShowDeletedAction;
 
 export const addPartner = (partner: Partner): AddPartnerAction => ({
   type: "ADD_PARTNER",
@@ -69,6 +76,11 @@ export const loadAllPartners = (
 ): LoadAllPartnersAction => ({
   type: "LOAD_ALL_PARTNERS",
   partners,
+});
+
+export const setShowDeleted = (showDeleted: boolean): SetShowDeletedAction => ({
+  type: "SET_SHOW_DELETED",
+  showDeleted,
 });
 
 export const actionCreators = {
@@ -122,10 +134,16 @@ export const actionCreators = {
       );
     };
   },
+  setShowDeleted: (showDeleted: boolean): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      dispatch(setShowDeleted(showDeleted));
+    };
+  },
 };
 
 const initialState = {
   partners: [],
+  showDeleted: false,
 };
 
 export const reducer: Reducer<PartnersState> = (
@@ -135,13 +153,14 @@ export const reducer: Reducer<PartnersState> = (
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case "ADD_PARTNER":
-      return { partners: [...state.partners, action.partner] };
+      return { ...state, partners: [...state.partners, action.partner] };
     case "LOAD_PARTNERS":
-      return { ...state.partners, partners: action.partners };
+      return { ...state, partners: action.partners };
     case "LOAD_ALL_PARTNERS":
-      return { ...state.partners, partners: action.partners };
+      return { ...state, partners: action.partners };
     case "EDIT_PARTNER":
       return {
+        ...state,
         partners: [
           ...state.partners.map((partner) => {
             if (partner.id === action.partner.id) return { ...action.partner };
@@ -151,11 +170,25 @@ export const reducer: Reducer<PartnersState> = (
       };
     case "DELETE_PARTNER":
       return {
-        partners: [
-          ...state.partners.filter(
-            (partner) => partner.id !== action.partnerId
-          ),
-        ],
+        ...state,
+        partners: state.showDeleted
+          ? [
+              ...state.partners.map((partner) => {
+                if (partner.id === action.partnerId)
+                  return { ...partner, isDeleted: true };
+                return partner;
+              }),
+            ]
+          : [
+              ...state.partners.filter(
+                (partner) => partner.id !== action.partnerId
+              ),
+            ],
+      };
+    case "SET_SHOW_DELETED":
+      return {
+        ...state,
+        showDeleted: action.showDeleted,
       };
     default:
       return state;

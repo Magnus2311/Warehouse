@@ -10,6 +10,7 @@ import { AppThunk } from "./store";
 
 export interface SalesState {
   sales: Sale[];
+  showDeleted: boolean;
 }
 
 interface AddSaleAction {
@@ -37,12 +38,18 @@ interface DeleteSaleAction {
   saleId: string;
 }
 
+interface SetShowDeletedAction {
+  type: "SET_SHOW_DELETED";
+  showDeleted: boolean;
+}
+
 export type KnownAction =
   | AddSaleAction
   | LoadSalesAction
   | EditSaleAction
   | DeleteSaleAction
-  | LoadAllSalesAction;
+  | LoadAllSalesAction
+  | SetShowDeletedAction;
 
 export const addSale = (sale: Sale): AddSaleAction => ({
   type: "ADD_SALE",
@@ -67,6 +74,11 @@ export const loadSales = (sales: Sale[]): LoadSalesAction => ({
 export const loadAllSales = (sales: Sale[]): LoadAllSalesAction => ({
   type: "LOAD_ALL_SALES",
   sales,
+});
+
+export const setShowDeleted = (showDeleted: boolean): SetShowDeletedAction => ({
+  type: "SET_SHOW_DELETED",
+  showDeleted,
 });
 
 export const actionCreators = {
@@ -128,10 +140,16 @@ export const actionCreators = {
       });
     };
   },
+  setShowDeleted: (showDeleted: boolean): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      dispatch(setShowDeleted(showDeleted));
+    };
+  },
 };
 
 const initialState = {
   sales: [],
+  showDeleted: false,
 };
 
 export const reducer: Reducer<SalesState> = (
@@ -141,13 +159,14 @@ export const reducer: Reducer<SalesState> = (
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case "ADD_SALE":
-      return { sales: [...state.sales, action.sale] };
+      return { ...state, sales: [...state.sales, action.sale] };
     case "LOAD_SALES":
-      return { ...state.sales, sales: action.sales };
+      return { ...state, sales: action.sales };
     case "LOAD_ALL_SALES":
-      return { ...state.sales, sales: action.sales };
+      return { ...state, sales: action.sales };
     case "EDIT_SALE":
       return {
+        ...state,
         sales: [
           ...state.sales.map((sale) => {
             if (sale.id === action.sale.id) return { ...action.sale };
@@ -157,7 +176,21 @@ export const reducer: Reducer<SalesState> = (
       };
     case "DELETE_SALE":
       return {
-        sales: [...state.sales.filter((sale) => sale.id !== action.saleId)],
+        ...state,
+        sales: state.showDeleted
+          ? [
+              ...state.sales.map((sale) => {
+                if (sale.id === action.saleId)
+                  return { ...sale, isDeleted: true };
+                return sale;
+              }),
+            ]
+          : [...state.sales.filter((sale) => sale.id !== action.saleId)],
+      };
+    case "SET_SHOW_DELETED":
+      return {
+        ...state,
+        showDeleted: action.showDeleted,
       };
     default:
       return state;

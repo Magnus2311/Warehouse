@@ -12,6 +12,8 @@ interface PartnersListScreenProps {
   onPartnerRecovery: (partnerId: string) => void;
   onAllPartnersLoaded: () => void;
   partners: Partner[];
+  showDeleted: boolean;
+  setShowDeleted: (showDeleted: boolean) => void;
 }
 
 const PartnersListScreen = ({
@@ -19,9 +21,9 @@ const PartnersListScreen = ({
   partners,
   onAllPartnersLoaded,
   onPartnerRecovery,
+  setShowDeleted,
+  showDeleted,
 }: PartnersListScreenProps) => {
-  const [showDeleted, setShowDeleted] = useState(false);
-
   useEffect(
     () => (showDeleted ? onAllPartnersLoaded() : onPartnersLoaded()),
     [showDeleted]
@@ -66,7 +68,10 @@ const PartnersListScreen = ({
 };
 
 const mapStateToProps = (state: AppState) => {
-  return state.partners;
+  return {
+    partners: state.partners!.partners,
+    showDeleted: state.partners!.showDeleted,
+  };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
@@ -79,6 +84,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     onAllPartnersLoaded: () => {
       dispatch(actionCreators.onLoadAllPartners());
+    },
+    setShowDeleted: (showDeleted: boolean) => {
+      dispatch(actionCreators.setShowDeleted(showDeleted));
     },
   };
 };

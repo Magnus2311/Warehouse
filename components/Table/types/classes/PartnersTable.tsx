@@ -40,6 +40,6 @@ class PartnersTable extends TableModel {
   };
 }
 
-const mapStateToProps = (state: AppState) => state.partners;
+const mapStateToProps = (state: AppState) => state.partners!.partners;
 
 export default connect(mapStateToProps)(PartnersTable);

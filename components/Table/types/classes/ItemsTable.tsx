@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import Table from "../../Table";
 import { actionCreators } from "../../../../redux/itemActions";
@@ -55,6 +55,6 @@ class ItemsTable extends TableModel {
   };
 }
 
-const mapStateToProps = (state: AppState) => state.items;
+const mapStateToProps = (state: AppState) => state.items!.items;
 
 export default connect(mapStateToProps)(ItemsTable);

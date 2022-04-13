@@ -16,7 +16,9 @@ class SalesTable extends TableModel {
         deleteProps={{
           title: "Изтриване на продажба",
           content: "Желаете ли да изтриете избраната продажба",
-          onDelete: this.onDelete,
+          cancelBtnTxt: "Отказ",
+          acceptBtnTxt: "Изтриване",
+          onAction: this.onDelete,
         }}
         onEdit={this.onEdit}
         showDeleted={showDeleted}
@@ -38,6 +40,6 @@ class SalesTable extends TableModel {
   };
 }
 
-const mapStateToProps = (state: AppState) => state.sales;
+const mapStateToProps = (state: AppState) => state.sales!.sales;
 
 export default connect(mapStateToProps)(SalesTable);

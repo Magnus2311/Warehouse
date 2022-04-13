@@ -11,6 +11,7 @@ import { AppThunk } from "./store";
 
 export interface ItemsState {
   items: Item[];
+  showDeleted: boolean;
 }
 
 interface AddItemAction {
@@ -43,13 +44,19 @@ interface BuyItemsAction {
   buyItem: BuyItem;
 }
 
+interface SetShowDeletedAction {
+  type: "SET_SHOW_DELETED";
+  showDeleted: boolean;
+}
+
 export type KnownAction =
   | AddItemAction
   | LoadItemsAction
   | LoadAllItemsAction
   | EditItemAction
   | DeleteItemAction
-  | BuyItemsAction;
+  | BuyItemsAction
+  | SetShowDeletedAction;
 
 export const addItem = (item: Item): AddItemAction => ({
   type: ADD_ITEM,
@@ -79,6 +86,11 @@ export const loadAllItems = (items: Item[]): LoadAllItemsAction => ({
 export const buyItem = (buyItem: BuyItem): BuyItemsAction => ({
   type: "BUY_ITEM",
   buyItem,
+});
+
+export const setShowDeleted = (showDeleted: boolean): SetShowDeletedAction => ({
+  type: "SET_SHOW_DELETED",
+  showDeleted,
 });
 
 export const actionCreators = {
@@ -147,11 +159,14 @@ export const actionCreators = {
       });
     };
   },
+  setShowDeleted: (showDeleted: boolean): AppThunk<void, KnownAction> => {
+    return (dispatch: any) => {
+      dispatch(setShowDeleted(showDeleted));
+    };
+  },
 };
 
-const initialState = {
-  items: [],
-};
+const initialState = { items: [], showDeleted: false };
 
 export const reducer: Reducer<ItemsState> = (
   state = initialState,
@@ -160,13 +175,14 @@ export const reducer: Reducer<ItemsState> = (
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case ADD_ITEM:
-      return { items: [...state.items, action.item] };
+      return { ...state, items: [...state.items, action.item] };
     case LOAD_ITEMS:
-      return { ...state.items, items: action.items };
+      return { ...state, items: action.items };
     case "LOAD_ALL_ITEMS":
-      return { ...state.items, items: action.items };
+      return { ...state, items: action.items };
     case "EDIT_ITEM":
       return {
+        ...state,
         items: [
           ...state.items.map((item) => {
             if (item.id === action.item.id) return { ...action.item };
@@ -176,10 +192,20 @@ export const reducer: Reducer<ItemsState> = (
       };
     case "DELETE_ITEM":
       return {
-        items: [...state.items.filter((item) => item.id !== action.itemId)],
+        ...state,
+        items: state.showDeleted
+          ? [
+              ...state.items.map((item) => {
+                if (item.id === action.itemId)
+                  return { ...item, isDeleted: true };
+                return item;
+              }),
+            ]
+          : [...state.items.filter((item) => item.id !== action.itemId)],
       };
     case "BUY_ITEM":
       return {
+        ...state,
         items: [
           ...state.items.map((item) => {
             if (item.id === action.buyItem.itemId)
@@ -193,6 +219,11 @@ export const reducer: Reducer<ItemsState> = (
             return item;
           }),
         ],
+      };
+    case "SET_SHOW_DELETED":
+      return {
+        ...state,
+        showDeleted: action.showDeleted,
       };
     default:
       return state;

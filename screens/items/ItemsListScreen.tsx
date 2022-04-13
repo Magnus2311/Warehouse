@@ -1,10 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useRef } from "react";
-import { useState } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import ItemsTable from "../../components/Table/types/classes/ItemsTable";
-import { Column, IListable, Item } from "../../helpers/models";
+import { Column, Item } from "../../helpers/models";
 import { isMobile } from "../../helpers/screenSizing";
 import { actionCreators } from "../../redux/itemActions";
 import { AppState } from "../../redux/store";
@@ -14,6 +13,8 @@ interface Props {
   onAllItemsLoaded: () => void;
   onItemRecovery: (itemId: string) => void;
   items: Item[];
+  showDeleted: boolean;
+  onShowDeletedChanged: (showDeleted: boolean) => void;
 }
 
 const ItemsListScreen: React.FunctionComponent<Props> = ({
@@ -21,10 +22,10 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
   onItemsLoaded,
   onAllItemsLoaded,
   onItemRecovery,
+  showDeleted,
+  onShowDeletedChanged,
 }) => {
   const navigation = useNavigation();
-
-  const [showDeleted, setShowDeleted] = useState(false);
 
   useEffect(() => {
     showDeleted ? onAllItemsLoaded() : onItemsLoaded();
@@ -63,7 +64,7 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
         navigation={navigation}
         showDeleted={{
           showDeleted,
-          setShowDeleted,
+          setShowDeleted: onShowDeletedChanged,
           recoverProps: {
             title: "Възстановяване на стока",
             content: "Желаете ли да възстановите избраната стока",
@@ -78,7 +79,10 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
 };
 
 const mapStateToProps = (state: AppState) => {
-  return state.items;
+  return {
+    items: state.items!.items,
+    showDeleted: state.items!.showDeleted,
+  };
 };
 
 const mapDispatchToProps = (dispatch: any) => {
@@ -91,6 +95,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     onAllItemsLoaded: () => {
       dispatch(actionCreators.onLoadAllItems());
+    },
+    onShowDeletedChanged: (showDeleted: boolean) => {
+      dispatch(actionCreators.setShowDeleted(showDeleted));
     },
   };
 };

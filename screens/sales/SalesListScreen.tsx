@@ -19,6 +19,8 @@ interface Props {
   onItemsLoaded: () => void;
   sales: Sale[];
   partners: Partner[];
+  setShowDeleted: (showDeleted: boolean) => void;
+  showDeleted: boolean;
 }
 
 interface SaleListable extends IListable {
@@ -32,6 +34,7 @@ const mapStateToProps = (state: AppState) => {
   return {
     sales: state.sales?.sales || [],
     partners: state.partners?.partners || [],
+    showDeleted: state.sales!.showDeleted,
   };
 };
 
@@ -52,6 +55,9 @@ const mapDispatchToProps = (dispatch: any) => {
     onItemsLoaded: () => {
       dispatch(itemActions.onLoadAllItems());
     },
+    setShowDeleted: (showDeleted: boolean) => {
+      dispatch(salesActions.setShowDeleted(showDeleted));
+    },
   };
 };
 
@@ -63,10 +69,10 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
   onItemsLoaded,
   onPartnersLoaded,
   onAllSalesLoaded,
+  showDeleted,
+  setShowDeleted,
 }) => {
   const navigation = useNavigation();
-
-  const [showDeleted, setShowDeleted] = useState(false);
 
   useEffect(() => {
     showDeleted ? onAllSalesLoaded() : onSalesLoaded();

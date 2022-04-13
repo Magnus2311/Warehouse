@@ -170,7 +170,7 @@ const Table: FunctionComponent<TableProps> = ({
                           }}
                         />
                       )}
-                      {deleteProps && (
+                      {deleteProps && !item.isDeleted && (
                         <FontAwesome
                           name="remove"
                           size={30}

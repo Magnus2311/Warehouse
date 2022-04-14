@@ -55,6 +55,7 @@ const TableBody = ({
         data.map((item) => {
           return (
             <DataTable.Row
+              key={item.id}
               style={{
                 backgroundColor: item.isDeleted
                   ? "rgba(255, 0, 0, 0.05)"

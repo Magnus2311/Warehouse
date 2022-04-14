@@ -6,10 +6,10 @@ import * as partners from "./partnerActions";
 import * as sales from "./salesActions";
 
 export interface AppState {
-  items: items.ItemsState | undefined;
-  title: title.ModalState | undefined;
-  partners: partners.PartnersState | undefined;
-  sales: sales.SalesState | undefined;
+  items: items.ItemsState;
+  title: title.ModalState;
+  partners: partners.PartnersState;
+  sales: sales.SalesState;
 }
 
 export const reducers = {

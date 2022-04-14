@@ -55,6 +55,8 @@ class ItemsTable extends TableModel {
   };
 }
 
-const mapStateToProps = (state: AppState) => state.items!.items;
+const mapStateToProps = (state: AppState) => {
+  return { items: state.items!.items };
+};
 
 export default connect(mapStateToProps)(ItemsTable);

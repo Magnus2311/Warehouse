@@ -40,6 +40,8 @@ class SalesTable extends TableModel {
   };
 }
 
-const mapStateToProps = (state: AppState) => state.sales!.sales;
+const mapStateToProps = (state: AppState) => {
+  return { sales: state.sales!.sales };
+};
 
 export default connect(mapStateToProps)(SalesTable);

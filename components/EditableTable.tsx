@@ -19,7 +19,7 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
     title: "",
   });
   const [itemsForDropdown] = useState(
-    items.map(item => ({
+    items.map((item) => ({
       id: item.id,
       title: item.name,
     }))
@@ -74,7 +74,13 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
               overflow: "scroll",
             }}
           >
-            {saleItems.map(selectedItem => {
+            {saleItems.map((selectedItem) => {
+              const isQttyEnough =
+                Number(selectedItem.qtty) <=
+                Number(
+                  items.find((item) => item.id === selectedItem.itemId)?.qtty
+                );
+
               return (
                 <View
                   key={selectedItem.itemId}
@@ -100,13 +106,13 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                       }}
                       placeholder="Въведете име на стока"
                       items={itemsForDropdown}
-                      handleItemChosen={itemId => {
+                      handleItemChosen={(itemId) => {
                         setTimeout(() => {
                           const currentItem = items.find(
-                            item => item.id === itemId
+                            (item) => item.id === itemId
                           )!;
                           setSelectedItems(
-                            saleItems.map(item => {
+                            saleItems.map((item) => {
                               if (selectedItem.uniqueId === item.uniqueId)
                                 return {
                                   id: "",
@@ -132,15 +138,16 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                     keyboardType="numeric"
                     style={{
                       textAlign: "center",
-                      borderWidth: 0,
+                      borderWidth: isQttyEnough ? 0 : 1,
                       flexDirection: "row",
                       flex: 1,
                       alignSelf: "stretch",
+                      borderColor: isQttyEnough ? "white" : "red",
                     }}
                     value={selectedItem.qtty.toString()}
-                    onChangeText={text =>
+                    onChangeText={(text) =>
                       setSelectedItems(
-                        saleItems.map(item => {
+                        saleItems.map((item) => {
                           if (selectedItem.uniqueId === item.uniqueId) {
                             return {
                               ...item,
@@ -165,9 +172,9 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                     }}
                     keyboardType="numeric"
                     value={selectedItem.price.toString()}
-                    onChangeText={text =>
+                    onChangeText={(text) =>
                       setSelectedItems(
-                        saleItems.map(item => {
+                        saleItems.map((item) => {
                           if (selectedItem.uniqueId === item.uniqueId) {
                             return {
                               ...item,
@@ -208,8 +215,10 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                   placeholder="Въведете име на стока"
                   selectedItem={selectedItem}
                   items={itemsForDropdown}
-                  handleItemChosen={itemId => {
-                    const currentItem = items.find(item => item.id === itemId)!;
+                  handleItemChosen={(itemId) => {
+                    const currentItem = items.find(
+                      (item) => item.id === itemId
+                    )!;
                     setSelectedItems([
                       ...saleItems,
                       {
@@ -289,7 +298,7 @@ const EditableTable = ({ items, saleItems, setSelectedItems, sale }: Props) => {
                 {toDecimalFormat(
                   saleItems.length > 0
                     ? saleItems
-                        ?.map(item => Number(item.total))
+                        ?.map((item) => Number(item.total))
                         ?.reduce((a, b) => a + b)
                     : 0.0
                 )}

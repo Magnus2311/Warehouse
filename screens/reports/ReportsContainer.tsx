@@ -1,8 +1,8 @@
 import React from "react";
-import PartnersReport from "./PartnersReport";
+import PartnersReportLayout from "./PartnersReportLayout";
 
 const ReportsContainer = () => {
-  return <PartnersReport />;
+  return <PartnersReportLayout />;
 };
 
 export default ReportsContainer;

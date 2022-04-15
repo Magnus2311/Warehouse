@@ -57,128 +57,132 @@ const MobileBody = ({
       {data &&
         data.map((item) => {
           return (
-            <GestureRecognizer
-              key={item.id}
-              onSwipeLeft={() => {
-                if (item.id !== showAdditionalMenus) {
-                  translateAnim.setValue(300);
-                  setShowAdditionalMenus(item.id);
+            (!showDeleted ||
+              showDeleted.showDeleted ||
+              (!showDeleted.showDeleted && !item.isDeleted)) && (
+              <GestureRecognizer
+                key={item.id}
+                onSwipeLeft={() => {
+                  if (item.id !== showAdditionalMenus) {
+                    translateAnim.setValue(300);
+                    setShowAdditionalMenus(item.id);
+                    Animated.timing(translateAnim, {
+                      toValue: 0,
+                      duration: 200,
+                      useNativeDriver: true,
+                    }).start();
+                  }
+                }}
+                onSwipeRight={() => {
                   Animated.timing(translateAnim, {
-                    toValue: 0,
+                    toValue: 300,
                     duration: 200,
                     useNativeDriver: true,
-                  }).start();
-                }
-              }}
-              onSwipeRight={() => {
-                Animated.timing(translateAnim, {
-                  toValue: 300,
-                  duration: 200,
-                  useNativeDriver: true,
-                }).start(() => setShowAdditionalMenus(""));
-              }}
-            >
-              <DataTable.Row
-                style={{
-                  backgroundColor: item.isDeleted
-                    ? "rgba(255, 0, 0, 0.05)"
-                    : "white",
+                  }).start(() => setShowAdditionalMenus(""));
                 }}
               >
-                {columns.map((column) => {
-                  return (
-                    <DataTable.Cell
-                      key={column.name}
-                      style={{
-                        flex: column.flex ?? 1,
-                      }}
-                    >
-                      {column.isMoney
-                        ? toDecimalFormat(Number(item[column.propName]))
-                        : item[column.propName]}
-                    </DataTable.Cell>
-                  );
-                })}
-                {showAdditionalMenus == item.id &&
-                  (onEdit ||
-                    deleteProps ||
-                    additionalActions ||
-                    (showDeleted && item.isDeleted)) && (
-                    <Animated.View
-                      key={item.id}
-                      style={{
-                        alignSelf: "center",
-                        flexDirection: "row",
-                        transform: [{ translateX: translateAnim }],
-                      }}
-                    >
-                      {additionalActions &&
-                        additionalActions.map((action) => (
+                <DataTable.Row
+                  style={{
+                    backgroundColor: item.isDeleted
+                      ? "rgba(255, 0, 0, 0.05)"
+                      : "white",
+                  }}
+                >
+                  {columns.map((column) => {
+                    return (
+                      <DataTable.Cell
+                        key={column.name}
+                        style={{
+                          flex: column.flex ?? 1,
+                        }}
+                      >
+                        {column.isMoney
+                          ? toDecimalFormat(Number(item[column.propName]))
+                          : item[column.propName]}
+                      </DataTable.Cell>
+                    );
+                  })}
+                  {showAdditionalMenus == item.id &&
+                    (onEdit ||
+                      deleteProps ||
+                      additionalActions ||
+                      (showDeleted && item.isDeleted)) && (
+                      <Animated.View
+                        key={item.id}
+                        style={{
+                          alignSelf: "center",
+                          flexDirection: "row",
+                          transform: [{ translateX: translateAnim }],
+                        }}
+                      >
+                        {additionalActions &&
+                          additionalActions.map((action) => (
+                            <FontAwesome
+                              name={action.name}
+                              size={30}
+                              color={action.color}
+                              style={{
+                                alignSelf: "center",
+                                marginRight: 10,
+                              }}
+                              onPress={() => {
+                                action.onPress(item);
+                                setShowAdditionalMenus("");
+                              }}
+                            />
+                          ))}
+                        {onEdit && (
                           <FontAwesome
-                            name={action.name}
+                            name="edit"
                             size={30}
-                            color={action.color}
+                            color="green"
                             style={{
                               alignSelf: "center",
                               marginRight: 10,
                             }}
                             onPress={() => {
-                              action.onPress(item);
+                              onEdit(item.id);
                               setShowAdditionalMenus("");
                             }}
                           />
-                        ))}
-                      {onEdit && (
-                        <FontAwesome
-                          name="edit"
-                          size={30}
-                          color="green"
-                          style={{
-                            alignSelf: "center",
-                            marginRight: 10,
-                          }}
-                          onPress={() => {
-                            onEdit(item.id);
-                            setShowAdditionalMenus("");
-                          }}
-                        />
-                      )}
-                      {deleteProps && !item.isDeleted && (
-                        <FontAwesome
-                          name="remove"
-                          size={30}
-                          color="green"
-                          style={{
-                            alignSelf: "center",
-                            paddingBottom: 4,
-                          }}
-                          onPress={() =>
-                            createTwoButtonAlert(item.id, deleteProps, alerts)
-                          }
-                        />
-                      )}
-                      {showDeleted && item.isDeleted && (
-                        <FontAwesome
-                          name="arrow-down"
-                          size={30}
-                          color="green"
-                          style={{
-                            alignSelf: "center",
-                            paddingBottom: 4,
-                          }}
-                          onPress={() =>
-                            createTwoButtonAlert(
-                              item.id,
-                              showDeleted.recoverProps,
-                              alerts
-                            )
-                          }
-                        />
-                      )}
-                    </Animated.View>
-                  )}
-              </DataTable.Row>
-            </GestureRecognizer>
+                        )}
+                        {deleteProps && !item.isDeleted && (
+                          <FontAwesome
+                            name="remove"
+                            size={30}
+                            color="green"
+                            style={{
+                              alignSelf: "center",
+                              paddingBottom: 4,
+                            }}
+                            onPress={() =>
+                              createTwoButtonAlert(item.id, deleteProps, alerts)
+                            }
+                          />
+                        )}
+                        {showDeleted && item.isDeleted && (
+                          <FontAwesome
+                            name="arrow-down"
+                            size={30}
+                            color="green"
+                            style={{
+                              alignSelf: "center",
+                              paddingBottom: 4,
+                            }}
+                            onPress={() =>
+                              createTwoButtonAlert(
+                                item.id,
+                                showDeleted.recoverProps,
+                                alerts
+                              )
+                            }
+                          />
+                        )}
+                      </Animated.View>
+                    )}
+                </DataTable.Row>
+              </GestureRecognizer>
+            )
           );
         })}
     </>

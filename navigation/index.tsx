@@ -21,6 +21,8 @@ import PartnersListScreen from "../screens/PartnersListScreen";
 import AddPartnerScreen from "../screens/AddPartnerScreen";
 import SalesListScreen from "../screens/sales/SalesListScreen";
 import AddSaleScreen from "../screens/sales/AddSaleScreen";
+import ReportsContainer from "../screens/reports/ReportsContainer";
+import { Button } from "../components/Themed";
 
 type Props = {
   colorScheme: ColorSchemeName;
@@ -55,6 +57,7 @@ function RootNavigator({ title }: { title: string }) {
         component={BottomTabNavigator}
         options={{ headerShown: false }}
       />
+      <Stack.Screen name="Reports" component={ReportsContainer} />
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
@@ -88,7 +91,7 @@ function BottomTabNavigator({ navigation }: any) {
             headerTitleAlign: "center",
             headerRight: () => (
               <Pressable
-                onPress={e => {
+                onPress={(e) => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddSaleScreen />,
@@ -117,7 +120,7 @@ function BottomTabNavigator({ navigation }: any) {
             headerTitleAlign: "center",
             headerRight: () => (
               <Pressable
-                onPress={e => {
+                onPress={(e) => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddItemScreen />,
@@ -146,7 +149,7 @@ function BottomTabNavigator({ navigation }: any) {
             headerTitleAlign: "center",
             headerRight: () => (
               <Pressable
-                onPress={e => {
+                onPress={(e) => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddPartnerScreen />,
@@ -168,6 +171,12 @@ function BottomTabNavigator({ navigation }: any) {
         />
 
         <Drawer.Screen name="Register" component={Register} />
+      </Drawer.Group>
+      <Drawer.Group>
+        <Drawer.Screen
+          component={ReportsContainer}
+          name="Reports"
+        ></Drawer.Screen>
       </Drawer.Group>
     </Drawer.Navigator>
   );

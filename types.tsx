@@ -20,6 +20,7 @@ export type RootStackParamList = {
   PartnersListScreen: undefined;
   ItemsListScreen: undefined;
   SalesListScreen: undefined;
+  Reports: undefined;
   Register: undefined;
 };
 

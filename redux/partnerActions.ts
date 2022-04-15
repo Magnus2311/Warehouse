@@ -28,11 +28,6 @@ interface LoadPartnersAction {
   partners: Partner[];
 }
 
-interface LoadAllPartnersAction {
-  type: "LOAD_ALL_PARTNERS";
-  partners: Partner[];
-}
-
 interface DeletePartnerAction {
   type: "DELETE_PARTNER";
   partnerId: string;
@@ -48,7 +43,6 @@ export type KnownAction =
   | LoadPartnersAction
   | EditPartnerAction
   | DeletePartnerAction
-  | LoadAllPartnersAction
   | SetShowDeletedAction;
 
 export const addPartner = (partner: Partner): AddPartnerAction => ({
@@ -71,13 +65,6 @@ export const loadPartners = (partners: Partner[]): LoadPartnersAction => ({
   partners,
 });
 
-export const loadAllPartners = (
-  partners: Partner[]
-): LoadAllPartnersAction => ({
-  type: "LOAD_ALL_PARTNERS",
-  partners,
-});
-
 export const setShowDeleted = (showDeleted: boolean): SetShowDeletedAction => ({
   type: "SET_SHOW_DELETED",
   showDeleted,
@@ -94,15 +81,6 @@ export const actionCreators = {
     };
   },
   onLoadPartners: (): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      get<Partner>("api/partners/")
-        .then((partners) => {
-          dispatch(loadPartners(partners));
-        })
-        .catch((er) => console.log(er));
-    };
-  },
-  onLoadAllPartners: (): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
       get<Partner>("api/partners/get-all")
         .then((partners) => {
@@ -156,8 +134,6 @@ export const reducer: Reducer<PartnersState> = (
       return { ...state, partners: [...state.partners, action.partner] };
     case "LOAD_PARTNERS":
       return { ...state, partners: action.partners };
-    case "LOAD_ALL_PARTNERS":
-      return { ...state, partners: action.partners };
     case "EDIT_PARTNER":
       return {
         ...state,
@@ -171,19 +147,13 @@ export const reducer: Reducer<PartnersState> = (
     case "DELETE_PARTNER":
       return {
         ...state,
-        partners: state.showDeleted
-          ? [
-              ...state.partners.map((partner) => {
-                if (partner.id === action.partnerId)
-                  return { ...partner, isDeleted: true };
-                return partner;
-              }),
-            ]
-          : [
-              ...state.partners.filter(
-                (partner) => partner.id !== action.partnerId
-              ),
-            ],
+        partners: [
+          ...state.partners.map((partner) => {
+            if (partner.id === action.partnerId)
+              return { ...partner, isDeleted: true };
+            return partner;
+          }),
+        ],
       };
     case "SET_SHOW_DELETED":
       return {

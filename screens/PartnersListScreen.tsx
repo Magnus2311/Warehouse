@@ -10,7 +10,6 @@ import PartnersTable from "../components/Table/types/classes/PartnersTable";
 interface PartnersListScreenProps {
   onPartnersLoaded: () => void;
   onPartnerRecovery: (partnerId: string) => void;
-  onAllPartnersLoaded: () => void;
   partners: Partner[];
   showDeleted: boolean;
   setShowDeleted: (showDeleted: boolean) => void;
@@ -19,15 +18,11 @@ interface PartnersListScreenProps {
 const PartnersListScreen = ({
   onPartnersLoaded,
   partners,
-  onAllPartnersLoaded,
   onPartnerRecovery,
   setShowDeleted,
   showDeleted,
 }: PartnersListScreenProps) => {
-  useEffect(
-    () => (showDeleted ? onAllPartnersLoaded() : onPartnersLoaded()),
-    [showDeleted]
-  );
+  useEffect(() => onPartnersLoaded(), [showDeleted]);
 
   const columns = [
     { name: "Име на партньора", propName: "name", flex: 4 },
@@ -81,9 +76,6 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     onPartnerRecovery: (partnerId: string) => {
       dispatch(actionCreators.onPartnerRecovery(partnerId));
-    },
-    onAllPartnersLoaded: () => {
-      dispatch(actionCreators.onLoadAllPartners());
     },
     setShowDeleted: (showDeleted: boolean) => {
       dispatch(actionCreators.setShowDeleted(showDeleted));

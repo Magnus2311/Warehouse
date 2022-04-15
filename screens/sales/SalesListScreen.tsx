@@ -50,7 +50,7 @@ const mapDispatchToProps = (dispatch: any) => {
       dispatch(salesActions.onLoadAllSales());
     },
     onPartnersLoaded: () => {
-      dispatch(partnersActions.onLoadAllPartners());
+      dispatch(partnersActions.onLoadPartners());
     },
     onItemsLoaded: () => {
       dispatch(itemActions.onLoadAllItems());

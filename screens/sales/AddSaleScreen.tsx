@@ -25,6 +25,7 @@ interface Props {
 const emptySale = {
   id: "",
   date: new Date(),
+  isDeleted: false,
   description: "",
   saleItems: [],
   partnerId: "",
@@ -40,10 +41,10 @@ const AddSaleScreen: FunctionComponent<Props> = ({
   partners,
   items,
 }) => {
-  const currentSale = sales.find(i => i.id === saleId);
+  const currentSale = sales.find((i) => i.id === saleId);
   const [sale, setSale] = useState(currentSale ?? emptySale);
   const [selectableItems] = useState(
-    partners.map(partner => ({
+    partners.map((partner) => ({
       id: partner.id,
       title: partner.name,
     }))
@@ -61,7 +62,7 @@ const AddSaleScreen: FunctionComponent<Props> = ({
 
   const [selectedItems, setSelectedItems] = useState<SaleItem[]>(
     currentSale
-      ? currentSale.saleItems.map(item => ({
+      ? currentSale.saleItems.map((item) => ({
           uniqueId: randomString(),
           itemId: item.itemId,
           name: item.name,
@@ -88,7 +89,7 @@ const AddSaleScreen: FunctionComponent<Props> = ({
                   id: currentSale.partnerId,
                   title:
                     partners.find(
-                      partner => partner.id === currentSale.partnerId
+                      (partner) => partner.id === currentSale.partnerId
                     )?.name ?? "",
                 }
               : undefined
@@ -114,7 +115,7 @@ const AddSaleScreen: FunctionComponent<Props> = ({
           label={currentSale ? "Редакция на стока" : "Добавяне на стока"}
           onPress={() => {
             sale.totalAmount = selectedItems
-              .map(item => Number(item.total))
+              .map((item) => Number(item.total))
               .reduce((a, b) => a + b);
             sale.saleItems = selectedItems;
             currentSale ? onSaleEdited(sale) : onSaleAdded(sale);

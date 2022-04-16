@@ -10,7 +10,7 @@ const PartnersReportLayout = () => {
   return (
     <Card
       onPress={() => {
-        navigator.navigate("Reports");
+        navigator.navigate("PartnersReport");
       }}
     >
       <Card.Title

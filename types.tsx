@@ -21,6 +21,7 @@ export type RootStackParamList = {
   ItemsListScreen: undefined;
   SalesListScreen: undefined;
   Reports: undefined;
+  PartnersReport: undefined;
   Register: undefined;
 };
 

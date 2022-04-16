@@ -22,7 +22,7 @@ import AddPartnerScreen from "../screens/AddPartnerScreen";
 import SalesListScreen from "../screens/sales/SalesListScreen";
 import AddSaleScreen from "../screens/sales/AddSaleScreen";
 import ReportsContainer from "../screens/reports/ReportsContainer";
-import { Button } from "../components/Themed";
+import PartnersReport from "../screens/reports/PartnersReport";
 
 type Props = {
   colorScheme: ColorSchemeName;
@@ -58,6 +58,11 @@ function RootNavigator({ title }: { title: string }) {
         options={{ headerShown: false }}
       />
       <Stack.Screen name="Reports" component={ReportsContainer} />
+      <Stack.Screen
+        name="PartnersReport"
+        component={PartnersReport}
+        options={{ title: "Справка партньори" }}
+      />
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
@@ -174,8 +179,9 @@ function BottomTabNavigator({ navigation }: any) {
       </Drawer.Group>
       <Drawer.Group>
         <Drawer.Screen
-          component={ReportsContainer}
           name="Reports"
+          component={ReportsContainer}
+          options={{ title: "Справки" }}
         ></Drawer.Screen>
       </Drawer.Group>
     </Drawer.Navigator>

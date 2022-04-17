@@ -13,7 +13,7 @@ declare global {
 }
 
 export type RootStackParamList = {
-  Root: undefined;
+  Warehouse: undefined;
   Modal: { component: ReactNode | ReactNode[] };
   NotFound: undefined;
   PartnersListScreen: undefined;

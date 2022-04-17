@@ -51,7 +51,7 @@ function RootNavigator({ title }: { title: string }) {
   return (
     <Stack.Navigator>
       <Stack.Screen
-        name="Root"
+        name="Warehouse"
         component={BottomTabNavigator}
         options={{ headerShown: false }}
       />

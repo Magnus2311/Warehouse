@@ -12,7 +12,9 @@ const linking: LinkingOptions<RootStackParamList> = {
   prefixes: [Linking.createURL("/Warehouse/")],
   config: {
     screens: {
-      Root: "Warehouse/*",
+      Warehouse: {
+        path: "Warehouse",
+      },
       ItemsListScreen: {
         path: "ItemsListScreen",
       },

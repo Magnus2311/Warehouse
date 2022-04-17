@@ -1,7 +1,7 @@
 {
   "files": {
-    "app.js": "/Warehouse/static/js/app.9f3515a5.chunk.js",
-    "app.js.map": "/Warehouse/static/js/app.9f3515a5.chunk.js.map",
+    "app.js": "/Warehouse/static/js/app.dd3ec815.chunk.js",
+    "app.js.map": "/Warehouse/static/js/app.dd3ec815.chunk.js.map",
     "runtime~app.js": "/Warehouse/static/js/runtime~app.e15e864d.js",
     "runtime~app.js.map": "/Warehouse/static/js/runtime~app.e15e864d.js.map",
     "static/js/2.f3570f03.chunk.js": "/Warehouse/static/js/2.f3570f03.chunk.js",
@@ -30,6 +30,6 @@
   "entrypoints": [
     "static/js/runtime~app.e15e864d.js",
     "static/js/2.f3570f03.chunk.js",
-    "static/js/app.9f3515a5.chunk.js"
+    "static/js/app.dd3ec815.chunk.js"
   ]
 }

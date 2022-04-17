@@ -16,7 +16,7 @@ const linking: LinkingOptions<RootStackParamList> = {
         screens: {
           SalesListScreen: {
             screens: {
-              SalesListScreen: "SalesListScreen",
+              SalesListScreen: "*",
             },
           },
         },
@@ -25,7 +25,6 @@ const linking: LinkingOptions<RootStackParamList> = {
       PartnersListScreen: "PartnersListScreen",
       Register: "Register",
       Modal: "modal",
-      NotFound: "*",
     },
   },
 };

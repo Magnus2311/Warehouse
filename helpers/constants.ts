@@ -1,4 +1,4 @@
-const isDev = true;
+const isDev = false;
 
 export const API_PATH = isDev
   ? "https://localhost:5001/"

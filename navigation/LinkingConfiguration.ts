@@ -9,20 +9,16 @@ import * as Linking from "expo-linking";
 import { RootStackParamList } from "../types";
 
 const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: [Linking.makeUrl("/Warehouse/")],
+  prefixes: [Linking.createURL("/Warehouse/")],
   config: {
     screens: {
-      Root: {
-        screens: {
-          SalesListScreen: {
-            screens: {
-              SalesListScreen: "*",
-            },
-          },
-        },
+      Root: "Warehouse/",
+      ItemsListScreen: {
+        path: "ItemsListScreen",
       },
-      ItemsListScreen: "ItemsListScreen",
-      PartnersListScreen: "PartnersListScreen",
+      PartnersListScreen: {
+        path: "PartnersListScreen",
+      },
       Register: "Register",
       Modal: "modal",
     },

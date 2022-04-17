@@ -55,11 +55,6 @@ function RootNavigator({ title }: { title: string }) {
         component={BottomTabNavigator}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="NotFound"
-        component={BottomTabNavigator}
-        options={{ headerShown: false }}
-      />
       <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen
           name="Modal"

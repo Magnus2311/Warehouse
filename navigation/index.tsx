@@ -57,8 +57,8 @@ function RootNavigator({ title }: { title: string }) {
       />
       <Stack.Screen
         name="NotFound"
-        component={NotFoundScreen}
-        options={{ title: "Oops!" }}
+        component={BottomTabNavigator}
+        options={{ headerShown: false }}
       />
       <Stack.Group screenOptions={{ presentation: "modal" }}>
         <Stack.Screen
@@ -88,7 +88,7 @@ function BottomTabNavigator({ navigation }: any) {
             headerTitleAlign: "center",
             headerRight: () => (
               <Pressable
-                onPress={e => {
+                onPress={(e) => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddSaleScreen />,
@@ -117,7 +117,7 @@ function BottomTabNavigator({ navigation }: any) {
             headerTitleAlign: "center",
             headerRight: () => (
               <Pressable
-                onPress={e => {
+                onPress={(e) => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddItemScreen />,
@@ -146,7 +146,7 @@ function BottomTabNavigator({ navigation }: any) {
             headerTitleAlign: "center",
             headerRight: () => (
               <Pressable
-                onPress={e => {
+                onPress={(e) => {
                   e.preventDefault();
                   navigation.navigate("Modal", {
                     component: <AddPartnerScreen />,

@@ -1,5 +1,20 @@
-const isDev = false;
+enum Environments {
+  Dev,
+  Testing,
+  Production,
+}
 
-export const API_PATH = isDev
-  ? "https://localhost:5001/"
-  : "https://warehouse-magnus.azurewebsites.net/";
+const environment = Environments.Production;
+
+const getEnvironment = (environment: Environments) => {
+  switch (environment) {
+    case Environments.Dev:
+      return "https://localhost:5001/";
+    case Environments.Testing:
+      return "https://warehouse-magnus-testing.azurewebsites.net/";
+    case Environments.Production:
+      return "https://warehouse-magnus.azurewebsites.net/";
+  }
+};
+
+export const API_PATH = getEnvironment(environment);

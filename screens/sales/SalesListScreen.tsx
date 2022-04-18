@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import SalesTable from "../../components/Table/types/classes/SalesTable";
 import { IListable, Partner, Sale } from "../../helpers/models";
-import { isMobile } from "../../helpers/screenSizing";
+import { isMobileScreen } from "../../helpers/screenSizing";
 import { actionCreators as salesActions } from "../../redux/salesActions";
 import { actionCreators as partnersActions } from "../../redux/partnerActions";
 import { actionCreators as itemActions } from "../../redux/itemActions";
@@ -85,13 +85,12 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
     {
       name: "Дата",
       propName: "date",
-      flex: isMobile ? 2 : 1,
-      isRight: true,
+      flex: isMobileScreen ? 3 : 2,
     },
     {
       name: "Обща сума",
       propName: "total",
-      flex: isMobile ? 2 : 1,
+      flex: isMobileScreen ? 2 : 1,
       isRight: true,
     },
   ];

@@ -16,6 +16,8 @@ export function normalize(size: number) {
   }
 }
 
+export const isMobileScreen = SCREEN_WIDTH < 600;
+
 export const isMobile = Platform.OS === "android" || Platform.OS === "ios";
 
 export const isAndroid = Platform.OS === "android";

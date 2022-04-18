@@ -6,9 +6,19 @@ export const getHeight = () => Dimensions.get("window").height;
 export const getWidth = () => Dimensions.get("window").width;
 
 const scale = SCREEN_WIDTH / 320;
+const heightScale = SCREEN_HEIGHT / 320;
 
 export function normalize(size: number) {
   const newSize = size * scale;
+  if (Platform.OS === "ios") {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize));
+  } else {
+    return Math.round(PixelRatio.roundToNearestPixel(newSize)) - 2;
+  }
+}
+
+export function normalizeHeight(size: number) {
+  const newSize = size * heightScale;
   if (Platform.OS === "ios") {
     return Math.round(PixelRatio.roundToNearestPixel(newSize));
   } else {

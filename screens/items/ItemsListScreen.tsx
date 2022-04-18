@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { Page } from "../../components/Page";
 import ItemsTable from "../../components/Table/types/classes/ItemsTable";
 import { Column, Item } from "../../helpers/models";
-import { isMobile } from "../../helpers/screenSizing";
+import { isMobileScreen } from "../../helpers/screenSizing";
 import { actionCreators } from "../../redux/itemActions";
 import { AppState } from "../../redux/store";
 
@@ -34,16 +34,16 @@ const ItemsListScreen: React.FunctionComponent<Props> = ({
   const columns = [
     { name: "Име на стока", propName: "name", flex: 6 },
     {
-      name: isMobile ? "Д-на цена" : "Доставна цена",
+      name: isMobileScreen ? "Д-на цена" : "Доставна цена",
       propName: "basePrice",
-      flex: isMobile ? 2 : 1,
+      flex: isMobileScreen ? 2 : 1,
       isRight: true,
       isMoney: true,
     },
     {
-      name: isMobile ? "П-на цена" : "Продажна цена",
+      name: isMobileScreen ? "П-на цена" : "Продажна цена",
       propName: "sellPrice",
-      flex: isMobile ? 2 : 1,
+      flex: isMobileScreen ? 2 : 1,
       isRight: true,
       isMoney: true,
     },

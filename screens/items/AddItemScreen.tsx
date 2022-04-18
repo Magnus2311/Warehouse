@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { FunctionComponent, useEffect, useState } from "react";
+import React, { FunctionComponent, useState } from "react";
 import { connect } from "react-redux";
 import Dropdown from "../../components/dropdowns/Dropdown";
 import { Page } from "../../components/Page";
@@ -119,7 +119,7 @@ const AddItemScreen: FunctionComponent<Props> = ({
         onPress={() => {
           currentItem ? onItemEdited(item) : onItemAdded(item);
           setItem(emptyItem);
-          navigator.navigate("Root");
+          navigator.navigate("ItemsListScreen");
         }}
       />
     </Page>

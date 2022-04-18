@@ -120,7 +120,7 @@ const AddSaleScreen: FunctionComponent<Props> = ({
             sale.saleItems = selectedItems;
             currentSale ? onSaleEdited(sale) : onSaleAdded(sale);
             setSale(emptySale);
-            navigator.navigate("Root");
+            navigator.navigate("SalesListScreen");
           }}
           style={{
             alignSelf: "center",

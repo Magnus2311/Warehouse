@@ -1,18 +1,13 @@
-import React, { FunctionComponent, useState, useRef } from "react";
+import React, { FunctionComponent } from "react";
 import { DataTable } from "react-native-paper";
-import GestureRecognizer from "react-native-swipe-gestures";
 import {
   Column,
   AlertModalProps as AlertModalProps,
   IListable,
   TableAction,
 } from "../../helpers/models";
-import { isMobile, normalize } from "../../helpers/screenSizing";
-import { FontAwesome } from "@expo/vector-icons";
-import { Animated, Switch } from "react-native";
-import { useAlerts } from "react-native-paper-alerts";
-import { AlertsMethods } from "react-native-paper-alerts/lib/typescript/type";
-import { toDecimalFormat } from "../../helpers/extensions";
+import { isMobileScreen, normalize } from "../../helpers/screenSizing";
+import {  Switch } from "react-native";
 import MobileBody from "./MobileBody";
 import TableBody from "./TableBody";
 
@@ -78,7 +73,7 @@ const Table: FunctionComponent<TableProps> = ({
       }}
     >
       {renderHeader({ columns })}
-      {isMobile ? (
+      {isMobileScreen ? (
         <MobileBody
           columns={columns}
           data={data}

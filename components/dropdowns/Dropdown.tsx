@@ -34,6 +34,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   style,
   placeholder,
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const [inputText, setInputText] = useState(selectedItem?.title ?? "");
   const [shownItems, setShownItems] = useState(items);
   const height = useRef(new Animated.Value(label ? 50 : 26.67)).current;
@@ -60,6 +61,8 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
       duration: 200,
       useNativeDriver: false,
     }).start();
+
+    setIsOpen(isOpen);
   };
 
   const handleInputFocus = () => {
@@ -69,7 +72,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
   const handleInputChange = (e: string) => {
     setInputText(e);
     setShownItems(
-      items.filter((item) => item.title.toLowerCase().includes(e.toLowerCase()))
+      items.filter(item => item.title.toLowerCase().includes(e.toLowerCase()))
     );
   };
 
@@ -93,6 +96,7 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
         margin: style?.margin ?? 0,
         marginBottom: style?.marginBottom ?? 0,
         marginTop: style?.marginTop ?? 0,
+        width: normalize(300),
       }}
     >
       <View
@@ -133,8 +137,9 @@ const Dropdown: FunctionComponent<DropdownProps> = ({
               alignSelf: "stretch",
             }}
           >
-            {shownItems.map((item) => (
+            {shownItems.map(item => (
               <Animated.View
+                key={item.id}
                 style={{
                   maxHeight: rowHeight,
                 }}

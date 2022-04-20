@@ -1,11 +1,11 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
-import { Page } from "../components/Page";
-import { Partner } from "../helpers/models";
-import { actionCreators } from "../redux/partnerActions";
-import { AppState } from "../redux/store";
-import PartnersTable from "../components/Table/types/classes/PartnersTable";
+import { Page } from "../../components/Page";
+import { Partner } from "../../helpers/models";
+import { actionCreators } from "../../redux/partnerActions";
+import { AppState } from "../../redux/store";
+import PartnersTable from "../../components/Table/types/classes/PartnersTable";
 
 interface PartnersListScreenProps {
   onPartnersLoaded: () => void;

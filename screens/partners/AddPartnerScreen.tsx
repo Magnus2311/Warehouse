@@ -1,12 +1,12 @@
 import { connect } from "react-redux";
-import { Partner } from "../helpers/models";
-import { actionCreators } from "../redux/partnerActions";
-import { actionCreators as modalActionCreators } from "../redux/modalActions";
+import { Partner } from "../../helpers/models";
+import { actionCreators } from "../../redux/partnerActions";
+import { actionCreators as modalActionCreators } from "../../redux/modalActions";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { Button, Input } from "../components/Themed";
-import { Page } from "../components/Page";
-import { AppState } from "../redux/store";
+import { Button, Input } from "../../components/Themed";
+import { Page } from "../../components/Page";
+import { AppState } from "../../redux/store";
 
 type AddPartnerScreenProps = {
   partners: Partner[];

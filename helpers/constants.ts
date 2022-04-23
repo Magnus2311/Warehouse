@@ -4,7 +4,7 @@ enum Environments {
   Production,
 }
 
-const environment = Environments.Production;
+const environment = Environments.Testing;
 
 const getEnvironment = (environment: Environments) => {
   switch (environment) {

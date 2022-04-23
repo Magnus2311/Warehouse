@@ -17,10 +17,10 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { connect } from "react-redux";
 import { ModalState } from "../redux/modalActions";
 import AddItemScreen from "../screens/items/AddItemScreen";
-import PartnersListScreen from "../screens/PartnersListScreen";
-import AddPartnerScreen from "../screens/AddPartnerScreen";
 import SalesListScreen from "../screens/sales/SalesListScreen";
 import AddSaleScreen from "../screens/sales/AddSaleScreen";
+import PartnersListScreen from "../screens/partners/PartnersListScreen";
+import AddPartnerScreen from "../screens/partners/AddPartnerScreen";
 
 type Props = {
   colorScheme: ColorSchemeName;

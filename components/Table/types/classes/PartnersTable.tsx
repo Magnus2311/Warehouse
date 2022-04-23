@@ -4,7 +4,7 @@ import Table from "../../Table";
 import { actionCreators } from "../../../../redux/partnerActions";
 import { AppState } from "../../../../redux/store";
 import TableModel from "./TableModel";
-import AddPartnerScreen from "../../../../screens/AddPartnerScreen";
+import AddPartnerScreen from "../../../../screens/partners/AddPartnerScreen";
 
 class PartnersTable extends TableModel {
   render() {

@@ -18,3 +18,5 @@ const getEnvironment = (environment: Environments) => {
 };
 
 export const API_PATH = getEnvironment(environment);
+
+export const SSO_API_PATH = "https://localhost:7206/";

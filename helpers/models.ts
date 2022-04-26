@@ -64,3 +64,8 @@ export interface BuyItem {
   qtty: string;
   basePrice: string;
 }
+
+export interface UserDTO {
+  username: string;
+  password: string;
+}

@@ -111,6 +111,7 @@ const Registration = () => {
           placeholder="Enter your password"
           keyboardType="visible-password"
           border={true}
+          secureTextEntry
         />
         <Input
           onChangeText={handleConfirmPasswordChange}
@@ -118,6 +119,7 @@ const Registration = () => {
           label="Confirm password"
           placeholder="Confirm your password"
           border={true}
+          secureTextEntry
           // isValid={isPasswordMatching}
         />
       </View>

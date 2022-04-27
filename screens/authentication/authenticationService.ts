@@ -1,4 +1,4 @@
-import { API_PATH, SSO_API_PATH } from "../../helpers/constants";
+import { SSO_API_PATH } from "../../helpers/constants";
 import { UserDTO } from "../../helpers/models";
 import { post } from "../../services/communication/connectionService";
 

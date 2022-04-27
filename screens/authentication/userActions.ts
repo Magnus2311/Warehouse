@@ -7,22 +7,12 @@ export interface UserState {
   username: string;
 }
 
-export interface AddUserAction {
-  type: "ADD_USER";
-  username: string;
-}
-
 export interface LoginAction {
   type: "LOGIN_USER";
   username: string;
 }
 
-type KnownActions = AddUserAction | LoginAction;
-
-export const addUser = (username: string): KnownActions => ({
-  type: "ADD_USER",
-  username,
-});
+type KnownActions = LoginAction;
 
 export const loginUser = (username: string): KnownActions => ({
   type: "LOGIN_USER",
@@ -30,16 +20,6 @@ export const loginUser = (username: string): KnownActions => ({
 });
 
 export const actionCreators = {
-  onAddUser: ({
-    username,
-    password,
-  }: UserDTO): AppThunk<void, KnownActions> => {
-    return (dispatch) => {
-      add({ username, password }).then(() => {
-        dispatch<any>(addUser(username));
-      });
-    };
-  },
   login: ({ username, password }: UserDTO): AppThunk<void, KnownActions> => {
     return (dispatch: any) => {
       login({ username, password }).then((loginResponse) => {
@@ -59,8 +39,6 @@ export const reducer: Reducer<UserState> = (
 ): UserState => {
   const action = incomingAction as KnownActions;
   switch (action.type) {
-    case "ADD_USER":
-      return { username: action.username };
     case "LOGIN_USER":
       return { username: action.username };
     default:

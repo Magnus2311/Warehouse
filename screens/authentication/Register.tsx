@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Input, Text, View } from "../../components/Themed";
 import { add } from "./authenticationService";
+import * as emailsService from "../../services/emailsService";
 
 enum RegistrationEnum {
   Username,
@@ -36,15 +37,12 @@ const Registration = () => {
   const changeIsRegisterActive = (field: RegistrationEnum, text: string) => {
     switch (field) {
       case RegistrationEnum.Username:
-        const isEmail = isValidEmail(text);
+        const isEmail = emailsService.isValidEmail(text);
         setIsValidEmail(isEmail);
         setIsRegisterActive(
-          text &&
-            text !== "" &&
-            isEmail &&
-            password &&
-            password !== "" &&
-            isPasswordMatching
+          text && text !== "" && isEmail && password && password !== ""
+            ? isPasswordMatching
+            : false
         );
         break;
       case RegistrationEnum.Password:
@@ -75,61 +73,61 @@ const Registration = () => {
       template: template,
     };
     add(userToInsert);
-    history.push(`/auth/emailsent/${username}`);
   };
 
   return (
-    <>
-      <img
+    <View
+      style={{ flex: 1, alignItems: "center", justifyContent: "flex-start" }}
+    >
+      {/* <img
         alt="Life Mode logo"
         src="/images/logos/logo_transparent.png"
         style={{ height: "20rem", width: "20rem", alignSelf: "baseline" }}
-      />
+      /> */}
       <View>
         <Text>Let's get started</Text>
       </View>
       <View>
         <Text>Sign up for free and get a lot of perks!</Text>
       </View>
-      <View>
+      <Input
+        onChangeText={handleUsernameChange}
+        value={username}
+        label="E-mail"
+        placeholder="Enter your email"
+        autoFocus
+        border={true}
+        // isValid={isValidEmail}
+      />
+      <View
+        style={{
+          display: "flex",
+        }}
+      >
         <Input
-          onChangeText={handleUsernameChange}
-          value={username}
-          label="E-mail"
-          placeholder="Enter your email"
-          autoFocus
-          // isValid={isValidEmail}
+          onChangeText={handlePasswordChange}
+          value={password}
+          label="Password"
+          placeholder="Enter your password"
+          keyboardType="visible-password"
+          border={true}
         />
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))",
-            columnGap: "0.75rem",
-          }}
-        >
-          <Input
-            onChangeText={handlePasswordChange}
-            value={password}
-            label="Password"
-            placeholder="Enter your password"
-            keyboardType="visible-password"
-          />
-          <Input
-            onChangeText={handleConfirmPasswordChange}
-            value={confirmPassword}
-            label="Confirm password"
-            placeholder="Confirm your password"
-            // isValid={isPasswordMatching}
-          />
-        </div>
-        <Button
-          onPress={handleSubmit}
-          style={{ width: "100%" }}
-          disabled={!isRegisterActive}
-          label={"Register"}
+        <Input
+          onChangeText={handleConfirmPasswordChange}
+          value={confirmPassword}
+          label="Confirm password"
+          placeholder="Confirm your password"
+          border={true}
+          // isValid={isPasswordMatching}
         />
       </View>
-    </>
+      <Button
+        onPress={handleSubmit}
+        style={{ width: "100%" }}
+        disabled={!isRegisterActive}
+        label={"Register"}
+      />
+    </View>
   );
 };
 

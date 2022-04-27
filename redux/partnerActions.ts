@@ -82,7 +82,7 @@ export const actionCreators = {
   },
   onLoadPartners: (): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      get<Partner>("api/partners/get-all")
+      get<Partner[]>("api/partners/get-all")
         .then((partners) => {
           dispatch(loadPartners(partners));
         })

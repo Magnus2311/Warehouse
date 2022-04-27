@@ -1,16 +1,16 @@
-import { API_PATH } from "../../helpers/constants";
+import { API_PATH, SSO_API_PATH } from "../../helpers/constants";
 
-export async function get<T>(url: string): Promise<T[]> {
-  const response = await fetch(`${API_PATH}${url}`);
+export async function get<T>(url: string, isSSO = false): Promise<T> {
+  const response = await fetch(`${isSSO ? SSO_API_PATH : API_PATH}${url}`);
   if (response.ok) {
     try {
-      return (await response.json()) as T[];
+      return (await response.json()) as T;
     } catch (ex) {
       throw ex;
     }
   }
 
-  return [];
+  return {} as T;
 }
 
 export async function put<T>(url: string, data: T): Promise<boolean> {
@@ -27,8 +27,12 @@ export async function put<T>(url: string, data: T): Promise<boolean> {
   return response.ok;
 }
 
-export async function post<T>(url: string, data: any): Promise<T> {
-  const response = await fetch(`${API_PATH}${url}`, {
+export async function post<T>(
+  url: string,
+  data: any,
+  isSSO = false
+): Promise<T> {
+  const response = await fetch(`${isSSO ? SSO_API_PATH : API_PATH}${url}`, {
     method: "POST",
     credentials: "omit",
     cache: "no-cache",

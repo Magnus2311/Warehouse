@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Button, Input, Text, View } from "../../components/Themed";
-import { add } from "./authenticationService";
+import * as usersService from "./authenticationService";
 import * as emailsService from "../../services/emailsService";
+import { UserDTO } from "../../helpers/models";
 
 enum RegistrationEnum {
+  Email,
   Username,
   Password,
   ConfirmPassword,
@@ -11,6 +13,8 @@ enum RegistrationEnum {
 
 const Registration = () => {
   const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isUsernameAvailable, setIsUsernameAvailable] = useState(true);
+  const [email, setEmail] = useState("");
   const [isPasswordMatching, setIsPasswordMatching] = useState(true);
   const [isRegisterActive, setIsRegisterActive] = useState(false);
   const [username, setUsername] = useState("");
@@ -20,6 +24,11 @@ const Registration = () => {
   const handleUsernameChange = (text: string) => {
     setUsername(text);
     changeIsRegisterActive(RegistrationEnum.Username, text);
+  };
+
+  const handleEmailChange = (text: string) => {
+    setEmail(text);
+    changeIsRegisterActive(RegistrationEnum.Email, text);
   };
 
   const handlePasswordChange = (text: string) => {
@@ -36,7 +45,7 @@ const Registration = () => {
 
   const changeIsRegisterActive = (field: RegistrationEnum, text: string) => {
     switch (field) {
-      case RegistrationEnum.Username:
+      case RegistrationEnum.Email:
         const isEmail = emailsService.isValidEmail(text);
         setIsValidEmail(isEmail);
         setIsRegisterActive(
@@ -44,6 +53,10 @@ const Registration = () => {
             ? isPasswordMatching
             : false
         );
+      case RegistrationEnum.Username:
+        usersService
+          .isUsernameAvailable(text)
+          .then((isAvailable: boolean) => setIsUsernameAvailable(isAvailable));
         break;
       case RegistrationEnum.Password:
         setIsRegisterActive(
@@ -65,14 +78,12 @@ const Registration = () => {
   };
 
   const handleSubmit = () => {
-    const template = "<ConfirmationEmailTemplate username={username} />";
     const userToInsert = {
-      createdDate: new Date(),
-      password: password,
-      username: username,
-      template: template,
-    };
-    add(userToInsert);
+      username,
+      password,
+      email,
+    } as UserDTO;
+    usersService.add(userToInsert);
   };
 
   return (
@@ -89,10 +100,19 @@ const Registration = () => {
       </View>
       <View>
         <Text>Sign up for free and get a lot of perks!</Text>
-      </View>
+      </View>{" "}
       <Input
         onChangeText={handleUsernameChange}
         value={username}
+        label="Username"
+        placeholder="Enter your username"
+        autoFocus
+        border={true}
+        // isValid={isUsernameAvailable}
+      />
+      <Input
+        onChangeText={handleEmailChange}
+        value={email}
         label="E-mail"
         placeholder="Enter your email"
         autoFocus

@@ -68,4 +68,5 @@ export interface BuyItem {
 export interface UserDTO {
   username: string;
   password: string;
+  email: string;
 }

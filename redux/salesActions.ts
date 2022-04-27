@@ -95,7 +95,7 @@ export const actionCreators = {
   },
   onLoadSales: (): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      get<Sale>("api/sales/")
+      get<Sale[]>("api/sales/")
         .then((sales) => {
           dispatch(loadSales(sales));
         })
@@ -106,7 +106,7 @@ export const actionCreators = {
   },
   onLoadAllSales: (): AppThunk<void, KnownAction> => {
     return (dispatch: any) => {
-      get<Sale>("api/sales/get-all")
+      get<Sale[]>("api/sales/get-all")
         .then((sales) => {
           dispatch(loadSales(sales));
         })

@@ -1,6 +1,5 @@
-import { SSO_API_PATH } from "../../helpers/constants";
 import { UserDTO } from "../../helpers/models";
-import { post } from "../../services/communication/connectionService";
+import { get, post } from "../../services/communication/connectionService";
 
 interface LoginResponse {
   username: string;
@@ -9,20 +8,31 @@ interface LoginResponse {
 interface ChangePasswordResponse {}
 
 export function add(user: UserDTO) {
-  return post(SSO_API_PATH + "api/users/add", user);
+  return post("api/users/register", user, true);
+}
+
+export function isUsernameAvailable(username: string) {
+  return get<boolean>(
+    `api/users/check-username-availability?username=${username}`,
+    true
+  );
 }
 
 export function login(user: UserDTO) {
-  return post<LoginResponse>(SSO_API_PATH + "api/users/login", user);
+  return post<LoginResponse>("api/users/login", user, true);
 }
 
 export function changePassword(oldPassword: string, newPassword: string) {
   return post<ChangePasswordResponse>(
-    SSO_API_PATH + "api/users/changePassword",
-    { oldPassword, newPassword }
+    "api/users/changePassword",
+    {
+      oldPassword,
+      newPassword,
+    },
+    true
   ).then(async (response) => {});
 }
 
 export const resetPassword = (token: string, newPassword: string) => {
-  return post(SSO_API_PATH + "api/users/resetPassword", { token, newPassword });
+  return post("api/users/resetPassword", { token, newPassword }, true);
 };

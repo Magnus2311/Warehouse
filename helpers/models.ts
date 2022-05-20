@@ -82,3 +82,8 @@ export interface LoginUserDTO {
 export enum SenderType {
   Warehouse = 1,
 }
+
+export interface LoginResponse {
+  username: string;
+  email: string;
+}

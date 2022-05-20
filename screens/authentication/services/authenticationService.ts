@@ -1,9 +1,9 @@
-import { LoginUserDTO, RegisterUserDTO } from "../../helpers/models";
-import { get, post } from "../../services/communication/connectionService";
-
-interface LoginResponse {
-  username: string;
-}
+import {
+  LoginResponse,
+  LoginUserDTO,
+  RegisterUserDTO,
+} from "../../../helpers/models";
+import { get, post } from "../../../services/communication/connectionService";
 
 interface ChangePasswordResponse {}
 
@@ -36,3 +36,6 @@ export function changePassword(oldPassword: string, newPassword: string) {
 export const resetPassword = (token: string, newPassword: string) => {
   return post("/users/resetPassword", { token, newPassword }, true);
 };
+
+export const getRefreshToken = () => SecureStore.get("access_token");
+export const isAuthenticated = () => !!getRefreshToken();

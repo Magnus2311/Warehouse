@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Button, Input, Text, View } from "../../components/Themed";
-import * as usersService from "./authenticationService";
-import * as emailsService from "../../services/emailsService";
-import { SenderType, RegisterUserDTO } from "../../helpers/models";
-import { WAREHOUSE_WEB_ADDRESS } from "../../helpers/constants";
+import { Button, Input, Text, View } from "../../../components/Themed";
+import * as usersService from "../services/authenticationService";
+import * as emailsService from "../../../services/emailsService";
+import { SenderType, RegisterUserDTO } from "../../../helpers/models";
+import { WAREHOUSE_WEB_ADDRESS } from "../../../helpers/constants";
 import { useNavigation } from "@react-navigation/native";
 
 enum RegistrationEnum {

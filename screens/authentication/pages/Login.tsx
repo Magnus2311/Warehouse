@@ -1,10 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { FunctionComponent, useState } from "react";
 import { connect } from "react-redux";
-import { Button, Input, Text, View } from "../../components/Themed";
-import { LoginUserDTO } from "../../helpers/models";
-import { isValidEmail } from "../../services/emailsService";
-import { actionCreators } from "./userActions";
+import { Button, Input, Text, View } from "../../../components/Themed";
+import { LoginUserDTO } from "../../../helpers/models";
+import { isValidEmail } from "../../../services/emailsService";
+import { actionCreators } from "../redux/userActions";
 
 const mapDispatchToProps = (dispatch: any) => {
   return {

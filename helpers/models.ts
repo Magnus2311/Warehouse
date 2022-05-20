@@ -65,8 +65,20 @@ export interface BuyItem {
   basePrice: string;
 }
 
-export interface UserDTO {
+export interface RegisterUserDTO {
   username: string;
   password: string;
   email: string;
+  callbackUrl: string;
+  senderType: SenderType;
+}
+
+export interface LoginUserDTO {
+  username: string;
+  email: string;
+  password: string;
+}
+
+export enum SenderType {
+  Warehouse = 1,
 }

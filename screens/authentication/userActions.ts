@@ -1,7 +1,7 @@
 import { Action, Reducer } from "redux";
-import { UserDTO } from "../../helpers/models";
+import { LoginUserDTO } from "../../helpers/models";
 import { AppThunk } from "../../redux/store";
-import { add, login } from "./authenticationService";
+import { login } from "./authenticationService";
 
 export interface UserState {
   username: string;
@@ -20,9 +20,9 @@ export const loginUser = (username: string): KnownActions => ({
 });
 
 export const actionCreators = {
-  login: ({ username, password }: UserDTO): AppThunk<void, KnownActions> => {
+  login: (user: LoginUserDTO): AppThunk<void, KnownActions> => {
     return (dispatch: any) => {
-      login({ username, password }).then((loginResponse) => {
+      login(user).then((loginResponse) => {
         dispatch(loginUser(loginResponse.username));
       });
     };

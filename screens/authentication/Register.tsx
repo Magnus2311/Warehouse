@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Button, Input, Text, View } from "../../components/Themed";
 import * as usersService from "./authenticationService";
 import * as emailsService from "../../services/emailsService";
-import { UserDTO } from "../../helpers/models";
+import { SenderType, RegisterUserDTO } from "../../helpers/models";
+import { WAREHOUSE_WEB_ADDRESS } from "../../helpers/constants";
+import { useNavigation } from "@react-navigation/native";
 
 enum RegistrationEnum {
   Email,
@@ -20,6 +22,7 @@ const Registration = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigation = useNavigation();
 
   const handleUsernameChange = (text: string) => {
     setUsername(text);
@@ -77,13 +80,16 @@ const Registration = () => {
     }
   };
 
-  const handleSubmit = () => {
+  const handleRegister = () => {
     const userToInsert = {
       username,
       password,
       email,
-    } as UserDTO;
+      callbackUrl: `${WAREHOUSE_WEB_ADDRESS}/registration/email-confirmed`,
+      senderType: SenderType.Warehouse,
+    } as RegisterUserDTO;
     usersService.add(userToInsert);
+    navigation.navigate("PartnersListScreen");
   };
 
   return (
@@ -100,7 +106,7 @@ const Registration = () => {
       </View>
       <View>
         <Text>Sign up for free and get a lot of perks!</Text>
-      </View>{" "}
+      </View>
       <Input
         onChangeText={handleUsernameChange}
         value={username}
@@ -144,7 +150,7 @@ const Registration = () => {
         />
       </View>
       <Button
-        onPress={handleSubmit}
+        onPress={handleRegister}
         style={{ width: "100%" }}
         disabled={!isRegisterActive}
         label={"Register"}

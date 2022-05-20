@@ -1,4 +1,4 @@
-import { UserDTO } from "../../helpers/models";
+import { LoginUserDTO, RegisterUserDTO } from "../../helpers/models";
 import { get, post } from "../../services/communication/connectionService";
 
 interface LoginResponse {
@@ -7,24 +7,24 @@ interface LoginResponse {
 
 interface ChangePasswordResponse {}
 
-export function add(user: UserDTO) {
-  return post("api/users/register", user, true);
+export function add(user: RegisterUserDTO) {
+  return post("/users/register", user, true);
 }
 
 export function isUsernameAvailable(username: string) {
   return get<boolean>(
-    `api/users/check-username-availability?username=${username}`,
+    `/users/check-username-availability?username=${username}`,
     true
   );
 }
 
-export function login(user: UserDTO) {
-  return post<LoginResponse>("api/users/login", user, true);
+export function login(user: LoginUserDTO) {
+  return post<LoginResponse>("/users/login", user, true);
 }
 
 export function changePassword(oldPassword: string, newPassword: string) {
   return post<ChangePasswordResponse>(
-    "api/users/changePassword",
+    "/users/changePassword",
     {
       oldPassword,
       newPassword,
@@ -34,5 +34,5 @@ export function changePassword(oldPassword: string, newPassword: string) {
 }
 
 export const resetPassword = (token: string, newPassword: string) => {
-  return post("api/users/resetPassword", { token, newPassword }, true);
+  return post("/users/resetPassword", { token, newPassword }, true);
 };

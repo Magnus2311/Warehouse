@@ -8,7 +8,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
 import { ColorSchemeName, Pressable } from "react-native";
 import ModalScreen from "../screens/ModalScreen";
-import NotFoundScreen from "../screens/NotFoundScreen";
 import ItemsListScreen from "../screens/items/ItemsListScreen";
 import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
@@ -21,6 +20,7 @@ import SalesListScreen from "../screens/sales/SalesListScreen";
 import AddSaleScreen from "../screens/sales/AddSaleScreen";
 import PartnersListScreen from "../screens/partners/PartnersListScreen";
 import AddPartnerScreen from "../screens/partners/AddPartnerScreen";
+import Login from "../screens/authentication/Login";
 
 type Props = {
   colorScheme: ColorSchemeName;
@@ -163,6 +163,7 @@ function BottomTabNavigator({ navigation }: any) {
         />
 
         <Drawer.Screen name="Register" component={Register} />
+        <Drawer.Screen name="Login" component={Login} />
       </Drawer.Group>
     </Drawer.Navigator>
   );

@@ -11,7 +11,7 @@ import ModalScreen from "../screens/ModalScreen";
 import ItemsListScreen from "../screens/items/ItemsListScreen";
 import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import Register from "../screens/authentication/Register";
+import Register from "../screens/authentication/pages/Register";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { connect } from "react-redux";
 import { ModalState } from "../redux/modalActions";
@@ -20,7 +20,7 @@ import SalesListScreen from "../screens/sales/SalesListScreen";
 import AddSaleScreen from "../screens/sales/AddSaleScreen";
 import PartnersListScreen from "../screens/partners/PartnersListScreen";
 import AddPartnerScreen from "../screens/partners/AddPartnerScreen";
-import Login from "../screens/authentication/Login";
+import Login from "../screens/authentication/pages/Login";
 
 type Props = {
   colorScheme: ColorSchemeName;

@@ -4,7 +4,7 @@ import * as items from "./itemActions";
 import * as title from "./modalActions";
 import * as partners from "./partnerActions";
 import * as sales from "./salesActions";
-import * as user from "../screens/authentication/userActions";
+import * as user from "../screens/authentication/redux/userActions";
 
 export interface AppState {
   items: items.ItemsState;

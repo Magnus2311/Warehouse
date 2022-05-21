@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Button, Input, Text, View } from "../../../components/Themed";
 import * as usersService from "../services/authenticationService";
 import * as emailsService from "../../../services/emailsService";
-import { SenderType, RegisterUserDTO } from "../../../helpers/models";
+import { SenderType, RegisterUserDTO } from "../models";
 import { WAREHOUSE_WEB_ADDRESS } from "../../../helpers/constants";
 import { useNavigation } from "@react-navigation/native";
 

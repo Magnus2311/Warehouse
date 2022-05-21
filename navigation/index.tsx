@@ -21,6 +21,7 @@ import AddSaleScreen from "../screens/sales/AddSaleScreen";
 import PartnersListScreen from "../screens/partners/PartnersListScreen";
 import AddPartnerScreen from "../screens/partners/AddPartnerScreen";
 import Login from "../screens/authentication/pages/Login";
+import { isAuthenticated } from "../screens/authentication/services/authenticationService";
 
 type Props = {
   colorScheme: ColorSchemeName;
@@ -71,99 +72,112 @@ function RootNavigator({ title }: { title: string }) {
 
 function BottomTabNavigator({ navigation }: any) {
   const Drawer = createDrawerNavigator<RootStackParamList>();
+  const [isAuthenticatedState, setIsAuthenticated] = React.useState(false);
+
+  React.useEffect(() => {
+    isAuthenticated().then((isAuthenticatedResponse) =>
+      setIsAuthenticated(isAuthenticatedResponse)
+    );
+  });
 
   return (
     <Drawer.Navigator>
       <Drawer.Group>
-        <Drawer.Screen
-          name="SalesListScreen"
-          component={SalesListScreen}
-          options={{
-            title: "Списък с продажби",
-            headerTitleAlign: "center",
-            headerRight: () => (
-              <Pressable
-                onPress={(e) => {
-                  e.preventDefault();
-                  navigation.navigate("Modal", {
-                    component: <AddSaleScreen />,
-                  });
-                }}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.5 : 1,
-                })}
-              >
-                <FontAwesome
-                  name="plus-circle"
-                  size={25}
-                  color="green"
-                  style={{ marginRight: 15 }}
-                />
-              </Pressable>
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="ItemsListScreen"
-          navigationKey="/ItemsListScreen"
-          component={ItemsListScreen}
-          options={{
-            title: "Списък със стоки",
-            headerTitleAlign: "center",
-            headerRight: () => (
-              <Pressable
-                onPress={(e) => {
-                  e.preventDefault();
-                  navigation.navigate("Modal", {
-                    component: <AddItemScreen />,
-                  });
-                }}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.5 : 1,
-                })}
-              >
-                <FontAwesome
-                  name="plus-circle"
-                  size={25}
-                  color="green"
-                  style={{ marginRight: 15 }}
-                />
-              </Pressable>
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="PartnersListScreen"
-          navigationKey="PartnersListScreen"
-          component={PartnersListScreen}
-          options={{
-            title: "Списък с партньори",
-            headerTitleAlign: "center",
-            headerRight: () => (
-              <Pressable
-                onPress={(e) => {
-                  e.preventDefault();
-                  navigation.navigate("Modal", {
-                    component: <AddPartnerScreen />,
-                  });
-                }}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.5 : 1,
-                })}
-              >
-                <FontAwesome
-                  name="plus-circle"
-                  size={25}
-                  color="green"
-                  style={{ marginRight: 15 }}
-                />
-              </Pressable>
-            ),
-          }}
-        />
-
-        <Drawer.Screen name="Register" component={Register} />
-        <Drawer.Screen name="Login" component={Login} />
+        {isAuthenticatedState ? (
+          <>
+            <Drawer.Screen
+              name="SalesListScreen"
+              component={SalesListScreen}
+              options={{
+                title: "Списък с продажби",
+                headerTitleAlign: "center",
+                headerRight: () => (
+                  <Pressable
+                    onPress={(e) => {
+                      e.preventDefault();
+                      navigation.navigate("Modal", {
+                        component: <AddSaleScreen />,
+                      });
+                    }}
+                    style={({ pressed }) => ({
+                      opacity: pressed ? 0.5 : 1,
+                    })}
+                  >
+                    <FontAwesome
+                      name="plus-circle"
+                      size={25}
+                      color="green"
+                      style={{ marginRight: 15 }}
+                    />
+                  </Pressable>
+                ),
+              }}
+            />
+            <Drawer.Screen
+              name="ItemsListScreen"
+              navigationKey="/ItemsListScreen"
+              component={ItemsListScreen}
+              options={{
+                title: "Списък със стоки",
+                headerTitleAlign: "center",
+                headerRight: () => (
+                  <Pressable
+                    onPress={(e) => {
+                      e.preventDefault();
+                      navigation.navigate("Modal", {
+                        component: <AddItemScreen />,
+                      });
+                    }}
+                    style={({ pressed }) => ({
+                      opacity: pressed ? 0.5 : 1,
+                    })}
+                  >
+                    <FontAwesome
+                      name="plus-circle"
+                      size={25}
+                      color="green"
+                      style={{ marginRight: 15 }}
+                    />
+                  </Pressable>
+                ),
+              }}
+            />
+            <Drawer.Screen
+              name="PartnersListScreen"
+              navigationKey="PartnersListScreen"
+              component={PartnersListScreen}
+              options={{
+                title: "Списък с партньори",
+                headerTitleAlign: "center",
+                headerRight: () => (
+                  <Pressable
+                    onPress={(e) => {
+                      e.preventDefault();
+                      navigation.navigate("Modal", {
+                        component: <AddPartnerScreen />,
+                      });
+                    }}
+                    style={({ pressed }) => ({
+                      opacity: pressed ? 0.5 : 1,
+                    })}
+                  >
+                    <FontAwesome
+                      name="plus-circle"
+                      size={25}
+                      color="green"
+                      style={{ marginRight: 15 }}
+                    />
+                  </Pressable>
+                ),
+              }}
+            />
+          </>
+        ) : (
+          <>
+            <Drawer.Screen name="Register" component={Register} />
+            <Drawer.Screen name="Login" component={Login} />
+          </>
+        )}
       </Drawer.Group>
     </Drawer.Navigator>
   );

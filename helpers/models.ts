@@ -64,26 +64,3 @@ export interface BuyItem {
   qtty: string;
   basePrice: string;
 }
-
-export interface RegisterUserDTO {
-  username: string;
-  password: string;
-  email: string;
-  callbackUrl: string;
-  senderType: SenderType;
-}
-
-export interface LoginUserDTO {
-  username: string;
-  email: string;
-  password: string;
-}
-
-export enum SenderType {
-  Warehouse = 1,
-}
-
-export interface LoginResponse {
-  username: string;
-  email: string;
-}

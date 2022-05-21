@@ -1,28 +1,25 @@
 import { Action, Reducer } from "redux";
-import { LoginResponse, LoginUserDTO } from "../../../helpers/models";
+import { LoginResponseDTO, LoginUserDTO } from "../models";
 import { AppThunk } from "../../../redux/store";
 import { login } from "../services/authenticationService";
 
 export interface UserState {
   username: string;
   email: string;
+  accessToken: string;
+  refreshToken: string;
 }
 
 export interface LoginAction {
   type: "LOGIN_USER";
-  username: string;
-  email: string;
+  user: LoginResponseDTO;
 }
 
 type KnownActions = LoginAction;
 
-export const loginUser = ({
-  username,
-  email,
-}: LoginResponse): KnownActions => ({
+export const loginUser = (user: LoginResponseDTO): KnownActions => ({
   type: "LOGIN_USER",
-  username,
-  email,
+  user,
 });
 
 export const actionCreators = {
@@ -38,6 +35,8 @@ export const actionCreators = {
 const initialState = {
   username: "",
   email: "",
+  accessToken: "",
+  refreshToken: "",
 };
 
 export const reducer: Reducer<UserState> = (
@@ -47,7 +46,7 @@ export const reducer: Reducer<UserState> = (
   const action = incomingAction as KnownActions;
   switch (action.type) {
     case "LOGIN_USER":
-      return { ...action };
+      return { ...action.user };
     default:
       return state;
   }

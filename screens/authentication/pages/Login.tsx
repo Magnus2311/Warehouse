@@ -2,9 +2,10 @@ import { useNavigation } from "@react-navigation/native";
 import React, { FunctionComponent, useState } from "react";
 import { connect } from "react-redux";
 import { Button, Input, Text, View } from "../../../components/Themed";
-import { LoginUserDTO } from "../../../helpers/models";
+import { LoginUserDTO } from "../models";
 import { isValidEmail } from "../../../services/emailsService";
 import { actionCreators } from "../redux/userActions";
+import { AppState } from "../../../redux/store";
 
 const mapDispatchToProps = (dispatch: any) => {
   return {

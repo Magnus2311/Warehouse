@@ -26,7 +26,15 @@ export function isUsernameAvailable(username: string) {
 }
 
 export async function login(user: LoginUserDTO) {
-  var loginResponse = await post<LoginResponseDTO>("/users/login", user, true);
+  const loginResponse = await post<LoginResponseDTO>(
+    "/users/login",
+    {
+      ...user,
+      accessToken: await getAccessToken(),
+      refreshToken: await getRefreshToken(),
+    },
+    true
+  );
   await storeUser(loginResponse);
   return loginResponse;
 }
@@ -46,28 +54,37 @@ export const resetPassword = (token: string, newPassword: string) => {
   return post("/users/resetPassword", { token, newPassword }, true);
 };
 
-export const isAuthenticated = async () => !!(await getRefreshToken());
+const refreshAccessToken = async () => {
+  return get<string>(
+    `/users/try-login?refreshToken=${await getRefreshToken()}`,
+    true
+  );
+};
+
+export const isAccessTokenActive = async () => !!(await getAccessToken());
+export const isAuthenticated = async () =>
+  (await isAccessTokenActive()) ? true : await isAccessTokenRefreshed();
 
 const storeUser = async (user: LoginResponseDTO) => {
   try {
-    var accessTokenJsonValue = JSON.stringify({
+    const userJsonValue = JSON.stringify({
       username: user.username,
       email: user.email,
     });
-    await AsyncStorage.setItem(USER_STORAGE_VARIABLE, accessTokenJsonValue);
+    await AsyncStorage.setItem(USER_STORAGE_VARIABLE, userJsonValue);
 
-    var accessToken = {
+    const accessToken = {
       value: user.accessToken,
       created: new Date(),
     } as Token;
-    var accessTokenJsonValue = JSON.stringify(accessToken);
+    const accessTokenJsonValue = JSON.stringify(accessToken);
     await AsyncStorage.setItem(USER_STORAGE_ACCESS_TOKEN, accessTokenJsonValue);
 
-    var refreshToken = {
+    const refreshToken = {
       value: user.refreshToken,
       created: new Date(),
     } as Token;
-    var refreshTokenJsonValue = JSON.stringify(refreshToken);
+    const refreshTokenJsonValue = JSON.stringify(refreshToken);
     await AsyncStorage.setItem(
       USER_STORAGE_REFRESH_TOKEN,
       refreshTokenJsonValue
@@ -82,7 +99,7 @@ const getRefreshToken = async () => {
     const jsonValue = await AsyncStorage.getItem(USER_STORAGE_REFRESH_TOKEN);
     if (jsonValue !== null) {
       const token = JSON.parse(jsonValue) as Token;
-      var expiryDate = new Date().setHours(
+      const expiryDate = new Date().setHours(
         new Date(token.created).getHours() + 1
       );
       if (expiryDate >= new Date().getHours()) return token.value;
@@ -93,4 +110,46 @@ const getRefreshToken = async () => {
   }
 
   return null;
+};
+
+const getAccessToken = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem(USER_STORAGE_ACCESS_TOKEN);
+    if (jsonValue !== null) {
+      const token = JSON.parse(jsonValue) as Token;
+      if (token.value && token.value !== "") {
+        const expiryDate = new Date().setHours(
+          new Date(token.created).getHours() + 1
+        );
+        if (expiryDate >= new Date().getHours()) return token.value;
+        else await AsyncStorage.removeItem(USER_STORAGE_ACCESS_TOKEN);
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  return null;
+};
+
+const isAccessTokenRefreshed = async () => {
+  const refreshToken = await getRefreshToken();
+  if (refreshToken) {
+    const accessToken = await refreshAccessToken();
+    if (accessToken && accessToken !== "") {
+      await storeAccessToken(accessToken);
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const storeAccessToken = async (token: string) => {
+  const accessToken = {
+    value: token,
+    created: new Date(),
+  } as Token;
+  const accessTokenJsonValue = JSON.stringify(accessToken);
+  await AsyncStorage.setItem(USER_STORAGE_ACCESS_TOKEN, accessTokenJsonValue);
 };

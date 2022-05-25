@@ -21,6 +21,7 @@ export type RootStackParamList = {
   SalesListScreen: undefined;
   Register: undefined;
   Login: undefined;
+  Logout: undefined;
 };
 
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =

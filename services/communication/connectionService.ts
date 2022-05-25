@@ -13,7 +13,7 @@ export async function get<T>(url: string, isSSO = false): Promise<T> {
   return {} as T;
 }
 
-export async function put<T>(url: string, data: T): Promise<boolean> {
+export async function put<T>(url: string, data: any): Promise<boolean> {
   const response = await fetch(`${API_PATH}${url}`, {
     method: "PUT",
     credentials: "omit",

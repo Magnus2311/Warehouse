@@ -126,7 +126,7 @@ const getRefreshToken = async () => {
   return null;
 };
 
-const getAccessToken = async () => {
+export const getAccessToken = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem(USER_STORAGE_ACCESS_TOKEN);
     if (jsonValue !== null) {

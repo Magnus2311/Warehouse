@@ -1,5 +1,6 @@
 import { Action, Reducer } from "redux";
 import { Partner } from "../helpers/models";
+import { getAccessToken } from "../screens/authentication/services/authenticationService";
 import {
   deletee,
   get,
@@ -72,8 +73,11 @@ export const setShowDeleted = (showDeleted: boolean): SetShowDeletedAction => ({
 
 export const actionCreators = {
   onAddPartner: (partnerDTO: Partner): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      post<Partner>("api/partners/", partnerDTO)
+    return async (dispatch: any) => {
+      post<Partner>("api/partners/", {
+        ...partnerDTO,
+        accessToken: await getAccessToken(),
+      })
         .then((partner) => {
           dispatch(addPartner(partner));
         })
@@ -81,8 +85,10 @@ export const actionCreators = {
     };
   },
   onLoadPartners: (): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      get<Partner[]>("api/partners/get-all")
+    return async (dispatch: any) => {
+      get<Partner[]>(
+        `api/partners/get-all?accessToken=${await getAccessToken()}`
+      )
         .then((partners) => {
           dispatch(loadPartners(partners));
         })
@@ -90,10 +96,11 @@ export const actionCreators = {
     };
   },
   onEditPartner: (partnerDTO: Partner): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      put("api/partners/", partnerDTO).then(
-        (isUpdated) => isUpdated && dispatch(editPartner(partnerDTO))
-      );
+    return async (dispatch: any) => {
+      put("api/partners/", {
+        ...partnerDTO,
+        accessToken: await getAccessToken(),
+      }).then((isUpdated) => isUpdated && dispatch(editPartner(partnerDTO)));
     };
   },
   onDeletePartner: (partnerId: string): AppThunk<void, KnownAction> => {

@@ -4,7 +4,7 @@ enum Environments {
   Production,
 }
 
-const warehouseEnvironment = Environments.Testing;
+const warehouseEnvironment = Environments.Dev;
 const ssoEnvironment = Environments.Dev;
 const warehouseWebEnvironment = Environments.Dev;
 

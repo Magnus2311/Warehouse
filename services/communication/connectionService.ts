@@ -16,7 +16,7 @@ export async function get<T>(url: string, isSSO = false): Promise<T> {
 export async function put<T>(url: string, data: T): Promise<boolean> {
   const response = await fetch(`${API_PATH}${url}`, {
     method: "PUT",
-    credentials: "include",
+    credentials: "omit",
     cache: "no-cache",
     body: JSON.stringify(data),
     headers: {
@@ -34,7 +34,7 @@ export async function post<T>(
 ): Promise<T> {
   const response = await fetch(`${isSSO ? SSO_API_PATH : API_PATH}${url}`, {
     method: "POST",
-    credentials: "include",
+    credentials: "omit",
     cache: "no-cache",
     body: JSON.stringify(data),
     headers: {
@@ -56,7 +56,7 @@ export async function post<T>(
 export async function deletee(url: string, id: string): Promise<boolean> {
   const response = await fetch(`${API_PATH}${url}`, {
     method: "DELETE",
-    credentials: "include",
+    credentials: "omit",
     cache: "no-cache",
     body: JSON.stringify(id),
     headers: {

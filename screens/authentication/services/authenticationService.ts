@@ -4,6 +4,7 @@ import {
   LoginUserDTO,
   RegisterUserDTO,
   Token,
+  TryLoginDTO,
 } from "../models";
 import { get, post } from "../../../services/communication/connectionService";
 import {
@@ -47,7 +48,7 @@ export function changePassword(oldPassword: string, newPassword: string) {
       newPassword,
     },
     true
-  ).then(async (response) => {});
+  ).then(async response => {});
 }
 
 export const resetPassword = (token: string, newPassword: string) => {
@@ -55,7 +56,7 @@ export const resetPassword = (token: string, newPassword: string) => {
 };
 
 const refreshAccessToken = async () => {
-  return get<string>(
+  return get<TryLoginDTO>(
     `/users/try-login?refreshToken=${await getRefreshToken()}`,
     true
   );
@@ -135,7 +136,7 @@ const getAccessToken = async () => {
 const isAccessTokenRefreshed = async () => {
   const refreshToken = await getRefreshToken();
   if (refreshToken) {
-    const accessToken = await refreshAccessToken();
+    const accessToken = (await refreshAccessToken()).accessToken;
     if (accessToken && accessToken !== "") {
       await storeAccessToken(accessToken);
       return true;

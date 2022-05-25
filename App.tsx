@@ -10,8 +10,10 @@ import Navigation from "./navigation";
 import configureStore from "./redux/configureStore";
 
 import "./helpers/styleFunctions";
+import { FunctionComponent } from "react";
+import { UserState } from "./screens/authentication/redux/userActions";
 
-export default function App() {
+const App = () => {
   const isLoadingComplete = useCachedResources();
   const colorScheme = useColorScheme();
 
@@ -36,4 +38,6 @@ export default function App() {
       </SafeAreaProvider>
     );
   }
-}
+};
+
+export default App;

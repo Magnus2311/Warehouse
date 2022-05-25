@@ -27,3 +27,7 @@ export interface Token {
   value: string;
   created: Date;
 }
+
+export interface TryLoginDTO {
+  accessToken: string;
+}

@@ -15,10 +15,20 @@ export interface LoginAction {
   user: LoginResponseDTO;
 }
 
-type KnownActions = LoginAction;
+export interface InitUserAction {
+  type: "INIT_USER";
+  user: UserState;
+}
+
+type KnownActions = LoginAction | InitUserAction;
 
 export const loginUser = (user: LoginResponseDTO): KnownActions => ({
   type: "LOGIN_USER",
+  user,
+});
+
+export const initUserAction = (user: UserState): KnownActions => ({
+  type: "INIT_USER",
   user,
 });
 
@@ -28,6 +38,11 @@ export const actionCreators = {
       login(user).then((loginResponse) => {
         dispatch(loginUser(loginResponse));
       });
+    };
+  },
+  initUser: (user: UserState): AppThunk<void, KnownActions> => {
+    return (dispatch: any) => {
+      dispatch(initUserAction(user));
     };
   },
 };
@@ -46,6 +61,8 @@ export const reducer: Reducer<UserState> = (
   const action = incomingAction as KnownActions;
   switch (action.type) {
     case "LOGIN_USER":
+      return { ...action.user };
+    case "INIT_USER":
       return { ...action.user };
     default:
       return state;

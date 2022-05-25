@@ -12,6 +12,7 @@ import {
   USER_STORAGE_REFRESH_TOKEN,
   USER_STORAGE_VARIABLE,
 } from "../constants";
+import { actionCreators, UserState } from "../redux/userActions";
 
 interface ChangePasswordResponse {}
 
@@ -48,11 +49,23 @@ export function changePassword(oldPassword: string, newPassword: string) {
       newPassword,
     },
     true
-  ).then(async response => {});
+  ).then(async (response) => {});
 }
 
 export const resetPassword = (token: string, newPassword: string) => {
   return post("/users/resetPassword", { token, newPassword }, true);
+};
+
+export const initUser = async () => {
+  const user = {} as UserState;
+
+  user.accessToken = (await getAccessToken()) ?? "";
+  user.refreshToken = (await getRefreshToken()) ?? "";
+  const userData = (await getUserData()) ?? ({} as UserState);
+  user.username = userData.username;
+  user.email = userData.email;
+
+  return user;
 };
 
 const refreshAccessToken = async () => {
@@ -124,6 +137,22 @@ const getAccessToken = async () => {
         );
         if (expiryDate >= new Date().getHours()) return token.value;
         else await AsyncStorage.removeItem(USER_STORAGE_ACCESS_TOKEN);
+      }
+    }
+  } catch (e) {
+    console.log(e);
+  }
+
+  return null;
+};
+
+const getUserData = async () => {
+  try {
+    const jsonValue = await AsyncStorage.getItem(USER_STORAGE_VARIABLE);
+    if (jsonValue !== null) {
+      const user = JSON.parse(jsonValue) as UserState;
+      if (user) {
+        return user;
       }
     }
   } catch (e) {

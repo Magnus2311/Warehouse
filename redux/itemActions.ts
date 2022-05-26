@@ -1,5 +1,6 @@
 import { Action, Reducer } from "redux";
 import { BuyItem, Item } from "../helpers/models";
+import { getAccessToken } from "../screens/authentication/services/authenticationService";
 import {
   deletee,
   get,
@@ -95,8 +96,11 @@ export const setShowDeleted = (showDeleted: boolean): SetShowDeletedAction => ({
 
 export const actionCreators = {
   onAddItem: (itemDTO: Item): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      post<Item>("api/items/", itemDTO)
+    return async (dispatch: any) => {
+      post<Item>("api/items/", {
+        ...itemDTO,
+        accessToken: await getAccessToken(),
+      })
         .then((item) => {
           dispatch(addItem(item));
         })
@@ -106,8 +110,8 @@ export const actionCreators = {
     };
   },
   onLoadItems: (): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      get<Item>("api/items/")
+    return async (dispatch: any) => {
+      get<Item[]>(`api/items?accessToken=${await getAccessToken()}`)
         .then((items) => {
           dispatch(loadItems(items));
         })
@@ -117,8 +121,8 @@ export const actionCreators = {
     };
   },
   onLoadAllItems: (): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      get<Item>("api/items/get-all")
+    return async (dispatch: any) => {
+      get<Item[]>(`api/items/get-all?accessToken=${await getAccessToken()}`)
         .then((items) => {
           dispatch(loadAllItems(items));
         })
@@ -128,8 +132,11 @@ export const actionCreators = {
     };
   },
   onEditItem: (itemDTO: Item): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      put<Item>("api/items/", itemDTO)
+    return async (dispatch: any) => {
+      put<Item>("api/items/", {
+        ...itemDTO,
+        accessToken: await getAccessToken(),
+      })
         .then((isUpdated) => {
           isUpdated && dispatch(editItem(itemDTO));
         })
@@ -146,15 +153,21 @@ export const actionCreators = {
     };
   },
   onBuyItem: (item: BuyItem): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      post<BuyItem>("api/items/buy-item", item).then((item) => {
+    return async (dispatch: any) => {
+      post<BuyItem>("api/items/buy-item", {
+        ...item,
+        accessToken: await getAccessToken(),
+      }).then((item) => {
         dispatch(buyItem(item));
       });
     };
   },
   onItemRecovery: (itemId: string): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      post<Item>("api/items/item-recovery", itemId).then((item: Item) => {
+    return async (dispatch: any) => {
+      post<Item>("api/items/item-recovery", {
+        itemId,
+        accessToken: await getAccessToken(),
+      }).then((item: Item) => {
         dispatch(editItem(item));
       });
     };

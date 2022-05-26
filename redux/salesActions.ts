@@ -1,5 +1,6 @@
 import { Action, Reducer } from "redux";
 import { Sale } from "../helpers/models";
+import { getAccessToken } from "../screens/authentication/services/authenticationService";
 import {
   deletee,
   get,
@@ -83,8 +84,11 @@ export const setShowDeleted = (showDeleted: boolean): SetShowDeletedAction => ({
 
 export const actionCreators = {
   onAddSale: (saleDTO: Sale): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      post<Sale>("api/sales/", saleDTO)
+    return async (dispatch: any) => {
+      post<Sale>("api/sales/", {
+        ...saleDTO,
+        accessToken: await getAccessToken(),
+      })
         .then((sale) => {
           dispatch(addSale(sale));
         })
@@ -94,8 +98,8 @@ export const actionCreators = {
     };
   },
   onLoadSales: (): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      get<Sale>("api/sales/")
+    return async (dispatch: any) => {
+      get<Sale[]>(`api/sales?accessToken=${await getAccessToken()}`)
         .then((sales) => {
           dispatch(loadSales(sales));
         })
@@ -105,8 +109,8 @@ export const actionCreators = {
     };
   },
   onLoadAllSales: (): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      get<Sale>("api/sales/get-all")
+    return async (dispatch: any) => {
+      get<Sale[]>(`api/sales/get-all?accessToken=${await getAccessToken()}`)
         .then((sales) => {
           dispatch(loadSales(sales));
         })
@@ -116,8 +120,11 @@ export const actionCreators = {
     };
   },
   onEditSale: (saleDTO: Sale): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      put<Sale>("api/sales/", saleDTO)
+    return async (dispatch: any) => {
+      put<Sale>("api/sales/", {
+        ...saleDTO,
+        accessToken: await getAccessToken(),
+      })
         .then((isUpdated) => {
           isUpdated && dispatch(editSale(saleDTO));
         })
@@ -134,8 +141,11 @@ export const actionCreators = {
     };
   },
   onSaleRecovery: (saleId: string): AppThunk<void, KnownAction> => {
-    return (dispatch: any) => {
-      post<Sale>("api/sales/sale-recovery", saleId).then((sale: Sale) => {
+    return async (dispatch: any) => {
+      post<Sale>("api/sales/sale-recovery", {
+        saleId,
+        accessToken: await getAccessToken(),
+      }).then((sale: Sale) => {
         dispatch(editSale(sale));
       });
     };

@@ -1,4 +1,3 @@
-import { FontAwesome } from "@expo/vector-icons";
 import {
   NavigationContainer,
   DefaultTheme,
@@ -6,31 +5,37 @@ import {
 } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as React from "react";
-import { ColorSchemeName, Pressable } from "react-native";
+import { ColorSchemeName } from "react-native";
 import ModalScreen from "../screens/ModalScreen";
-import NotFoundScreen from "../screens/NotFoundScreen";
-import ItemsListScreen from "../screens/items/ItemsListScreen";
 import { RootStackParamList } from "../types";
 import LinkingConfiguration from "./LinkingConfiguration";
-import Register from "../screens/authentication/Register";
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { connect } from "react-redux";
 import { ModalState } from "../redux/modalActions";
-import AddItemScreen from "../screens/items/AddItemScreen";
-import SalesListScreen from "../screens/sales/SalesListScreen";
-import AddSaleScreen from "../screens/sales/AddSaleScreen";
-import PartnersListScreen from "../screens/partners/PartnersListScreen";
-import AddPartnerScreen from "../screens/partners/AddPartnerScreen";
+import BottomTabNavigator from "./BottomTabNavigator";
+import {
+  actionCreators,
+  UserState,
+} from "../screens/authentication/redux/userActions";
+import { initUser } from "../screens/authentication/services/authenticationService";
 
 type Props = {
   colorScheme: ColorSchemeName;
   title: string;
+  onInitUser: (user: UserState) => void;
 };
 
 const Navigation: React.FunctionComponent<Props> = ({
   colorScheme,
   title,
+  onInitUser,
 }: Props) => {
+  React.useEffect(() => {
+    const getUserData = async () => {
+      const userData = await initUser();
+      onInitUser(userData);
+    };
+    getUserData();
+  }, []);
   return (
     <NavigationContainer
       linking={LinkingConfiguration}
@@ -43,7 +48,15 @@ const Navigation: React.FunctionComponent<Props> = ({
 
 const mapStateToProps = (state: ModalState) => state.title;
 
-export default connect(mapStateToProps, null)(Navigation);
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    onInitUser: (user: UserState) => {
+      dispatch(actionCreators.initUser(user));
+    },
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Navigation);
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -66,104 +79,5 @@ function RootNavigator({ title }: { title: string }) {
         />
       </Stack.Group>
     </Stack.Navigator>
-  );
-}
-
-function BottomTabNavigator({ navigation }: any) {
-  const Drawer = createDrawerNavigator<RootStackParamList>();
-
-  return (
-    <Drawer.Navigator>
-      <Drawer.Group>
-        <Drawer.Screen
-          name="SalesListScreen"
-          component={SalesListScreen}
-          options={{
-            title: "Списък с продажби",
-            headerTitleAlign: "center",
-            headerRight: () => (
-              <Pressable
-                onPress={(e) => {
-                  e.preventDefault();
-                  navigation.navigate("Modal", {
-                    component: <AddSaleScreen />,
-                  });
-                }}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.5 : 1,
-                })}
-              >
-                <FontAwesome
-                  name="plus-circle"
-                  size={25}
-                  color="green"
-                  style={{ marginRight: 15 }}
-                />
-              </Pressable>
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="ItemsListScreen"
-          navigationKey="/ItemsListScreen"
-          component={ItemsListScreen}
-          options={{
-            title: "Списък със стоки",
-            headerTitleAlign: "center",
-            headerRight: () => (
-              <Pressable
-                onPress={(e) => {
-                  e.preventDefault();
-                  navigation.navigate("Modal", {
-                    component: <AddItemScreen />,
-                  });
-                }}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.5 : 1,
-                })}
-              >
-                <FontAwesome
-                  name="plus-circle"
-                  size={25}
-                  color="green"
-                  style={{ marginRight: 15 }}
-                />
-              </Pressable>
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="PartnersListScreen"
-          navigationKey="PartnersListScreen"
-          component={PartnersListScreen}
-          options={{
-            title: "Списък с партньори",
-            headerTitleAlign: "center",
-            headerRight: () => (
-              <Pressable
-                onPress={(e) => {
-                  e.preventDefault();
-                  navigation.navigate("Modal", {
-                    component: <AddPartnerScreen />,
-                  });
-                }}
-                style={({ pressed }) => ({
-                  opacity: pressed ? 0.5 : 1,
-                })}
-              >
-                <FontAwesome
-                  name="plus-circle"
-                  size={25}
-                  color="green"
-                  style={{ marginRight: 15 }}
-                />
-              </Pressable>
-            ),
-          }}
-        />
-
-        <Drawer.Screen name="Register" component={Register} />
-      </Drawer.Group>
-    </Drawer.Navigator>
   );
 }

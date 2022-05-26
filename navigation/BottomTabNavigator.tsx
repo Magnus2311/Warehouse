@@ -1,11 +1,13 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createDrawerNavigator, DrawerItem } from "@react-navigation/drawer";
 import { useNavigation } from "@react-navigation/native";
 import React, { FunctionComponent, useEffect, useState } from "react";
 import { Pressable } from "react-native";
 import { connect } from "react-redux";
+import { View } from "../components/Themed";
 import { AppState } from "../redux/store";
 import Login from "../screens/authentication/pages/Login";
+import Logout from "../screens/authentication/pages/Logout";
 import Register from "../screens/authentication/pages/Register";
 import { UserState } from "../screens/authentication/redux/userActions";
 import AddItemScreen from "../screens/items/AddItemScreen";
@@ -50,24 +52,27 @@ const BottomTabNavigator: FunctionComponent<Props> = ({ user }) => {
                 title: "Списък с продажби",
                 headerTitleAlign: "center",
                 headerRight: () => (
-                  <Pressable
-                    onPress={(e) => {
-                      e.preventDefault();
-                      navigation.navigate("Modal", {
-                        component: <AddSaleScreen />,
-                      });
-                    }}
-                    style={({ pressed }) => ({
-                      opacity: pressed ? 0.5 : 1,
-                    })}
-                  >
-                    <FontAwesome
-                      name="plus-circle"
-                      size={25}
-                      color="green"
-                      style={{ marginRight: 15 }}
-                    />
-                  </Pressable>
+                  <View style={{ display: "flex" }}>
+                    <Pressable
+                      onPress={(e) => {
+                        e.preventDefault();
+                        navigation.navigate("Modal", {
+                          component: <AddSaleScreen />,
+                        });
+                      }}
+                      style={({ pressed }) => ({
+                        opacity: pressed ? 0.5 : 1,
+                      })}
+                    >
+                      <FontAwesome
+                        name="plus-circle"
+                        size={25}
+                        color="green"
+                        style={{ marginRight: 15 }}
+                      />
+                    </Pressable>
+                    <Logout />
+                  </View>
                 ),
               }}
             />
@@ -79,24 +84,27 @@ const BottomTabNavigator: FunctionComponent<Props> = ({ user }) => {
                 title: "Списък със стоки",
                 headerTitleAlign: "center",
                 headerRight: () => (
-                  <Pressable
-                    onPress={(e) => {
-                      e.preventDefault();
-                      navigation.navigate("Modal", {
-                        component: <AddItemScreen />,
-                      });
-                    }}
-                    style={({ pressed }) => ({
-                      opacity: pressed ? 0.5 : 1,
-                    })}
-                  >
-                    <FontAwesome
-                      name="plus-circle"
-                      size={25}
-                      color="green"
-                      style={{ marginRight: 15 }}
-                    />
-                  </Pressable>
+                  <View>
+                    <Pressable
+                      onPress={(e) => {
+                        e.preventDefault();
+                        navigation.navigate("Modal", {
+                          component: <AddItemScreen />,
+                        });
+                      }}
+                      style={({ pressed }) => ({
+                        opacity: pressed ? 0.5 : 1,
+                      })}
+                    >
+                      <FontAwesome
+                        name="plus-circle"
+                        size={25}
+                        color="green"
+                        style={{ marginRight: 15 }}
+                      />
+                    </Pressable>
+                    <Logout />
+                  </View>
                 ),
               }}
             />
@@ -108,24 +116,27 @@ const BottomTabNavigator: FunctionComponent<Props> = ({ user }) => {
                 title: "Списък с партньори",
                 headerTitleAlign: "center",
                 headerRight: () => (
-                  <Pressable
-                    onPress={(e) => {
-                      e.preventDefault();
-                      navigation.navigate("Modal", {
-                        component: <AddPartnerScreen />,
-                      });
-                    }}
-                    style={({ pressed }) => ({
-                      opacity: pressed ? 0.5 : 1,
-                    })}
-                  >
-                    <FontAwesome
-                      name="plus-circle"
-                      size={25}
-                      color="green"
-                      style={{ marginRight: 15 }}
-                    />
-                  </Pressable>
+                  <View>
+                    <Pressable
+                      onPress={(e) => {
+                        e.preventDefault();
+                        navigation.navigate("Modal", {
+                          component: <AddPartnerScreen />,
+                        });
+                      }}
+                      style={({ pressed }) => ({
+                        opacity: pressed ? 0.5 : 1,
+                      })}
+                    >
+                      <FontAwesome
+                        name="plus-circle"
+                        size={25}
+                        color="green"
+                        style={{ marginRight: 15 }}
+                      />
+                    </Pressable>
+                    <Logout />
+                  </View>
                 ),
               }}
             />

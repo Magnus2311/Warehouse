@@ -41,6 +41,11 @@ export async function login(user: LoginUserDTO) {
   return loginResponse;
 }
 
+export const logout = async () => {
+  await deleteDataOnLogout();
+  return post("/users/logout", { refreshToken: await getRefreshToken() }, true);
+};
+
 export function changePassword(oldPassword: string, newPassword: string) {
   return post<ChangePasswordResponse>(
     "/users/changePassword",
@@ -182,4 +187,10 @@ const storeAccessToken = async (token: string) => {
   } as Token;
   const accessTokenJsonValue = JSON.stringify(accessToken);
   await AsyncStorage.setItem(USER_STORAGE_ACCESS_TOKEN, accessTokenJsonValue);
+};
+
+const deleteDataOnLogout = async () => {
+  await AsyncStorage.removeItem(USER_STORAGE_VARIABLE);
+  await AsyncStorage.removeItem(USER_STORAGE_ACCESS_TOKEN);
+  await AsyncStorage.removeItem(USER_STORAGE_REFRESH_TOKEN);
 };

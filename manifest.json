@@ -6,6 +6,13 @@
   "short_name": "Warehouse",
   "start_url": "/?utm_source=web_app_manifest",
   "orientation": "portrait",
+  "related_applications": [
+    {
+      "platform": "itunes",
+      "id": "warehouse"
+    }
+  ],
+  "prefer_related_applications": true,
   "icons": [
     {
       "src": "\\Warehouse\\pwa\\chrome-icon\\chrome-icon-144.png",

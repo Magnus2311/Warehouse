@@ -1,11 +1,11 @@
 {
   "files": {
-    "app.js": "/Warehouse/static/js/app.ccb61f3c.chunk.js",
-    "app.js.map": "/Warehouse/static/js/app.ccb61f3c.chunk.js.map",
+    "app.js": "/Warehouse/static/js/app.3dedab89.chunk.js",
+    "app.js.map": "/Warehouse/static/js/app.3dedab89.chunk.js.map",
     "runtime~app.js": "/Warehouse/static/js/runtime~app.e15e864d.js",
     "runtime~app.js.map": "/Warehouse/static/js/runtime~app.e15e864d.js.map",
-    "static/js/2.0db76c16.chunk.js": "/Warehouse/static/js/2.0db76c16.chunk.js",
-    "static/js/2.0db76c16.chunk.js.map": "/Warehouse/static/js/2.0db76c16.chunk.js.map",
+    "static/js/2.b294629c.chunk.js": "/Warehouse/static/js/2.b294629c.chunk.js",
+    "static/js/2.b294629c.chunk.js.map": "/Warehouse/static/js/2.b294629c.chunk.js.map",
     "fonts/AntDesign.ttf": "/Warehouse/./fonts/AntDesign.ttf",
     "fonts/Entypo.ttf": "/Warehouse/./fonts/Entypo.ttf",
     "fonts/Feather.ttf": "/Warehouse/./fonts/Feather.ttf",
@@ -25,11 +25,11 @@
     "index.html": "/Warehouse/index.html",
     "manifest.json": "/Warehouse/manifest.json",
     "serve.json": "/Warehouse/serve.json",
-    "static/js/2.0db76c16.chunk.js.LICENSE.txt": "/Warehouse/static/js/2.0db76c16.chunk.js.LICENSE.txt"
+    "static/js/2.b294629c.chunk.js.LICENSE.txt": "/Warehouse/static/js/2.b294629c.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime~app.e15e864d.js",
-    "static/js/2.0db76c16.chunk.js",
-    "static/js/app.ccb61f3c.chunk.js"
+    "static/js/2.b294629c.chunk.js",
+    "static/js/app.3dedab89.chunk.js"
   ]
 }

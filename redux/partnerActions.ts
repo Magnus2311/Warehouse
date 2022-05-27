@@ -90,7 +90,8 @@ export const actionCreators = {
         `api/partners/get-all?accessToken=${await getAccessToken()}`
       )
         .then((partners) => {
-          dispatch(loadPartners(partners));
+          if (partners && Array.isArray(partners))
+            dispatch(loadPartners(partners));
         })
         .catch((er) => console.log(er));
     };

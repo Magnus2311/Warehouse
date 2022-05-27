@@ -113,7 +113,7 @@ export const actionCreators = {
     return async (dispatch: any) => {
       get<Item[]>(`api/items?accessToken=${await getAccessToken()}`)
         .then((items) => {
-          dispatch(loadItems(items));
+          if (items && Array.isArray(items)) dispatch(loadItems(items));
         })
         .catch((error) => {
           console.log(error);
@@ -124,7 +124,7 @@ export const actionCreators = {
     return async (dispatch: any) => {
       get<Item[]>(`api/items/get-all?accessToken=${await getAccessToken()}`)
         .then((items) => {
-          dispatch(loadAllItems(items));
+          if (items && Array.isArray(items)) dispatch(loadAllItems(items));
         })
         .catch((error) => {
           console.log(error);

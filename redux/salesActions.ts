@@ -112,7 +112,7 @@ export const actionCreators = {
     return async (dispatch: any) => {
       get<Sale[]>(`api/sales/get-all?accessToken=${await getAccessToken()}`)
         .then((sales) => {
-          dispatch(loadSales(sales));
+          if (sales && Array.isArray(sales)) dispatch(loadSales(sales));
         })
         .catch((error) => {
           console.log(error);

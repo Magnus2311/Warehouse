@@ -52,6 +52,7 @@ const TableBody = ({
   return (
     <>
       {data &&
+        Array.isArray(data) &&
         data.map((item) => {
           return (
             (!showDeleted ||

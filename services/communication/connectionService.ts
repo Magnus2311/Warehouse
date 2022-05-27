@@ -10,7 +10,7 @@ export async function get<T>(url: string, isSSO = false): Promise<T> {
     }
   }
 
-  return {} as T;
+  return [] as unknown as T;
 }
 
 export async function put<T>(url: string, data: any): Promise<boolean> {

@@ -8,11 +8,13 @@ import {
 } from "../models";
 import { get, post } from "../../../services/communication/connectionService";
 import {
+  ONE_HOUR,
+  ONE_YEAR,
   USER_STORAGE_ACCESS_TOKEN,
   USER_STORAGE_REFRESH_TOKEN,
   USER_STORAGE_VARIABLE,
 } from "../constants";
-import { actionCreators, UserState } from "../redux/userActions";
+import { UserState } from "../redux/userActions";
 
 interface ChangePasswordResponse {}
 
@@ -118,10 +120,12 @@ const getRefreshToken = async () => {
     const jsonValue = await AsyncStorage.getItem(USER_STORAGE_REFRESH_TOKEN);
     if (jsonValue !== null) {
       const token = JSON.parse(jsonValue) as Token;
-      const expiryDate = new Date().setHours(
-        new Date(token.created).getHours() + 1
-      );
-      if (expiryDate >= new Date().getHours()) return token.value;
+      if (
+        new Date(new Date().toUTCString()).getTime() -
+          new Date(token.created).getTime() <
+        ONE_YEAR
+      )
+        return token.value;
       else await AsyncStorage.removeItem(USER_STORAGE_REFRESH_TOKEN);
     }
   } catch (e) {
@@ -131,24 +135,32 @@ const getRefreshToken = async () => {
   return null;
 };
 
-export const getAccessToken = async () => {
+export const getAccessToken = async (): Promise<string | undefined> => {
   try {
     const jsonValue = await AsyncStorage.getItem(USER_STORAGE_ACCESS_TOKEN);
     if (jsonValue !== null) {
       const token = JSON.parse(jsonValue) as Token;
       if (token.value && token.value !== "") {
-        const expiryDate = new Date().setHours(
-          new Date(token.created).getHours() + 1
-        );
-        if (expiryDate >= new Date().getHours()) return token.value;
-        else await AsyncStorage.removeItem(USER_STORAGE_ACCESS_TOKEN);
+        debugger;
+        if (
+          new Date(new Date().toUTCString()).getTime() -
+            new Date(token.created).getTime() <
+          ONE_HOUR
+        )
+          return token.value;
+        else {
+          await AsyncStorage.removeItem(USER_STORAGE_ACCESS_TOKEN);
+          if (await isAccessTokenRefreshed()) return await getAccessToken();
+        }
       }
+    } else {
+      if (await isAccessTokenRefreshed()) return await getAccessToken();
     }
   } catch (e) {
     console.log(e);
   }
 
-  return null;
+  return undefined;
 };
 
 const getUserData = async () => {

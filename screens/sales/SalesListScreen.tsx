@@ -95,11 +95,9 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
     },
   ];
 
-  return (
-    <Page>
-      <SalesTable
-        columns={columns}
-        listableItems={sales.map(
+  const listableItems =
+    sales && Array.isArray(sales)
+      ? sales.map(
           (sale) =>
             ({
               id: sale.id,
@@ -111,7 +109,14 @@ const SalesListScreen: React.FunctionComponent<Props> = ({
               total: toDecimalFormat(sale.totalAmount),
               isDeleted: sale.isDeleted,
             } as SaleListable)
-        )}
+        )
+      : [];
+
+  return (
+    <Page>
+      <SalesTable
+        columns={columns}
+        listableItems={listableItems}
         navigation={navigation}
         showDeleted={{
           setShowDeleted,
